@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Test_subset_sum__7 </SetName>
+  <SetValue> 5 </SetValue>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 9 </NumberOfElements>
+  <Element>
+    <name> x01 </name>
+    <value> 1 </value>
+  </Element>
+  <Element>
+    <name> x02 </name>
+    <value> 2 </value>
+  </Element>
+  <Element>
+    <name> x03 </name>
+    <value> 3 </value>
+  </Element>
+  <Element>
+    <name> x04 </name>
+    <value> 4 </value>
+  </Element>
+  <Element>
+    <name> x05 </name>
+    <value> 5 </value>
+  </Element>
+  <Element>
+    <name> x06 </name>
+    <value> 6 </value>
+  </Element>
+  <Element>
+    <name> x07 </name>
+    <value> 7 </value>
+  </Element>
+  <Element>
+    <name> x08 </name>
+    <value> 8 </value>
+  </Element>
+  <Element>
+    <name> x09 </name>
+    <value> 9 </value>
+  </Element>
+</ElementSet>
+

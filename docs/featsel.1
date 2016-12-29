@@ -1,0 +1,111 @@
+.\" Process this file with
+.\" groff -man -Tascii featsel.1
+.\"
+.TH FEATSEL 1 "DECEMBER 2016" Linux "User Manuals"
+.SH NAME
+featsel \- a flexible feature selection program
+.SH SYNOPSIS
+.B featsel [-h] [-f
+.I input-file-name
+.B ]
+.B [ -c 
+.I cost-function-name
+.B ] ...
+.SH DESCRIPTION
+.B featsel
+receives a set
+.B S 
+of objects, values associated with each 
+of them, a cost function 
+.B c
+with subsets of S as domain
+and real numbers as image, and searches for a subset 
+X in S such as c(X) is minimum (i.e., there are no 
+Y in S, such as c(Y) < c(X)). 
+The minima subsets found are printed into the standard
+output.
+
+.SH OPTIONS
+.IP "-a algorithm-name"
+Selects the
+.I algorithm-name
+as the algorithm used in the search. The default value is 
+.I ubb
+(U-curve Branch and Bound); other valid names are
+.I sffs
+(Sequential Forward Floating Selection),
+.I sfs
+(Sequential Forward Selection), and
+.I es
+(Exhaustive Search).
+.IP "-c cost-function-name"
+Selects the
+.I cost-function-name
+as the cost function of the search. The default value is 
+.I subset_sum;
+(polynomial reduction from the subset sum problem); other valid names are 
+.I hamming_distance,
+(the Hamming distance),
+.I mce 
+(Mean Conditional Entropy),
+.I explicit 
+(cost function values explicitly defined from file).
+.IP "-f input-file-name"
+Uses as instance either a XML or a DAT file 
+.I input-file-name,
+containing the elements of the set, their names and values.
+.IP -h
+Displays this help screen.
+.IP "-m number-of-minima"
+The number of minima to be showed in the standard output. It
+should be and integer grater than zero, and the default value
+is 1.
+.IP "-n number-of-elements"
+If the option -f is not used, creates a random set with
+.I number-of-elements
+elements with a single value. It should be an integer
+greater than zero. The default value is 3.
+.IP "-r range"
+If the option -f is not used, creates the elements of
+the random set with a single value greater or equal than
+zero and less than
+.I range.
+The default value is 1000.
+.IP -s
+Stores all the visited subsets into the file called
+.I visited.log
+.IP "-t max-number-of-calls-of-cost-function"
+Set a
+.I max-number-of-calls-of-cost-function,
+a threshold value to end the execution if the cost function is computed
+that number of times. 
+
+.SH FILES
+.I etc/featsel.conf
+.RS
+The program configuration file (not implemented yet).
+.RE
+.I etc/costfunc.conf
+.RS
+Configuration of the cost function lexical/syntactic analyzer (not implemented yet).
+.SH ENVIRONMENT
+.IP PATH
+May be useful to add the full pathname of the directory where the featsel binary
+is located. The configuration files must be at the same directory of the binary.
+.SH DIAGNOSTICS
+The following diagnostics may be issued on stderr:
+.RE
+Bad magic number.
+.RS
+The input file does not look like a XML file.
+.RE
+Bad cost.
+.RS
+.B "cost-function-name"
+given is not a valid one.
+.SH BUGS
+XML parsing should be improved.
+.SH AUTHOR
+Marcelo S. Reis < marcelo.reis at butantan dot gov dot br>
+.SH "SEE ALSO"
+.BR featsel (1)

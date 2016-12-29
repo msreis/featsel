@@ -1,0 +1,4 @@
+            explicit             Explicit                  xml
+                 mce MeanConditionalEntropy                  dat
+    hamming_distance      HammingDistance                  xml
+          subset_sum            SubsetSum                  xml

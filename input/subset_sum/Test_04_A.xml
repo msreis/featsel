@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Test_subset_sum_3_A </SetName>
+  <SetValue> 43203.25 </SetValue>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 4 </NumberOfElements>
+  <Element>
+    <name>e1</name>
+    <value> 99348  </value>
+  </Element>  <Element>
+    <name>e2</name>
+    <value> 27826  </value>
+  </Element>  <Element>
+    <name>e3</name>
+    <value> 17559  </value>
+  </Element>  <Element>
+    <name>e4</name>
+    <value> 28080  </value>
+  </Element>
+</ElementSet>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Test_hamming_distance_3 </SetName>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 3 </NumberOfElements>
+  <Element>
+    <name> x00 </name>
+    <value> 1 </value>
+  </Element>
+  <Element>
+    <name> x01 </name>
+    <value>  0  </value>
+  </Element>
+  <Element>
+    <name> x02 </name>
+    <value> 1 </value>
+  </Element>
+</ElementSet>
+

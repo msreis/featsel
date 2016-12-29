@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> ElementSetTest_3 </SetName>
+  <MaxNumberOfElementValues> 3 </MaxNumberOfElementValues>
+  <NumberOfElements> 3 </NumberOfElements>
+  <Element>
+    <name> x00 </name>
+    <value> 1 </value>
+    <value>20</value>
+    <value>-7</value>
+  </Element>
+  <Element>
+    <name> x01</name>
+    <value>100</value>
+    <value>-2</value>
+    <value>-200</value>
+  </Element>
+  <Element>
+    <name> x02 </name>
+    <value> 3 </value>
+    <value> 4 </value>
+    <value> 50 </value>
+  </Element>
+</ElementSet>

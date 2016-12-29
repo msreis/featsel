@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+
+  <SetName> Test_explicit_function_A </SetName>
+
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+
+  <NumberOfElements> 3 </NumberOfElements>
+  
+  <Element><name>x00</name>
+    <value>1</value>
+  </Element><Element>
+    <name>x01</name>
+    <value>2</value>
+  </Element>
+  <Element>
+    <name>x02</name>
+    <value>3</value>
+  </Element>
+  
+  <Cost>
+    <name>_000</name>
+    <value>5.0</value>
+  </Cost>
+  <Cost>
+    <name>_100</name>
+    <value>4.0</value>
+  </Cost>
+  <Cost>
+    <name>_010</name>
+    <value>3.0</value>
+  </Cost>
+  <Cost>
+    <name>_001</name>
+    <value>3.0</value>
+  </Cost>
+  <Cost>
+    <name>_110</name>
+    <value>2.0</value>
+  </Cost>
+  <Cost>
+    <name>_101</name>
+    <value>1.0</value>
+  </Cost>
+  <Cost>
+    <name>_011</name>
+    <value>2.0</value>
+  </Cost>
+  <Cost>
+    <name>_111</name>
+    <value>7.0</value>
+  </Cost>
+  
+</ElementSet>
+

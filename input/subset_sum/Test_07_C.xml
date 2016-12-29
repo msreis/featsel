@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName>RANDOM_SUBSET_SUM_100000</SetName>
+  <SetValue> 25771.857142857 </SetValue>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 7 </NumberOfElements>
+  <Element>
+    <name>e1</name>
+    <value> 70160  </value>
+  </Element>  <Element>
+    <name>e2</name>
+    <value> 48856  </value>
+  </Element>  <Element>
+    <name>e3</name>
+    <value> 26612  </value>
+  </Element>  <Element>
+    <name>e4</name>
+    <value> 11513  </value>
+  </Element>  <Element>
+    <name>e5</name>
+    <value> 7243  </value>
+  </Element>  <Element>
+    <name>e6</name>
+    <value> 8369  </value>
+  </Element>  <Element>
+    <name>e7</name>
+    <value> 7650  </value>
+  </Element>
+</ElementSet>

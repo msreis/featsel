@@ -1,0 +1,383 @@
+#!/usr/bin/perl -w 
+
+#
+# add_new_cost_function.pl : program to add a new cost function into the featsel
+#                            framework; it includes a new class, its respective
+#                            test namespace and modifications in featsel.cpp,
+#                            featselTest.cpp and in the Makefile.
+#
+#    This file is part of the featsel program
+#    Copyright (C) 2016  Marcelo S. Reis
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use strict;
+
+my $date_string = localtime ();
+
+# List of classes and files, whose names are reserved for the main program.
+#
+my @reserved_names = ("Collection", "CostFunction", "Element", "ElementSet",
+                      "ElementSubset", "featsel", "global", "Solver", 
+                      "DatParserDriver", "XmlParserDriver", "XmlParser",
+                      "XmlScanner");
+
+#------------------------------------------------------------------------------#
+
+# Process the program arguments
+#
+(@ARGV != 3) and 
+  die "Syntax: $0  code  class_name  file_type\n";
+
+my $code;
+($ARGV[0] =~ /(^\w+$)/) and $code = $1 or
+  die "Error: cost function code must be alphanumeric!\n";
+
+my $class_name;
+($ARGV[1] =~ /(^\w+$)/) and $class_name = $1 or
+  die "Error: cost function class name must be alphanumeric!\n";
+
+my $file_type;
+(($ARGV[2] eq "dat") or ($ARGV[2] eq "xml")) and $file_type = $ARGV[2] or
+  die "Error: cost function file type must be either dat or xml!\n";
+
+#------------------------------------------------------------------------------#
+
+# Before we start, we check whether the user selected a name which is already
+# reserved for a main system class and/or file.
+#
+foreach my $name (@reserved_names)
+{
+  if (($class_name eq $name) || ($class_name eq ($name . "Test")))
+  {
+    die "\nName '$class_name' is already reserved for a main program file!\n\n";
+  }
+}
+
+#------------------------------------------------------------------------------#
+
+# First, we load the list of cost functions and algorithms, in order to avoid 
+# to try to create a class that already exists.
+#
+
+print "Loading the lists of algorithms and cost functions...";
+
+my $list_of_cost_functions_file = "ListOfCostFunctions.txt";
+my $list_of_algorithms_file     = "ListOfAlgorithms.txt";
+
+open (LIST, $list_of_cost_functions_file) or 
+  die "Error: could not open $list_of_cost_functions_file for reading!\n";
+
+my @list_of_function_codes;
+my @list_of_function_class_names;
+my @list_of_function_file_types;
+
+while (<LIST>)
+{
+  chomp $_;
+  # $1 == code, $2 == class name, $3 == file type
+  #
+  if ($_ =~ /^\s*(\w+)\s+(\w+)\s+(\w+)\s*$/) 
+  {
+    $code eq $1 and die "Code $1 is already used by a cost function!\n";
+    $class_name eq $2 and 
+      die "Class name $2 is already used by a cost function!\n";
+  
+    push @list_of_function_codes, $1;
+    push @list_of_function_class_names, $2; 
+    push @list_of_function_file_types, $3; 
+  }
+  elsif ($_ =~ /^\s*$/)
+  {
+    # Blank line; do nothing.
+  }
+  else
+  {
+    die "Error: could not parse line of $list_of_cost_functions_file!\n";
+  }
+}
+
+close (LIST);
+
+open (LIST, $list_of_algorithms_file) or 
+  die "Error: could not open $list_of_algorithms_file for reading!\n";
+
+my @list_of_algorithm_codes;
+my @list_of_algorithm_class_names;
+
+while (<LIST>)
+{
+  chomp $_;
+  if ($_ =~ /^\s*(\w+)\s+(\w+)\s*$/) # $1 == code, $2 == class name
+  {  
+    $code eq $1 and die "Code $1 is already used by an algorithm!\n";
+    $class_name eq $2 and
+      die "Class name $2 is already used by an algorithm!\n";
+
+    push @list_of_algorithm_codes, $1;
+    push @list_of_algorithm_class_names, $2; 
+  }
+  elsif ($_ =~ /^\s*$/)
+  {
+    # Blank line; do nothing.
+  }
+  else
+  {
+    die "Error: could not parse line of $list_of_algorithms_file!\n";
+  }
+}
+
+close (LIST);
+
+print " [done]\n";
+
+#------------------------------------------------------------------------------#
+
+# Creating the new class header and implementation files.
+#
+
+print "Creating the new class header and implementation files...";
+
+open (TEMPLATE, "src/functions/TemplateCostFunction.th") or
+  die "Error: could not open cost function header template file!\n";
+open (OUT, ">src/functions/$class_name.h") or
+  die "Error: could not open cost function header output file!\n";
+
+printf OUT "// $class_name.h automatically generated by $0\n" .
+           "// in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  $_ =~ s/\%template\%/$class_name/g;
+  my $uc_class_name = uc $class_name;
+  $_ =~ s/\%TEMPLATE\%/$uc_class_name/g;
+  print OUT $_;
+}
+
+close (TEMPLATE);
+close (OUT);
+
+open (TEMPLATE, "src/functions/TemplateCostFunction.tpp") or
+  die "Error: could not open cost function implementation template file!\n";
+open (OUT, ">src/functions/$class_name.cpp") or
+  die "Error: could not open cost function implementation output file!\n";
+
+printf OUT "// $class_name.cpp automatically generated by $0\n" .
+           "// in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  $_ =~ s/\%template\%/$class_name/g;
+  my $uc_class_name = uc $class_name;
+  $_ =~ s/\%TEMPLATE\%/$uc_class_name/g;
+  print OUT $_;
+}
+
+close (TEMPLATE);
+close (OUT);
+
+print " [done]\n";
+
+#------------------------------------------------------------------------------#
+
+# Creating the new class test header and implementation files.
+#
+
+print "Creating the new class test header and implementation files...";
+
+my $class_name_test = $class_name . "Test";
+
+open (TEMPLATE, "test/functions/TemplateCostFunctionTest.th") or
+  die "Error: could not open cost function test header template file!\n";
+open (OUT, ">test/functions/$class_name_test.h") or
+  die "Error: could not open cost functiont test header output file!\n";
+
+printf OUT "// $class_name_test.h automatically generated by $0\n" .
+           "// in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  $_ =~ s/\%template_class\%/$class_name/g;
+  $_ =~ s/\%template_test\%/$class_name_test/g;
+  my $uc_class_name_test = uc $class_name_test;
+  $_ =~ s/\%TEMPLATE_TEST\%/$uc_class_name_test/g;
+  print OUT $_;
+}
+
+close (TEMPLATE);
+close (OUT);
+
+open (TEMPLATE, "test/functions/TemplateCostFunctionTest.tpp") or
+ die "Error: could not open cost function test implementation template file!\n";
+open (OUT, ">test/functions/$class_name_test.cpp") or
+  die "Error: could not open cost function test implementation output file!\n";
+
+printf OUT "// $class_name_test.cpp automatically generated by $0\n" .
+           "// in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  $_ =~ s/\%template_class\%/$class_name/g;
+  $_ =~ s/\%template_test\%/$class_name_test/g;
+  my $uc_class_name_test = uc $class_name_test;
+  $_ =~ s/\%TEMPLATE_TEST\%/$uc_class_name_test/g;
+  print OUT $_;
+}
+
+close (TEMPLATE);
+close (OUT);
+
+print " [done]\n";
+
+#------------------------------------------------------------------------------#
+
+# Code and class name are ok, and their respective classes were created
+# successfully! Therefore, now we update the list of cost functions file.
+#
+
+print "Updating the lists of algorithms and cost functions...";
+
+push @list_of_function_codes, $code;
+push @list_of_function_class_names, $class_name;
+push @list_of_function_file_types, $file_type;
+
+open (LIST, ">$list_of_cost_functions_file") or
+  die "Error: could not open $list_of_cost_functions_file for writing!\n";
+
+foreach my $index (0..$#list_of_function_codes)
+{
+  printf LIST "%20s %20s %20s\n", $list_of_function_codes[$index], 
+                            $list_of_function_class_names[$index],
+                             $list_of_function_file_types[$index];
+}
+
+close (LIST);
+
+print " [done]\n";
+
+#------------------------------------------------------------------------------#
+
+print "Creating new '$file_type' lib file...";
+
+my $lib_file = "lib/" . $class_name . ".pm";
+
+my $template = "lib/CostFunction" . (uc $file_type) . ".tpm";
+
+open (LIB, ">$lib_file") or
+  die "Error: could not open $lib_file for writing!\n";
+
+open (TEMPLATE, "$template") or
+  die "Error: could not open $template for reading!\n";
+
+printf LIB "# $class_name.pm automatically generated by $0\n" .
+           "# in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  if ($_ =~ /^(.*)\%name\%(.*)$/)
+  {
+    print LIB $1 . $class_name . $2 . "\n";
+  }
+  elsif ($_ =~ /^(.*)\%code\%(.*)$/)
+  {
+    print LIB $1 . $code . $2 . "\n";
+  }
+  else
+  {
+    print LIB $_;
+  }
+}
+
+close (LIB);
+close (TEMPLATE);
+
+print " [done]\n";
+
+
+#------------------------------------------------------------------------------#
+
+# Finally, we create a new up-to-date Makefile and update main files.
+#
+
+print "Updating Makefile file...";
+
+open (TEMPLATE, "Makefile.tpl") or
+  die "Error: could not open Makefile template file!\n";
+open (OUT, ">Makefile") or
+  die "Error: could not open Makefile output file!\n";
+
+printf OUT "# Makefile automatically generated by $0\n" .
+           "# in $date_string.\n\n";
+
+while (<TEMPLATE>)
+{
+  if ($_ =~ /\%template_class\%/)
+  {
+    foreach my $index (0..$#list_of_function_codes)
+    {
+      printf OUT "      src/functions/%s.o \\\n",
+      $list_of_function_class_names[$index];
+    }
+    foreach my $index (0..$#list_of_algorithm_codes)
+    {
+      printf OUT "      src/algorithms/%s.o \\\n",
+      $list_of_algorithm_class_names[$index];
+    }
+  }
+  elsif ($_ =~ /\%template_test\%/)
+  {
+    foreach my $index (0..$#list_of_function_codes)
+    {
+      printf OUT "      test/functions/%s" . "Test.o \\\n",
+        $list_of_function_class_names[$index];
+    }
+    foreach my $index (0..$#list_of_algorithm_codes)
+    {
+      printf OUT "      test/algorithms/%s" . "Test.o \\\n",
+        $list_of_algorithm_class_names[$index];
+    }
+  }
+  else
+  {
+    print OUT $_;
+  }
+}
+
+close (TEMPLATE);
+close (OUT);
+
+print " [done]\n";
+
+print "Updating main, test and benchmarking files...";
+
+system ("bin/build_featsel_main_file.pl");
+system ("bin/build_featselTest_main_file.pl");
+system ("bin/build_benchmarking_file.pl");
+
+system ("make clean 1> /dev/null");
+system ("make 1> /dev/null");
+
+
+print " [done]\n";
+
+#------------------------------------------------------------------------------#
+
+# End of execution.
+#
+
+print "End of execution.\n";
+
+exit 0;   
+

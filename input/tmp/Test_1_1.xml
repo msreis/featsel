@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Test </SetName>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 1 </NumberOfElements>
+  <Element><name>x01</name>
+    <value>1</value>
+  </Element>
+</ElementSet>
+

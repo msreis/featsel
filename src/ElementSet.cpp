@@ -125,6 +125,7 @@ ElementSet::ElementSet (string set_name, unsigned int n, unsigned int range)
   std::ostringstream stm;
   has_extra_element = false;
   number_of_elements = n;
+  value = 0;
 
   if (set_name.length () > 0)
     name = set_name;

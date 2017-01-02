@@ -329,7 +329,7 @@ Try to type:
 
 $> perl bin/run_benchmarking.pl test 0 subset_sum 10 7 0
 
-With this command, it should generate a HTML table which contains, for each
+With this command, it should generate an HTML table which contains, for each
 subset sum instance of size i in [1,7] and for each algorithm j, the average
 results of 10 runs for:
 
@@ -361,9 +361,9 @@ Try to type:
 
 $> perl bin/run_benchmarking.pl test 1 mce 3 4 0
 
-In this example, we assume that there are at least, for each instance size of 
-sizes between 1 and 4, at least 3 Mean Conditional Entropy (mce) instances
-in .dat format.
+In this example, we assume that there are, for each instance size between 1 and
+4, at least 3 Mean Conditional Entropy (mce) instances in .dat format insde the
+input/tmp directory.
 
 
 (4.3.3) EXAMPLE 3: running a suboptimal search with Explicit instances created
@@ -384,7 +384,7 @@ compute the cost function up to 100 times and then end its execution.
 
 --------------------------------------------------------------------------------
 
-  (5.1) INCLUDING A NEW ALGORITHM
+(5.1) INCLUDING A NEW ALGORITHM
 
 To include a new algorithm, type:
 
@@ -401,8 +401,8 @@ If the user try to add an algorithm whose name is already used by either
 another algorithm, a cost function, or other main program class and/or file, 
 the "add_new_algorithm.pl" program will return an error message.
 
-If the user successfuly include a new algorithm, say X, then it will be
-created the following files:
+If the user successfuly include a new algorithm, say X, then the following 
+files will be created:
 
 |---\src\
 |   |---\algorithms\
@@ -420,7 +420,7 @@ run "make" and "make test" in order to have her/his new algorithm available.
 
 --------------------------------------------------------------------------------
 
-  (5.2) INCLUDING A NEW COST FUNCTION
+(5.2) INCLUDING A NEW COST FUNCTION
 
 To include a new cost function, type:
 
@@ -440,8 +440,8 @@ If the user try to add a cost function whose name is already used by either
 another cost function, an algorithm or other main program class and/or file, 
 the "add_new_cost_function.pl" program will return an error message.
 
-If the user successfuly include a new cost function, say Y, then it will be
-created the following files:
+If the user successfuly include a new cost function, say Y, then the following
+files will be created:
 
 |---\lib\
 |   |---\Y.m
@@ -463,9 +463,9 @@ run "make" and "make test" in order to have her/his new cost function available.
 It is noteworthy to remark that once a new cost function is included, then it
 can be used straightforwardly in the benchmarking program if the user put 
 manually them into the "/input/tmp" directory. However, to generate random
-instances of the newly included cost function, then the user must edit a 
-subroutine to this end within the file "/lib/Y.m"; the subroutine itself will be
-named as "sub random_y_instance", where "y" is the code of the cost function Y.
+instances of the newly included cost function, the user must edit a subroutine
+to this end within the file "/lib/Y.m"; the subroutine itself will be named as
+"sub random_y_instance", where "y" is the code of the cost function Y.
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

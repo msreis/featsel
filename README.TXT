@@ -298,8 +298,8 @@ standard output.
 
 The syntax of benchmarking auxiliary program is:
 
-$> perl bin/run_benchmarking.pl  OUTPUT_FILE_PREFIX   COST_FUNCTION_CODE
-                INSTANCE_MODE  k  n   SEARCH_MODE  [max_number_of_calls]
+$> perl bin/run_benchmarking.pl  OUTPUT_FILE_PREFIX  INSTANCE_MODE
+     COST_FUNCTION_CODE  k  n   SEARCH_MODE  [max_number_of_calls]
 
 Where:
 

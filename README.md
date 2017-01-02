@@ -1,5 +1,5 @@
 #featsel
-A flexible feat
+A flexible feature selection program. This program  receives  a  set  S of objects, values associated with each of them, a cost function c with subsets of S as domain and real numbers as image,  and searches for a subset X in S such as c(X) is minimum (i.e., there are no Y in S, such as c(Y) < c(X)).  The  minima  subsets  found are printed into the standard output.
 
 ## Requirements
 These requirements are mandatory:

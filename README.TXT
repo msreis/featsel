@@ -133,21 +133,21 @@ These requirements are mandatory:
 
 * the "make" command or equivalent;
 
-* A C++ compiler (GNU g++ or equivalent), with the standard libraries.
+* a C++ compiler (GNU g++ or equivalent), with the standard libraries.
 
 
 Additionally, the following dependencies are recommended:
 
-* GNU Bison 2.4.1 or higher, required to update the XML parser.
+* GNU Bison 2.4.1 or higher, required to update the XML parser;
 
-* Flex 2.5 or higher, also required to update the XML parser.
+* Flex 2.5 or higher, also required to update the XML parser;
 
 * Perl 5 interpreter version 17 or higher, which is required to: 
      - recompile 'featsel.cpp' and 'featselTest.cpp' files;
      - add and remove algorithms and cost functions;
      - run the benchmarking program.
 
-* Gnuplot to generate performance graphs using the benchmarking program.
+* Gnuplot to generate performance graphs using the benchmarking program;
 
 * GNU groff to update a help man page.
 
@@ -180,7 +180,7 @@ After the modifications in the XML parser files, type:
 
 $> make bison
 
-And then:
+and then:
 
 $> make flex
 
@@ -319,7 +319,8 @@ Where:
     'max_number_of_calls' calls of the cost function.
 
 
-In the following, we show two examples with different usage of the syntax.
+In the following sections, we show two examples with different usage of the
+syntax.
 
 
 (4.3.1) EXAMPLE 1: running optimal search with subset sum instances created

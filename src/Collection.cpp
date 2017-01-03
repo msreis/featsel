@@ -178,15 +178,16 @@ unsigned int Collection::remove_covered_subsets
 {
   unsigned int number_of_removed_subsets = 0;
   map<string, ElementSubset *>::iterator it;
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = my_map.begin (); it != my_map.end ();)
   {
     if ( ( ( lower_cover) && (X->contains (it->second)) ) ||
          ( (!lower_cover) && (X->is_contained_by (it->second)) ) )
     {
       delete it->second;
-      my_map.erase (it);
+      my_map.erase (it++);
       number_of_removed_subsets++;
     }
+    else it++;
   }
   return number_of_removed_subsets;
 }

@@ -21,7 +21,7 @@ Additionally, the following dependencies are recommended:
 ## How to Compile
 ### The Main Program And the Unit Tests
 After unzip this package, just open a terminal and type, inside the directory
-were it was unzipped:
+where it was unzipped:
 
 ```
 > make

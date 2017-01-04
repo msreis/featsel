@@ -83,14 +83,14 @@ ElementSet::ElementSet (string a_set_name, string file_name)
 }
 
 
-// Load .dat files, in order to perform W-operator feature selection
+// Load .dat files, in order to perform morphological operator design.
 //
 ElementSet::ElementSet (string file_name, unsigned int n)
 {
   DatParserDriver * driver = new DatParserDriver ();  
 
   has_extra_element = true;
-  name = "W-operator window";
+  name = "Morphological operator design";
   number_of_elements = n;
   value = 0;
   
@@ -100,9 +100,9 @@ ElementSet::ElementSet (string file_name, unsigned int n)
   }
   else
   {
-    list_of_elements = new Element * [number_of_elements + 2];
+    list_of_elements = new Element * [number_of_elements + NUMBER_OF_LABELS];
 
-    for (unsigned int i = 0; i < number_of_elements + 2; i++)
+    for (unsigned int i = 0; i < (number_of_elements + NUMBER_OF_LABELS); i++)
     {
       unsigned int max = 
         driver->list_of_elements[i]->get_number_of_values ();
@@ -166,11 +166,12 @@ ElementSet::~ElementSet ()
   {
     delete list_of_elements[i];
   }
-
   if (has_extra_element)
   {
-    delete list_of_elements [number_of_elements];
-    delete list_of_elements [number_of_elements + 1]; // 2 labels in W-operator
+    for (i = 0; i < NUMBER_OF_LABELS; i++)
+    {
+      delete list_of_elements [number_of_elements + i];
+    }
   }
 
   if (list_of_elements != NULL)
@@ -197,7 +198,10 @@ unsigned int ElementSet::get_set_cardinality ()
 
 Element * ElementSet::get_element (unsigned int index)
 {
-  if ((has_extra_element && (index <= (number_of_elements + 1)) ) ||
+  if ((has_extra_element 
+        && 
+      (index < (number_of_elements + NUMBER_OF_LABELS)) )
+      ||
       (index < number_of_elements))
     return list_of_elements[index];
   else
@@ -230,7 +234,7 @@ void ElementSet::permute_set ()
   unsigned int i, j, n;
   Element * * uniform_permutation, * k;
 
-  n = number_of_elements + 1; // the extra element is used in MCE estimation
+  n = number_of_elements;
 
   uniform_permutation = new (nothrow) Element * [n];
   if (uniform_permutation == NULL)

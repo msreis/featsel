@@ -129,7 +129,7 @@ float MeanConditionalEntropy::calculate_conditional_entropy (ElementSubset * x)
                         x->cost; // cost stores the sum of Y[i..k]
     if (Pr_Y_is_y_given_x > 0)
       H_of_Y_given_x -= Pr_Y_is_y_given_x *
-      (log(Pr_Y_is_y_given_x) / log((float) NUMBER_OF_LABELS));
+      (log (Pr_Y_is_y_given_x) / log ((float) NUMBER_OF_LABELS));
   }
 
   return H_of_Y_given_x;
@@ -168,6 +168,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
       B->copy (& A);
       B->Y = new (nothrow) unsigned int [NUMBER_OF_LABELS];
       B->cost = 0;
+   
       for (k = 0; k < NUMBER_OF_LABELS; k++)
       {
         B->Y[k] = set->get_element
@@ -175,6 +176,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
         B->cost += B->Y[k];
       }
       samples.insert (pair<string, ElementSubset *> (B->print_subset (), B));
+
     }
 
     // Increment the occurrence of X

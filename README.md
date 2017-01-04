@@ -1,5 +1,5 @@
 #featsel
-A flexible feature selection program. This program  receives  a  set  S of objects, values associated with each of them, a cost function c with subsets of S as domain and real numbers as image,  and searches for a subset X in S such as c(X) is minimum (i.e., there are no Y in S, such as c(Y) < c(X)).  The  minima  subsets  found are printed into the standard output.
+A framework for benchmarking of feature selection algorithms and cost functions.
 
 ## Requirements
 These requirements are mandatory:
@@ -146,7 +146,7 @@ To run the test program, make test and type:
 It should run all the tests automatically, displaying the results into the
 standard output.
 
-### Runnig the Benchmarking Program
+### Running the Benchmarking Program
 The syntax of benchmarking auxiliary program is:
 
 ```
@@ -247,7 +247,7 @@ If the user successfuly include a new algorithm, say X, then the following files
 |       |---\XTest.h
 ```
 
-Besides, the "Makefile", "featsel.cpp", and "featselTest.cpp" will be properly updated. The user must just edit the files in the directory tree above and run "make" and "make test" in order to have her/his new algorithm available.
+Besides, the "Makefile", "featsel.cpp", and "featselTest.cpp" will be properly updated. The user must just edit the files in the directory tree above and run "make" and "make test" in order to have her/his new algorithm functionally available.
 
 
 ### Including a New Cost Function
@@ -268,7 +268,7 @@ Where:
 
 If the user try to add a cost function whose name is already used by either another cost function, an algorithm or other main program class and/or file, the "add_new_cost_function.pl" program will return an error message.
 
-If the user successfuly include a new cost function, say Y, then the following files will be created:
+If the user successfully include a new cost function, say Y, then the following files will be created:
 
 ```
 |---\lib\
@@ -285,9 +285,36 @@ If the user successfuly include a new cost function, say Y, then the following f
 |       |---\YTest.h
 ```
 
-Besides, the "Makefile", "featsel.cpp", and "featselTest.cpp" will be properly updated. The user must just edit the files in the directory tree above and run "make" and "make test" in order to have her/his new cost function available.
+Besides, the "Makefile", "featsel.cpp", and "featselTest.cpp" will be properly updated. The user must just edit the files in the directory tree above and run "make" and "make test" in order to have her/his new cost function functionally available.
 
 It is noteworthy to remark that once a new cost function is included, then it can be used straightforwardly in the benchmarking program if the user put manually them into the "/input/tmp" directory. However, to generate random instances of the newly included cost function, the user must edit a subroutine to this end within the file "/lib/Y.m"; the subroutine itself will be named as "sub random_y_instance", where "y" is the code of the cost function Y.
+
+### Removing an algorithm
+
+To remove an algorithm, type:
+
+```
+> perl bin/remove_algorithm.pl code ClassName
+```
+
+Where:
+- ```code```: the algorithm code.
+
+- ```ClassName```: name of the algorithm class.
+
+
+### Removing a cost function
+
+To remove a cost function, type:
+
+```
+> perl bin/remove_cost_function.pl code ClassName
+```
+Where:
+
+- ```code```: the cost function code.
+
+- ```ClassName```: name of the cost function class.
 
 
 ## Bug Report and Contact:

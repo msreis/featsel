@@ -409,7 +409,7 @@ my %experiment;
 
 foreach my $file (sort @instance_file)
 {
-  if ($file =~ /Test_0+(\d+)_\w+/)
+  if ($file =~ /Test_(\d+)_\w+/)
   {
     push @{$experiment{$1}}, $file;
   }

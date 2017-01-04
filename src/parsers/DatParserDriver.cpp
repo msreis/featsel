@@ -34,7 +34,7 @@ DatParserDriver::~DatParserDriver ()
 {
   if (list_of_elements != NULL)
   {
-    for (int i = 0; i < number_of_elements + 2; i++)
+    for (int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
       delete list_of_elements[i];
     delete [] list_of_elements;
   }
@@ -42,14 +42,15 @@ DatParserDriver::~DatParserDriver ()
 
 int DatParserDriver::parse (unsigned int n, string f)
 {
-  // Example of a line of a .dat file with two subsets of a set of 5 elements:
+  // Example of a line of a .dat file with two subsets of a set of 5 elements
+  // and three labels:
   //
-  // 0 1 1 0 1 11 27\n
-  // 1 0 0 1 0  7 320\n
+  // 0 1 1 0 1 11 27 1212\n
+  // 1 0 0 1 0  7 320  0\n
   //
   // For each row, the first five digits are the characteristic vector of the 
-  // subset, and the last two numbers are the number of occurrences of the 
-  // labels "0" and "1" to the respective subset.
+  // subset, and the last three numbers are the number of occurrences of the 
+  // labels "0", "1" and "2" to the respective subset.
   //
   unsigned int i, current_value;
   long begin, end;
@@ -65,11 +66,13 @@ int DatParserDriver::parse (unsigned int n, string f)
   // A conservative estimation, since the values of the last two numbers
   // often have more than 2 digits.
   //
-  max_number_of_values = (end - begin) / (2 * (number_of_elements + 2));
+  max_number_of_values = (end - begin) / 
+                         (2 * (number_of_elements + NUMBER_OF_LABELS));
 
-  // The extra positions are to store the classification for a given subset
+  // The extra positions are to store the classification for a given subset,
+  // which requires one index per label.
   //
-  list_of_elements = new Element * [number_of_elements + 2];
+  list_of_elements = new Element * [number_of_elements + NUMBER_OF_LABELS];
   if (list_of_elements == 0)
   {
     cout << "Error in ElementSet: could not allocate memory for " <<
@@ -77,7 +80,7 @@ int DatParserDriver::parse (unsigned int n, string f)
     return 1; 
   }
 
-  for (i = 0; i < number_of_elements + 2; i++)
+  for (i = 0; i < (number_of_elements + NUMBER_OF_LABELS); i++)
     list_of_elements [i] = new Element (max_number_of_values, "");
 
   i = 0;
@@ -85,7 +88,7 @@ int DatParserDriver::parse (unsigned int n, string f)
   {
     list_of_elements [i]->add_element_value (current_value);
     i++;
-    if (i == (number_of_elements + 2))
+    if (i == (number_of_elements + NUMBER_OF_LABELS))
       i = 0;
   }
   my_file.close ();

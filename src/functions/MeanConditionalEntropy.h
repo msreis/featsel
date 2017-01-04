@@ -22,11 +22,6 @@
 #define MEAN_CONDITIONAL_ENTROPY_H_
 
 
-// Binary classifier (W-operator)
-//
-#define NUMBER_OF_LABELS 2
-
-
 #include "../global.h"
 #include "../ElementSet.h"
 #include "../ElementSubset.h"

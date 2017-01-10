@@ -409,7 +409,7 @@ my %experiment;
 
 foreach my $file (sort @instance_file)
 {
-  if ($file =~ /Test_(\d+)_\w+/)
+  if ($file =~ /Test_0*(\d+)_\w+/)
   {
     push @{$experiment{$1}}, $file;
   }
@@ -427,6 +427,7 @@ foreach my $file (sort @instance_file)
 #
 my %total_time;
 my %cost_function_time;
+my %cost_function_calls;
 my $max_number_of_calls = " ";
 
 # This variable stores the maximum required time among all algoritms; this is
@@ -459,8 +460,8 @@ foreach my $i (1..$maximum_instance_size)
     $number_of_times_that_has_a_best_solution[$j] = 0;
   }
 
-  # If the search mode is the heuristic mode one, then the procedure is
-  # carried out in two steps. In the first one
+  # If the search mode is one, then the procedure has an upper limit
+  # for the number of calls of the cost function.
   #
   if ($search_mode == 1)
   {
@@ -531,6 +532,9 @@ foreach my $i (1..$maximum_instance_size)
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
     $average_calls_of_cost_function[$j] /= $number_of_instances_per_size;	 
+
+    $cost_function_calls{$algorithms[$j]}->[$i] = 
+      $average_calls_of_cost_function[$j];      
 
     $average_time_of_cost_function[$j] /= 
       ($number_of_instances_per_size * 1000000); # convert to seconds
@@ -648,40 +652,31 @@ sub print_time_graphs
   foreach my $algo (@algorithms)
   {
     open (DATA, ">$GNUPLOT_DATA_FILE");
-    if ($instance_mode == 0)
+
+    for (my $i = 1; $i <= $maximum_instance_size; $i++)
     {
-      printf DATA "0 0 0\n";
-      for (my $i = 1; $i <= $maximum_instance_size; $i++)
-      {
-        printf DATA "$i %.4f %.4f\n", 
-          $cost_function_time{$algo}->[$i], $total_time{$algo}->[$i];
-      }
+      printf DATA "$i %.4f %.4f\n", $cost_function_calls{$algo}->[$i],
+                                    $total_time{$algo}->[$i];
     }
-    else
-    {
-      foreach my $i (1..$maximum_instance_size)
-      {
-        printf DATA "$i %.4f %.4f\n", $cost_function_time{$algo}->[$i],
-          $total_time{$algo}->[$i] - $cost_function_time{$algo}->[$i];
-      }
-      $maximum_instance_size = scalar keys %experiment;
-    }
+
     close (DATA);
 
-    my $Xaxis = 35 * $maximum_instance_size;
+    my $Xaxis = 75 * $maximum_instance_size;
+
+    my $grid_points = $maximum_instance_size * 3;
 
     open (PLOT, ">$GNUPLOT_PLOT_FILE");
-    printf PLOT "set terminal postscript\n";
-    printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.eps'\n";
-    printf PLOT "set key\n";
 
-    printf PLOT "set xlabel \"|S|\"\nset ylabel \"Time (seconds)\"\n";
+    printf PLOT "set terminal png enhanced crop size $Xaxis, $Xaxis\n";
+    printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.png'\n";
+    printf PLOT "unset key\n";
+    printf PLOT "set xlabel \"|S|\" rotate parallel\n";
+    printf PLOT "set ylabel \"Number of computed nodes\" rotate parallel\n";
+    printf PLOT "set zlabel \"Total time (seconds)\" rotate parallel\n";
     printf PLOT "unset colorbox\n";
-    printf PLOT "set style line 1 lt 2 lc rgb \"red\" lw 1\n";
-    printf PLOT "set style line 2 lt 2 lc rgb \"blue\" lw 2\n";
-    printf PLOT "plot \"$GNUPLOT_DATA_FILE\" using 2 t \"Cost Function\" " .
-        "with lines ls 1, '' using 3 t \"Control\" with lines ls 2\n";
-    close (PLOT);
+    printf PLOT "set dgrid3d $grid_points, $maximum_instance_size\n";
+    printf PLOT "set hidden3d\n";  
+    printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:3 with lines\n";
 
     # Execute Gnuplot.
     #
@@ -694,6 +689,7 @@ sub print_time_graphs
   }
   print "[done]\n";
 }
+
 
 #------------------------------------------------------------------------------#
 

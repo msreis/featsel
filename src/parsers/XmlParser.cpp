@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.0.4.
+// A Bison parser, made by GNU Bison 3.0.2.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015 Free Software Foundation, Inc.
+// Copyright (C) 2002-2013 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 
 // First part of user declarations.
 
-#line 37 "src/parsers/XmlParser.cpp" // lalr1.cc:404
+#line 37 "src/parsers/XmlParser.cpp" // lalr1.cc:399
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -47,15 +47,15 @@
 
 // User implementation prologue.
 
-#line 51 "src/parsers/XmlParser.cpp" // lalr1.cc:412
+#line 51 "src/parsers/XmlParser.cpp" // lalr1.cc:407
 // Unqualified %code blocks.
-#line 53 "src/parsers/XmlParser.yy" // lalr1.cc:413
+#line 53 "src/parsers/XmlParser.yy" // lalr1.cc:408
 
   #include "XmlParserDriver.h"
   std::stringstream out;
   pair <map <string, float>::iterator,bool> ret;
 
-#line 59 "src/parsers/XmlParser.cpp" // lalr1.cc:413
+#line 59 "src/parsers/XmlParser.cpp" // lalr1.cc:408
 
 
 #ifndef YY_
@@ -132,7 +132,7 @@
 #endif // !YYDEBUG
 
 #define yyerrok         (yyerrstatus_ = 0)
-#define yyclearin       (yyla.clear ())
+#define yyclearin       (yyempty = true)
 
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
@@ -141,7 +141,7 @@
 
 
 namespace yy {
-#line 145 "src/parsers/XmlParser.cpp" // lalr1.cc:479
+#line 145 "src/parsers/XmlParser.cpp" // lalr1.cc:474
 
   /* Return YYSTR after stripping away unnecessary quotes and
      backslashes, so that it's suitable for yyerror.  The heuristic is
@@ -245,23 +245,6 @@ namespace yy {
   inline
    XmlParser ::basic_symbol<Base>::~basic_symbol ()
   {
-    clear ();
-  }
-
-  template <typename Base>
-  inline
-  void
-   XmlParser ::basic_symbol<Base>::clear ()
-  {
-    Base::clear ();
-  }
-
-  template <typename Base>
-  inline
-  bool
-   XmlParser ::basic_symbol<Base>::empty () const
-  {
-    return Base::type_get () == empty_symbol;
   }
 
   template <typename Base>
@@ -277,7 +260,7 @@ namespace yy {
   // by_type.
   inline
    XmlParser ::by_type::by_type ()
-    : type (empty_symbol)
+     : type (empty)
   {}
 
   inline
@@ -292,17 +275,10 @@ namespace yy {
 
   inline
   void
-   XmlParser ::by_type::clear ()
-  {
-    type = empty_symbol;
-  }
-
-  inline
-  void
    XmlParser ::by_type::move (by_type& that)
   {
     type = that.type;
-    that.clear ();
+    that.type = empty;
   }
 
   inline
@@ -316,7 +292,7 @@ namespace yy {
   // by_state.
   inline
    XmlParser ::by_state::by_state ()
-    : state (empty_state)
+    : state (empty)
   {}
 
   inline
@@ -326,17 +302,10 @@ namespace yy {
 
   inline
   void
-   XmlParser ::by_state::clear ()
-  {
-    state = empty_state;
-  }
-
-  inline
-  void
    XmlParser ::by_state::move (by_state& that)
   {
     state = that.state;
-    that.clear ();
+    that.state = empty;
   }
 
   inline
@@ -348,10 +317,7 @@ namespace yy {
    XmlParser ::symbol_number_type
    XmlParser ::by_state::type_get () const
   {
-    if (state == empty_state)
-      return empty_symbol;
-    else
-      return yystos_[state];
+    return state == empty ? 0 : yystos_[state];
   }
 
   inline
@@ -365,7 +331,7 @@ namespace yy {
   {
     value = that.value;
     // that is emptied.
-    that.type = empty_symbol;
+    that.type = empty;
   }
 
   inline
@@ -392,9 +358,9 @@ namespace yy {
     {
             case 22: // "string value"
 
-#line 88 "src/parsers/XmlParser.yy" // lalr1.cc:614
+#line 88 "src/parsers/XmlParser.yy" // lalr1.cc:599
         { delete (yysym.value.sval); }
-#line 398 "src/parsers/XmlParser.cpp" // lalr1.cc:614
+#line 364 "src/parsers/XmlParser.cpp" // lalr1.cc:599
         break;
 
 
@@ -412,10 +378,6 @@ namespace yy {
     std::ostream& yyoutput = yyo;
     YYUSE (yyoutput);
     symbol_number_type yytype = yysym.type_get ();
-    // Avoid a (spurious) G++ 4.8 warning about "array subscript is
-    // below array bounds".
-    if (yysym.empty ())
-      std::abort ();
     yyo << (yytype < yyntokens_ ? "token" : "nterm")
         << ' ' << yytname_[yytype] << " ("
         << yysym.location << ": ";
@@ -423,163 +385,163 @@ namespace yy {
     {
             case 3: // "open ElementSet"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 429 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 391 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 4: // "close ElementSet"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 436 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 398 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 5: // "open SetName"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 443 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 405 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 6: // "close SetName"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 450 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 412 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 7: // "open SetValue"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 457 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 419 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 8: // "close SetValue"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 464 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 426 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 9: // "open NumberOfElements"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 471 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 433 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 10: // "close NumberOfElements"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 478 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 440 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 11: // "open MaxNumberOfElementValues"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 485 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 447 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 12: // "close MaxNumberOfElementValues"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 492 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 454 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 13: // "open Element"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 499 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 461 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 14: // "close Element"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 506 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 468 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 15: // "open Cost"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 513 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 475 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 16: // "close Cost"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 520 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 482 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 17: // "open name"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 527 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 489 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 18: // "close name"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 534 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 496 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 19: // "open value"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 541 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 503 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 20: // "close value"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 548 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 510 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 21: // "XML header"
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 555 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 517 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 22: // "string value"
 
-#line 87 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 87 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << *(yysym.value.sval); }
-#line 562 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 524 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 27: // set
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 569 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 531 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 28: // element
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 576 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 538 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
       case 30: // value
 
-#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:636
+#line 89 "src/parsers/XmlParser.yy" // lalr1.cc:617
         { debug_stream () << (yysym.value.sval); }
-#line 583 "src/parsers/XmlParser.cpp" // lalr1.cc:636
+#line 545 "src/parsers/XmlParser.cpp" // lalr1.cc:617
         break;
 
 
@@ -666,6 +628,9 @@ namespace yy {
   int
    XmlParser ::parse ()
   {
+    /// Whether yyla contains a lookahead.
+    bool yyempty = true;
+
     // State.
     int yyn;
     /// Length of the RHS of the rule being reduced.
@@ -692,13 +657,13 @@ namespace yy {
 
 
     // User initialization code.
-    #line 36 "src/parsers/XmlParser.yy" // lalr1.cc:741
+    #line 36 "src/parsers/XmlParser.yy" // lalr1.cc:725
 {
   // Initialize the initial location.
   yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
 }
 
-#line 702 "src/parsers/XmlParser.cpp" // lalr1.cc:741
+#line 667 "src/parsers/XmlParser.cpp" // lalr1.cc:725
 
     /* Initialize the stack.  The initial state will be set in
        yynewstate, since the latter expects the semantical and the
@@ -726,7 +691,7 @@ namespace yy {
       goto yydefault;
 
     // Read a lookahead token.
-    if (yyla.empty ())
+    if (yyempty)
       {
         YYCDEBUG << "Reading a token: ";
         try
@@ -738,6 +703,7 @@ namespace yy {
             error (yyexc);
             goto yyerrlab1;
           }
+        yyempty = false;
       }
     YY_SYMBOL_PRINT ("Next token is", yyla);
 
@@ -756,6 +722,9 @@ namespace yy {
         yyn = -yyn;
         goto yyreduce;
       }
+
+    // Discard the token being shifted.
+    yyempty = true;
 
     // Count tokens shifted since error; after three, turn off error status.
     if (yyerrstatus_)
@@ -806,32 +775,32 @@ namespace yy {
           switch (yyn)
             {
   case 9:
-#line 120 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 120 "src/parsers/XmlParser.yy" // lalr1.cc:847
     {
   driver.set_name = *(yystack_[1].value.sval);  
   delete (yystack_[1].value.sval); 
 }
-#line 815 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 784 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 10:
-#line 126 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 126 "src/parsers/XmlParser.yy" // lalr1.cc:847
     {
   driver.set_value = (yystack_[1].value.dval);  
 }
-#line 823 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 792 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 11:
-#line 131 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 131 "src/parsers/XmlParser.yy" // lalr1.cc:847
     {
   driver.set_value = (yystack_[1].value.ival);
 }
-#line 831 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 800 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 12:
-#line 137 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 137 "src/parsers/XmlParser.yy" // lalr1.cc:847
     {
   driver.number_of_elements = (yystack_[1].value.ival);
   driver.list_of_elements = new Element*[(yystack_[1].value.ival)];
@@ -839,19 +808,19 @@ namespace yy {
     std::cout << "Error: could not allocate memory for" << 
     " ElementSet elements!" << std::endl;
 }
-#line 843 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 812 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 13:
-#line 146 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 146 "src/parsers/XmlParser.yy" // lalr1.cc:847
     { 
   driver.number_of_values = (yystack_[1].value.ival);
 }
-#line 851 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 820 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 14:
-#line 155 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 155 "src/parsers/XmlParser.yy" // lalr1.cc:847
     { 
   ret = driver.explicit_cost.insert (pair<string, float> (*(yystack_[4].value.sval), (yystack_[1].value.dval)));
   if (!ret.second)
@@ -859,11 +828,11 @@ namespace yy {
     << (yystack_[4].value.sval) << std::endl;
   delete (yystack_[4].value.sval);   
 }
-#line 863 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 832 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 15:
-#line 168 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 168 "src/parsers/XmlParser.yy" // lalr1.cc:847
     { 
   driver.current_element++;
   driver.list_of_elements[driver.current_element-1] = 
@@ -874,11 +843,11 @@ namespace yy {
   driver.list_of_elements[driver.current_element-1]->set_element_name (*(yystack_[1].value.sval)); 
   delete (yystack_[1].value.sval);   
 }
-#line 878 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 847 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 16:
-#line 180 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 180 "src/parsers/XmlParser.yy" // lalr1.cc:847
     { 
   out << (yystack_[1].value.ival);
   driver.current_element++;
@@ -892,19 +861,19 @@ namespace yy {
   out.clear ();  
   out.str (std::string ());
 }
-#line 896 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 865 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
   case 17:
-#line 195 "src/parsers/XmlParser.yy" // lalr1.cc:859
+#line 195 "src/parsers/XmlParser.yy" // lalr1.cc:847
     { 
   driver.list_of_elements[driver.current_element-1]->add_element_value ((yystack_[1].value.ival));
 }
-#line 904 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 873 "src/parsers/XmlParser.cpp" // lalr1.cc:847
     break;
 
 
-#line 908 "src/parsers/XmlParser.cpp" // lalr1.cc:859
+#line 877 "src/parsers/XmlParser.cpp" // lalr1.cc:847
             default:
               break;
             }
@@ -932,7 +901,8 @@ namespace yy {
     if (!yyerrstatus_)
       {
         ++yynerrs_;
-        error (yyla.location, yysyntax_error_ (yystack_[0].state, yyla));
+        error (yyla.location, yysyntax_error_ (yystack_[0].state,
+                                           yyempty ? yyempty_ : yyla.type_get ()));
       }
 
 
@@ -945,10 +915,10 @@ namespace yy {
         // Return failure if at end of input.
         if (yyla.type_get () == yyeof_)
           YYABORT;
-        else if (!yyla.empty ())
+        else if (!yyempty)
           {
             yy_destroy_ ("Error: discarding", yyla);
-            yyla.clear ();
+            yyempty = true;
           }
       }
 
@@ -1024,7 +994,7 @@ namespace yy {
     goto yyreturn;
 
   yyreturn:
-    if (!yyla.empty ())
+    if (!yyempty)
       yy_destroy_ ("Cleanup: discarding lookahead", yyla);
 
     /* Do not reclaim the symbols of the rule whose action triggered
@@ -1044,7 +1014,7 @@ namespace yy {
                  << std::endl;
         // Do not try to display the values of the reclaimed symbols,
         // as their printer might throw an exception.
-        if (!yyla.empty ())
+        if (!yyempty)
           yy_destroy_ (YY_NULLPTR, yyla);
 
         while (1 < yystack_.size ())
@@ -1064,8 +1034,9 @@ namespace yy {
 
   // Generate an error message.
   std::string
-   XmlParser ::yysyntax_error_ (state_type yystate, const symbol_type& yyla) const
+   XmlParser ::yysyntax_error_ (state_type yystate, symbol_number_type yytoken) const
   {
+    std::string yyres;
     // Number of reported tokens (one for the "unexpected", one per
     // "expected").
     size_t yycount = 0;
@@ -1079,7 +1050,7 @@ namespace yy {
          the only way this function was invoked is if the default action
          is an error action.  In that case, don't check for expected
          tokens because there are none.
-       - The only way there can be no lookahead present (in yyla) is
+       - The only way there can be no lookahead present (in yytoken) is
          if this state is a consistent state with a default action.
          Thus, detecting the absence of a lookahead is sufficient to
          determine that there is no unexpected or expected token to
@@ -1099,9 +1070,8 @@ namespace yy {
          token that will not be accepted due to an error action in a
          later state.
     */
-    if (!yyla.empty ())
+    if (yytoken != yyempty_)
       {
-        int yytoken = yyla.type_get ();
         yyarg[yycount++] = yytname_[yytoken];
         int yyn = yypact_[yystate];
         if (!yy_pact_value_is_default_ (yyn))
@@ -1144,7 +1114,6 @@ namespace yy {
 #undef YYCASE_
       }
 
-    std::string yyres;
     // Argument number.
     size_t yyi = 0;
     for (char const* yyp = yyformat; *yyp; ++yyp)
@@ -1347,8 +1316,8 @@ namespace yy {
 
 
 } // yy
-#line 1351 "src/parsers/XmlParser.cpp" // lalr1.cc:1167
-#line 201 "src/parsers/XmlParser.yy" // lalr1.cc:1168
+#line 1320 "src/parsers/XmlParser.cpp" // lalr1.cc:1155
+#line 201 "src/parsers/XmlParser.yy" // lalr1.cc:1156
 
 
 void yy::XmlParser::error

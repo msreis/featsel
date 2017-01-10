@@ -35,28 +35,30 @@ IDIR = ../
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
-      src/functions/Explicit.o \
-      src/functions/MeanConditionalEntropy.o \
-      src/functions/HammingDistance.o \
-      src/functions/SubsetSum.o \
-      src/algorithms/UcurveBranchandBound.o \
-      src/algorithms/ExhaustiveSearch.o \
-      src/algorithms/SFS.o \
-      src/algorithms/SFFS.o \
-			src/Collection.o src/Solver.o src/CostFunction.o \
+	src/functions/Explicit.o \
+	src/functions/MeanConditionalEntropy.o \
+	src/functions/HammingDistance.o \
+	src/functions/SubsetSum.o \
+	src/algorithms/UcurveBranchandBound.o \
+	src/algorithms/ExhaustiveSearch.o \
+	src/algorithms/SFS.o \
+	src/algorithms/SFFS.o \
+	src/Collection.o src/Solver.o src/CostFunction.o \
+	src/ROBDD.o src/Vertex.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
-      test/functions/ExplicitTest.o \
-      test/functions/MeanConditionalEntropyTest.o \
-      test/functions/HammingDistanceTest.o \
-      test/functions/SubsetSumTest.o \
-      test/algorithms/UcurveBranchandBoundTest.o \
-      test/algorithms/ExhaustiveSearchTest.o \
-      test/algorithms/SFSTest.o \
-      test/algorithms/SFFSTest.o \
-      test/ElementSubsetTest.o test/CollectionTest.o \
+	  test/functions/ExplicitTest.o \
+	  test/functions/MeanConditionalEntropyTest.o \
+	  test/functions/HammingDistanceTest.o \
+	  test/functions/SubsetSumTest.o \
+	  test/algorithms/UcurveBranchandBoundTest.o \
+	  test/algorithms/ExhaustiveSearchTest.o \
+	  test/algorithms/SFSTest.o \
+	  test/algorithms/SFFSTest.o \
+	  test/ElementSubsetTest.o test/CollectionTest.o \
+	  test/ROBDDTest.o \
 			test/functions/MeanConditionalEntropyMock.o \
-      test/algorithms/SFFSMock.o \
+	  test/algorithms/SFFSMock.o \
 
 LIBS = -lm
 

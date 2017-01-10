@@ -48,6 +48,24 @@ ElementSubset::ElementSubset (string subset_name, ElementSet * a_set)
 }
 
 
+ElementSubset::ElementSubset (ElementSubset * elm_subset)
+{
+  unsigned int set_size = elm_subset->set->get_set_cardinality ();
+  this->set = elm_subset->set;
+  this->name = elm_subset->name;
+  this->L = elm_subset->L;
+  this->subset_cardinality = elm_subset->subset_cardinality;
+  this->list_of_elements = new (nothrow) bool [set_size];
+  if (list_of_elements == NULL)
+    cout << "Error in ElementSubset: no memory available!\n";
+  for (unsigned int i = 0; i < set_size; i++)
+    this->list_of_elements[i] = elm_subset->list_of_elements[i];
+  this->cost = elm_subset->cost;
+  this->j = elm_subset->j;
+  this->Y = elm_subset->Y;
+}
+
+
 ElementSubset::~ElementSubset ()
 {
   if (list_of_elements != NULL)
@@ -298,6 +316,3 @@ string ElementSubset::print_subset_in_hex ()
   subset_string = stm.str ();
   return subset_string;
 }
-
-
-

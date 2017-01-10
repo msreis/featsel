@@ -7,14 +7,14 @@
 
   <NumberOfElements> 3 </NumberOfElements>
   
-  <Element><name>x00</name>
+  <Element><name>a</name>
     <value>1</value>
   </Element><Element>
-    <name>x01</name>
+    <name>b</name>
     <value>2</value>
   </Element>
   <Element>
-    <name>x02</name>
+    <name>c</name>
     <value>3</value>
   </Element>
   

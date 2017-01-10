@@ -698,7 +698,7 @@ sub print_time_graphs
     my $Xaxis = 35 * $maximum_instance_size;
 
     open (PLOT, ">$GNUPLOT_PLOT_FILE");
-    printf PLOT "set terminal postscript\n";
+    printf PLOT "set terminal postscript eps\n";
     printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.eps'\n";
     printf PLOT "set key\n";
 

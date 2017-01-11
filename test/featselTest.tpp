@@ -38,6 +38,7 @@
 #include "ElementSubsetTest.h"
 #include "CollectionTest.h"
 #include "ROBDDTest.h"
+#include "PartitionTest.h"
 
 // Cost (objective) functions
 //
@@ -182,6 +183,15 @@ int main (void)
     ROBDDTest::it_should_be_able_to_reduce_an_obdd ());
   result ("ROBDDTest::it_should_be_able_to_add_a_subset",
     ROBDDTest::it_should_be_able_to_add_a_subset ());
+  cout << endl;
+
+  // Testing Class Partition
+  //
+  current_class = "PartitionTest";
+  result ("PartitionTest::it_should_create_the_fixed_elm_set",
+    PartitionTest::it_should_create_the_fixed_elm_set ());
+  result ("PartitionTest::it_should_create_the_unfixed_elm_set",
+    PartitionTest::it_should_create_the_unfixed_elm_set ());
   cout << endl;
 
   // <COST FUNCTION TEMPLATE 2>

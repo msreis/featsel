@@ -48,7 +48,6 @@ ElementSet::ElementSet (ElementSet * elm_set)
   for (unsigned int i = 0; i < number_of_elements; i++)
     this->list_of_elements[i] = 
       new Element (elm_set->list_of_elements[i]);
-  this->element_indexes = elm_set->element_indexes;
   this->has_extra_element = elm_set->has_extra_element;
   this->name = elm_set->name;
   this->explicit_cost = elm_set->explicit_cost;
@@ -170,6 +169,21 @@ ElementSet::ElementSet (string set_name, unsigned int n, unsigned int range)
       }
     }
   }
+}
+
+
+ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
+  unsigned int size)
+{
+  this->number_of_elements = size;
+  this->list_of_elements = new Element*[size];
+  for (unsigned int i = 0; i < size; i++)
+  {
+    Element * elm = elm_set->list_of_elements[map[i]];
+    this->list_of_elements[i] = new Element (elm);
+  }
+  this->name = elm_set->name;
+  this->has_extra_element = elm_set->has_extra_element;
 }
 
 

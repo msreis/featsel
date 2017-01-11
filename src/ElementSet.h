@@ -80,6 +80,11 @@ public:
   //
   ElementSet (string, unsigned int, unsigned int);
 
+  // Copy constructor
+  // The new element set has only the elements determined by 'map'
+  //
+  ElementSet (ElementSet *, unsigned int *, unsigned int);
+
   // Default destructor.
   //
   virtual ~ElementSet ();

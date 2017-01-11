@@ -32,7 +32,7 @@ my $date_string = localtime ();
 # Process the program arguments
 #
 (@ARGV != 2) and 
-  die "Syntax: $0 cost_function_code\n";
+  die "Syntax: $0 cost_function_code cost_function_class_name\n";
 
 my $code;
 ($ARGV[0] =~ /(^\w+$)/) and $code = $1 or

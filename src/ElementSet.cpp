@@ -41,6 +41,20 @@ ElementSet::ElementSet (string set_name)
 }
 
 
+ElementSet::ElementSet (ElementSet * elm_set)
+{
+  this->number_of_elements = elm_set->number_of_elements;
+  this->list_of_elements = new Element*[number_of_elements];
+  for (unsigned int i = 0; i < number_of_elements; i++)
+    this->list_of_elements[i] = 
+      new Element (elm_set->list_of_elements[i]);
+  this->element_indexes = elm_set->element_indexes;
+  this->has_extra_element = elm_set->has_extra_element;
+  this->name = elm_set->name;
+  this->explicit_cost = elm_set->explicit_cost;
+}
+
+
 // This constructor uses the class "XMLParserDriver".
 //
 ElementSet::ElementSet (string a_set_name, string file_name)

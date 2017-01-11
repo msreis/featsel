@@ -39,6 +39,17 @@ Element::Element (unsigned int number, string element_name)
 }
 
 
+Element::Element (Element * elm) 
+{
+  this->max_number_of_values = elm->max_number_of_values;
+  this->name = elm->name;
+  this->number_of_values = elm->number_of_values;
+  this->value = new int[number_of_values];
+  for (unsigned int i = 0; i < number_of_values; i++)
+    this->value[i] = elm->value[i];
+}
+
+
 Element::~Element ()
 {
   if (value != 0)

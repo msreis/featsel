@@ -51,6 +51,10 @@ public:
   //
   Element (unsigned int, string);
 
+  // Copy constructor
+  //
+  Element (Element *);
+
   // Default destructor.
   //
   virtual ~Element ();

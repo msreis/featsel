@@ -63,6 +63,10 @@ public:
   //
   ElementSet (string);
 
+  // Copy constructor
+  //
+  ElementSet (ElementSet *);
+
   // Constructor: a set with elements imported from a XML file.
   //
   ElementSet (string, string);

@@ -574,7 +574,7 @@ foreach my $i (1..$maximum_instance_size)
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%5.2f&nbsp;</CENTER></TD>",
+    printf OUT "<TD><CENTER>&nbsp;%5.1f&nbsp;</CENTER></TD>",
       $average_calls_of_cost_function[$j];
   }
 
@@ -667,8 +667,8 @@ sub print_time_graphs
 
     open (PLOT, ">$GNUPLOT_PLOT_FILE");
 
-    printf PLOT "set terminal png enhanced crop size $Xaxis, $Xaxis\n";
-    printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.png'\n";
+    printf PLOT "set terminal svg enhanced crop size $Xaxis, $Xaxis\n";
+    printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.svg'\n";
     printf PLOT "unset key\n";
     printf PLOT "set xlabel \"|S|\" rotate parallel\n";
     printf PLOT "set ylabel \"Number of computed nodes\" rotate parallel\n";

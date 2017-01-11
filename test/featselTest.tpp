@@ -44,6 +44,7 @@
 // Cost (objective) functions
 //
 // <COST FUNCTION TEMPLATE 1>
+#include "functions/PartCostTest.h"
 
 // Solvers (algorithms)
 //

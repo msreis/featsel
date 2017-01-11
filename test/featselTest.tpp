@@ -39,6 +39,7 @@
 #include "CollectionTest.h"
 #include "ROBDDTest.h"
 #include "PartitionTest.h"
+#include "PartitionNodeTest.h"
 
 // Cost (objective) functions
 //
@@ -192,6 +193,18 @@ int main (void)
     PartitionTest::it_should_create_the_fixed_elm_set ());
   result ("PartitionTest::it_should_create_the_unfixed_elm_set",
     PartitionTest::it_should_create_the_unfixed_elm_set ());
+  cout << endl;
+
+  // Testing Class PartitionNode
+  current_class = "PartitionNodeTest";
+  result ("PartitionNodeTest::it_map_subsets_correctly",
+    PartitionNodeTest::it_map_subsets_correctly ());
+  result ("PartitionNodeTest::it_should_check_upper_adjacent_parts",
+    PartitionNodeTest::it_should_check_upper_adjacent_parts ());
+  result ("PartitionNodeTest::it_should_return_the_least_subset",
+    PartitionNodeTest::it_should_return_the_least_subset ());
+  result ("PartitionNodeTest::it_should_return_the_greatest_subset",
+    PartitionNodeTest::it_should_return_the_greatest_subset ());
   cout << endl;
 
   // <COST FUNCTION TEMPLATE 2>

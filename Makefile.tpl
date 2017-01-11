@@ -32,12 +32,14 @@ IDIR = ../
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
-			src/ROBDD.o src/Partition.o src/Vertex.o \
+			src/ROBDD.o src/Vertex.o src/Partition.o \
+			src/PartitionNode.o \
 # %template_class%
 			src/Collection.o src/Solver.o src/CostFunction.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/ROBDDTest.o test/PartitionTest.o \
+			test/PartitionNodeTest.o \
 # %template_test%
       test/ElementSubsetTest.o test/CollectionTest.o \
 			test/functions/MeanConditionalEntropyMock.o \

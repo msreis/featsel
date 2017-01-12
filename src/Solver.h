@@ -162,7 +162,7 @@ public:
 
   // Returns a copy of list_of_minima
   //
-  list<ElementSubset *> * get_list_of_minima ();
+  list<ElementSubset *> get_list_of_minima ();
 
 };
 

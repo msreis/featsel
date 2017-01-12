@@ -40,7 +40,6 @@ float PartCost::cost (ElementSubset * X)
   gettimeofday (& begin, NULL);
   usleep (SLEEP_TIME);
   
-  float cost;
   number_of_calls_of_cost_function++;
 
   ElementSubset * original_subset;

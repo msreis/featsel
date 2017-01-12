@@ -28,13 +28,39 @@ PUCS::PUCS ()
 {
   list_of_visited_subsets = new Collection ();
   cost_function = NULL;
+  cand_part = NULL;
+  partition = NULL;
 }
 
 
 PUCS::~PUCS ()
 {
   if (list_of_visited_subsets != NULL)
-  delete list_of_visited_subsets;
+    delete list_of_visited_subsets;
+  if (cand_part != NULL)
+    delete cand_part;
+  if (partition != NULL)
+    delete partition;
+}
+
+
+void PUCS::set_partition_model ()
+{
+  unsigned int set_size = set->get_set_cardinality ();
+  unsigned int partition_set_size = set_size * (1 / 2.0) + 1;
+  bool * fixed = new bool[set_size];
+  for (unsigned int i = 0; i < set_size; i++)
+    fixed[i] = false;
+  // Random partitioning
+  ElementSubset X ("", set);
+  X.set_complete_subset ();
+  for (unsigned int i = 0; i < partition_set_size; i++)
+  {
+    unsigned int e = X.remove_random_element ();
+    fixed[e] = true;
+  }
+  this->partition = new Partition (set, fixed);
+  delete[] fixed;
 }
 
 
@@ -43,24 +69,236 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
 
-  //
+  list<PartitionNode *> parts_to_solve;
+  ElementSubset * p_subset;
+  set_partition_model ();
+  cand_part = new ROBDD (partition->get_fixed_elm_set ());
 
-  // TODO: [ADD YOUR ALGORITHM CODE HERE!]
+  p_subset = cand_part->get_random_zero_evaluated_element ();
+  while (p_subset != NULL)
+  {
+    PartitionNode * P = new PartitionNode (partition, p_subset);
+    random_walk (P, &parts_to_solve);
+    delete p_subset;
+    p_subset = cand_part->get_random_zero_evaluated_element ();
+  }
 
-  ElementSubset * X;
-  X = new ElementSubset ("X", set);    
-  X->cost = cost_function->cost (X);   // A template algorithm returns the
-  X->set_complete_subset ();           // complete subset as best one, since it
-	list_of_minima.push_back (X);  // does not perform any search yet!
-  //
-
-  number_of_visited_subsets =
-  cost_function->get_number_of_calls_of_cost_function ();
-  clean_list_of_minima (max_size_of_minima_list);
+  list<ElementSubset *> * min_list = &list_of_minima;
+  #pragma omp parallel shared (min_list, parts_to_solve)
+  #pragma omp single
+  solve_parts (&parts_to_solve, min_list, max_size_of_minima_list);
+  #pragma omp taskwait
+  number_of_visited_subsets =  
+    cost_function->get_number_of_calls_of_cost_function ();
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
-
 }
 
 
+void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
+{
+  unsigned int i = 0;
+  unsigned int n = P->get_number_of_fixed_elms ();
+  TQ->push_back (new PartitionNode (P));
+  restrict_part (P, cand_part);
+  PartitionNode * Q;
+  while (i < n)
+  {
+    Q = adjacent_part (P, i++);
+    // cout << "- Q = " << Q->get_selected_elements ()->print_subset () << endl;
+    if (is_restricted (Q, cand_part))
+    {   
+      // cout << "- Q é restrito já" << endl;
+      delete Q;
+      continue;
+    }
+    PartitionNode * next;
+    next = prune_and_walk (P, Q,
+      cost_function, cand_part);
+    // if (next != NULL)
+    //     cout << "- next = " << next->get_selected_elements ()->print_subset () << endl;
+    // else
+    //     cout << "- next = NULL" << endl;
+    if (next == P)
+      delete Q;
+    else if (next == Q)
+    {
+      i = 0;
+      delete P;
+      P = Q;
+      TQ->push_back (new PartitionNode (P));
+      restrict_part (P, cand_part);
+    }
+    else
+    {
+      delete P;
+      delete Q;
+      return;
+    }
+  }
+  delete P;
+  // cout << "Saindo de random walk\n-";
+}
+
+
+void PUCS::solve_parts (list<PartitionNode *> * parts, 
+  list<ElementSubset *> * min_list, 
+  unsigned int max_size_of_minima_list)
+{
+  PartitionNode * P = NULL;
+  Collection * L = NULL;
+  while (parts->size () > 0) 
+  {
+    #pragma omp critical
+    {
+      P = parts->back ();
+      parts->pop_back ();
+    }
+    #pragma omp task 
+    {
+      L = part_minimum (P, cost_function,
+        max_size_of_minima_list);
+      #pragma omp taskwait
+      while (L->size () > 0) 
+      {
+        ElementSubset * X = L->remove_last_subset ();
+        #pragma omp critical
+        {
+          min_list->push_back (X);
+          if (store_visited_subsets)
+            list_of_visited_subsets->add_subset (X);
+        }
+      }
+      #pragma omp critical
+      clean_list_of_minima (max_size_of_minima_list);
+      delete L;
+      delete P;
+    }
+  }
+}
+
+//TODO: refactor all methods bellow this
+void PUCS::create_minima_list (Collection * L, PartitionNode * P,
+  list<ElementSubset *> * l)
+{
+  while (l->size () > 0) 
+  {
+    ElementSubset * pX = l->back ();
+    l->pop_back ();
+    ElementSubset * X = P->get_original_subset (pX);
+    X->cost = pX->cost;
+    L->add_subset (X);
+    delete X;
+    delete pX;
+  }
+}
+
+
+Collection * PUCS::part_minimum (PartitionNode * P,
+  CostFunction * c, unsigned int max_size_of_minima_list)
+{
+  Collection * L = new Collection ();
+  list<ElementSubset *> p_min_lst;
+  Partition * partition = P->get_partition ();
+  ElementSet * p_elm_set = partition->get_unfixed_elm_set ();
+  if (p_elm_set->get_set_cardinality () == 0)
+  {
+    ElementSubset * minimal = P->get_least_subset ();
+    minimal->cost = c->cost (minimal);
+    p_min_lst.push_back (minimal);
+  }
+  else
+  {
+    Solver * sub_solver;
+    if (p_elm_set->get_set_cardinality () > UCS_CUTOFF)
+      sub_solver = new PUCS ();
+    else
+      sub_solver = new ExhaustiveSearch ();
+    PartCost * P_cost = new PartCost (c, P);
+    sub_solver->set_parameters (P_cost, p_elm_set, false);
+    // TODO: does it run faster when we run the next line as a
+    // task?
+    sub_solver->get_minima_list (max_size_of_minima_list);
+    #pragma omp taskwait
+    p_min_lst = sub_solver->get_list_of_minima ();
+    delete P_cost;
+    delete sub_solver;
+  }
+  create_minima_list (L, P, &p_min_lst);
+  return L;
+}
+
+
+PartitionNode * PUCS::adjacent_part (PartitionNode * P, unsigned int i)
+{
+  ElementSubset * sel_elms = P->get_selected_elements ();
+  if (sel_elms->has_element (i))
+    sel_elms->remove_element (i);
+  else
+    sel_elms->add_element (i);
+  Partition * partition = P->get_partition ();
+  PartitionNode * Q = new PartitionNode (partition, sel_elms);
+  delete sel_elms;
+  return Q;
+}
+
+
+PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q, 
+  CostFunction * c, ROBDD * R) 
+{
+  PartitionNode * P1, * P2, * next;
+  ElementSubset * e1, * e2, * p1_sub, * p2_sub;
+  ElementSubset * p_sub = P->get_least_subset ();
+  ElementSubset * q_sub = Q->get_least_subset ();
+  if (P->is_upper_adjacent (Q))
+    P1 = P, P2 = Q;
+  else
+    P1 = Q; P2 = P;
+  p1_sub = P1->get_selected_elements ();
+  p2_sub = P2->get_selected_elements ();
+  e1 = P1->get_least_subset ();
+  e2 = P2->get_least_subset ();
+  if (c->cost (e1) > c->cost (e2)) 
+    R->add_interval (p1_sub, true);
+  delete e1;
+  delete e2;
+  e1 = P1->get_greatest_subset ();
+  e2 = P2->get_greatest_subset ();
+  if (c->cost (e1) < c->cost (e2))
+    R->add_interval (p2_sub, false);
+  delete e1;
+  delete e2;
+  next = Q;
+  if (R->contains (q_sub))
+  {
+    if (R->contains (p_sub))
+      next = NULL;
+    else
+      next = P;
+  }
+  delete p_sub;
+  delete q_sub;
+  delete p1_sub;
+  delete p2_sub;
+  return next;
+}
+
+
+bool PUCS::is_restricted (PartitionNode * P, ROBDD * R) 
+{
+  bool answ = false;
+  ElementSubset * p_subset = P->get_selected_elements ();
+  if (R->contains (p_subset))
+    answ = true;
+  delete p_subset;
+  return answ;
+}
+
+
+void PUCS::restrict_part (PartitionNode * P, ROBDD * R)
+{
+  ElementSubset * p_subset = P->get_selected_elements ();
+  R->add_subset (p_subset);
+  delete p_subset;
+}

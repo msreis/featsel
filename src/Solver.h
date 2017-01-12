@@ -159,6 +159,11 @@ public:
   //
   void store_minimum_subset (ElementSubset * X);
 
+
+  // Returns a copy of list_of_minima
+  //
+  list<ElementSubset *> * get_list_of_minima ();
+
 };
 
 #endif /* SOLVER_H_ */

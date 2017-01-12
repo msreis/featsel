@@ -29,7 +29,7 @@
 
 IDIR = ../
 
-CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -fopenmp	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
 			src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -53,20 +53,20 @@ TARGET =	bin/featsel
 TEST =		bin/featselTest
 
 $(TARGET):	featsel.o $(OBJS)
-	$(CXX) -o $(TARGET) src/featsel.o $(OBJS) $(LIBS) \
+	$(CXX) $(CXXFLAGS) -o $(TARGET) src/featsel.o $(OBJS) $(LIBS) \
 			src/parsers/XmlParser.cpp src/parsers/XmlScanner.cpp \
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
 
 $(TEST):	featselTest.o $(TOBJS) $(OBJS)
-	$(CXX) -o $(TEST) test/featselTest.o $(TOBJS) $(OBJS) $(LIBS) \
+	$(CXX) $(CXXFLAGS) -o $(TEST) test/featselTest.o $(TOBJS) $(OBJS) $(LIBS) \
 			src/parsers/XmlParser.cpp src/parsers/XmlScanner.cpp \
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
 
 
 featsel.o:
-	$(CXX)	-c -o src/featsel.o src/featsel.cpp
+	$(CXX) 	-c -o src/featsel.o src/featsel.cpp
 
 featselTest.o:
 	$(CXX)	-c -o test/featselTest.o test/featselTest.cpp

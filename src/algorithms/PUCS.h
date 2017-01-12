@@ -35,6 +35,7 @@
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
 #include "ExhaustiveSearch.h"
+#include <omp.h>
 
 #define UCS_CUTOFF 10
 
@@ -82,15 +83,14 @@ private:
   // This function is used to transfer the list of minima of a 
   // partition to the list of minima of the original problem
   //
-  void create_minima_list (Collection *, PartitionNode *, 
+  void part_minima_collection (Collection *, PartitionNode *, 
     list<ElementSubset *> *);
 
 
   // Finds the minimum of a partition and adds the list of minima of
   // this partition to the collection L.
   //
-  Collection * part_minimum (PartitionNode *, CostFunction *,
-    unsigned int);
+  Collection * part_minimum (PartitionNode *, unsigned int);
 
   // Given a PartitionNode P and an index i we return an adjacent 
   // part Q. Parts are defined according to fixed elements that can
@@ -116,16 +116,15 @@ private:
   //     Q by default
   //     P if Q is restricted by the end of the function
   //     NULL if P and Q are restricted by the end of the function
-  PartitionNode * prune_and_walk (PartitionNode *, PartitionNode *,
-    CostFunction *, ROBDD *);
+  PartitionNode * prune_and_walk (PartitionNode *, PartitionNode *);
 
   // Returns true if the part is restricted
   //
-  bool is_restricted (PartitionNode *, ROBDD *);
+  bool is_restricted (PartitionNode *);
 
   // Restricts a part
   //
-  void restrict_part (PartitionNode *, ROBDD *);
+  void restrict_part (PartitionNode *);
 
 public:
 

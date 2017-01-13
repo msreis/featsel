@@ -36,10 +36,12 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
 			src/PartitionNode.o src/functions/PartCost.o \
 # %template_class%
 			src/Collection.o src/Solver.o src/CostFunction.o \
+			src/algorithms/UCurveToolBox.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/ROBDDTest.o test/PartitionTest.o \
 			test/PartitionNodeTest.o test/functions/PartCostTest.o \
+			test/algorithms/UCurveToolBoxTest.o \
 # %template_test%
       test/ElementSubsetTest.o test/CollectionTest.o \
 			test/functions/MeanConditionalEntropyMock.o \

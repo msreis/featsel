@@ -49,6 +49,7 @@
 // Solvers (algorithms)
 //
 // <ALGORITHM TEMPLATE 1>
+#include "algorithms/UCurveToolBoxTest.h"
 
 // Number of passed and failed tests
 //
@@ -209,6 +210,20 @@ int main (void)
   cout << endl;
 
   // <COST FUNCTION TEMPLATE 2>
+
+  // Testing Class UCurveToolBox
+  current_class = "UCurveToolBoxTest";
+  result ("UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset", 
+    UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset ());
+  result ("UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset", 
+    UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset ());
+  result ("UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset", 
+    UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset ());
+  result ("UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset", 
+    UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset ());
+  result ("UCurveToolBoxTest::it_should_get_a_maximal_subset", 
+    UCurveToolBoxTest::it_should_get_a_maximal_subset ());
+  cout << endl;
 
   // <ALGORITHM TEMPLATE 2>
 

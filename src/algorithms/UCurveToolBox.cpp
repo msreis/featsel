@@ -100,6 +100,7 @@ namespace UCurveToolBox
     list<Node *> Stack;
     map<string, Node *>Graph;
     map<string, Node *>::iterator it;
+    map<string, Node *>::iterator aux_it;
 
     Stack.push_back (M);
     Graph.insert (pair<string, Node *> (M->vertex->print_subset (), M));
@@ -215,7 +216,7 @@ namespace UCurveToolBox
     } // while (! Stack.size () > 0)
 
     // "Remove graph" subroutine
-    for (it = Graph.begin (); it != Graph.end (); it++)
+    for (it = Graph.begin (); it != Graph.end ();)
     {
       if (it->second->upper_flag->is_empty ())
         UCurveToolBox::update_lower_restriction (RL,
@@ -223,10 +224,11 @@ namespace UCurveToolBox
       else if (it->second->lower_flag->is_empty ())
         UCurveToolBox::update_upper_restriction (RU,
          it->second->vertex);
+      aux_it = it++;
       // delete the removed node
-      delete_node (it->second);
+      delete_node (aux_it->second);
       // remove the node from the graph
-      Graph.erase (it);
+      Graph.erase (aux_it);
     }
 
   } // end of minima_exhausting subroutine
@@ -295,9 +297,10 @@ namespace UCurveToolBox
       if ((A->vertex->contains (it->second->vertex)) &&
         (! A->vertex->is_equal (it->second->vertex)))
       {
-        Stack->remove (it->second);
-        delete_node (it->second);
-        Graph->erase (it);
+        map<string, Node *>::iterator trash = it++;
+        Stack->remove (trash->second);
+        delete_node (trash->second);
+        Graph->erase (trash);
       }
   }
 
@@ -311,9 +314,10 @@ namespace UCurveToolBox
       if ((A->vertex->is_contained_by (it->second->vertex)) &&
         (! A->vertex->is_equal (it->second->vertex)))
       {
-        Stack->remove (it->second);
-        delete_node (it->second);
-        Graph->erase (it);
+        map<string, Node *>::iterator trash = it++;
+        Stack->remove (trash->second);
+        delete_node (trash->second);
+        Graph->erase (trash);
       }
   }
 

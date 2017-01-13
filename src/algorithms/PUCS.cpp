@@ -192,7 +192,6 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
 Collection * PUCS::part_minimum (PartitionNode * P, 
   unsigned int max_size_of_minima_list)
 {
-  ElementSubset * ps = P->get_selected_elements ();
   Collection * L = new Collection ();
   list<ElementSubset *> p_min_lst;
   ElementSet * p_elm_set = partition->get_unfixed_elm_set ();
@@ -316,8 +315,9 @@ void PUCS::update_visited_subsets (Collection * T, PartitionNode * P)
   {
     ElementSubset * pX = T->remove_last_subset ();
     ElementSubset * X = P->get_original_subset (pX);
-    delete pX;
     #pragma omp critical
     store_visited_subset (X);
+    delete pX;
+    delete X;
   }
 }

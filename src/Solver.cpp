@@ -177,3 +177,9 @@ list<ElementSubset *> Solver::get_list_of_minima ()
   }
   return lst;
 }
+
+
+Collection * Solver::get_list_of_visited_subsets () 
+{
+  return list_of_visited_subsets;
+}

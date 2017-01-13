@@ -159,6 +159,9 @@ public:
   //
   void store_minimum_subset (ElementSubset * X);
 
+  // Returns a pointer to the list of visited subsets
+  //
+  Collection * get_list_of_visited_subsets ();
 
   // Returns a copy of list_of_minima
   //

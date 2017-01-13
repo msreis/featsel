@@ -162,11 +162,7 @@ void PUCS::solve_parts (list<PartitionNode *> * parts,
       {
         ElementSubset * X = L->remove_last_subset ();
         #pragma omp critical
-        {
-          min_list->push_back (X);
-          if (store_visited_subsets)
-            list_of_visited_subsets->add_subset (X);
-        }
+        min_list->push_back (X);
       }
       #pragma omp critical
       clean_list_of_minima (max_size_of_minima_list);
@@ -176,7 +172,7 @@ void PUCS::solve_parts (list<PartitionNode *> * parts,
   }
 }
 
-//TODO: refactor all methods bellow this
+
 void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
   list<ElementSubset *> * l)
 {
@@ -196,6 +192,7 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
 Collection * PUCS::part_minimum (PartitionNode * P, 
   unsigned int max_size_of_minima_list)
 {
+  ElementSubset * ps = P->get_selected_elements ();
   Collection * L = new Collection ();
   list<ElementSubset *> p_min_lst;
   ElementSet * p_elm_set = partition->get_unfixed_elm_set ();
@@ -208,17 +205,20 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   else
   {
     Solver * sub_solver;
+    Collection * visited_subsets;
     if (p_elm_set->get_set_cardinality () > UCS_CUTOFF)
       sub_solver = new PUCS ();
     else
       sub_solver = new ExhaustiveSearch ();
     PartCost * P_cost = new PartCost (cost_function, P);
-    sub_solver->set_parameters (P_cost, p_elm_set, false);
+    sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
     // TODO: does it run faster when we run the next line as a
     // task?
     sub_solver->get_minima_list (max_size_of_minima_list);
     #pragma omp taskwait
     p_min_lst = sub_solver->get_list_of_minima ();
+    visited_subsets = sub_solver->get_list_of_visited_subsets ();
+    update_visited_subsets (visited_subsets, P);
     delete P_cost;
     delete sub_solver;
   }
@@ -255,12 +255,22 @@ PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q)
   p2_sub = P2->get_selected_elements ();
   e1 = P1->get_least_subset ();
   e2 = P2->get_least_subset ();
+  #pragma omp critical
+  {
+    store_visited_subset (e1);
+    store_visited_subset (e2);
+  }
   if (cost_function->cost (e1) > cost_function->cost (e2))
     cand_part->add_interval (p1_sub, true);
   delete e1;
   delete e2;
   e1 = P1->get_greatest_subset ();
   e2 = P2->get_greatest_subset ();
+  #pragma omp critical
+  {
+    store_visited_subset (e1);
+    store_visited_subset (e2);
+  }
   if (cost_function->cost (e1) < cost_function->cost (e2))
     cand_part->add_interval (p2_sub, false);
   delete e1;
@@ -297,4 +307,17 @@ void PUCS::restrict_part (PartitionNode * P)
   ElementSubset * p_subset = P->get_selected_elements ();
   cand_part->add_subset (p_subset);
   delete p_subset;
+}
+
+
+void PUCS::update_visited_subsets (Collection * T, PartitionNode * P)
+{
+  while (T->size () > 0) 
+  {
+    ElementSubset * pX = T->remove_last_subset ();
+    ElementSubset * X = P->get_original_subset (pX);
+    delete pX;
+    #pragma omp critical
+    store_visited_subset (X);
+  }
 }

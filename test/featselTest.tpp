@@ -209,7 +209,9 @@ int main (void)
     PartitionNodeTest::it_should_return_the_greatest_subset ());
   cout << endl;
 
+  /*
   // <COST FUNCTION TEMPLATE 2>
+  */
 
   // Testing Class UCurveToolBox
   current_class = "UCurveToolBoxTest";

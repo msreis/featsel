@@ -126,6 +126,10 @@ private:
   //
   void restrict_part (PartitionNode *);
 
+  // Updates the collection of visited subsets
+  //
+  void update_visited_subsets (Collection *, PartitionNode *);
+
 public:
 
   // Default constructor.

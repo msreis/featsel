@@ -106,19 +106,13 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
   while (i < n)
   {
     Q = adjacent_part (P, i++);
-    // cout << "- Q = " << Q->get_selected_elements ()->print_subset () << endl;
     if (is_restricted (Q))
     {   
-      // cout << "- Q é restrito já" << endl;
       delete Q;
       continue;
     }
     PartitionNode * next;
     next = prune_and_walk (P, Q);
-    // if (next != NULL)
-    //     cout << "- next = " << next->get_selected_elements ()->print_subset () << endl;
-    // else
-    //     cout << "- next = NULL" << endl;
     if (next == P)
       delete Q;
     else if (next == Q)
@@ -137,7 +131,6 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
     }
   }
   delete P;
-  // cout << "Saindo de random walk\n-";
 }
 
 
@@ -208,11 +201,11 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     if (p_elm_set->get_set_cardinality () > UCS_CUTOFF)
       sub_solver = new PUCS ();
     else
-      sub_solver = new ExhaustiveSearch ();
+      sub_solver = new UCurveSearch ();
     PartCost * P_cost = new PartCost (cost_function, P);
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
-    // TODO: does it run faster when we run the next line as a
-    // task?
+  
+    #pragma omp task
     sub_solver->get_minima_list (max_size_of_minima_list);
     #pragma omp taskwait
     p_min_lst = sub_solver->get_list_of_minima ();

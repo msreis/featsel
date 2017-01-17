@@ -34,7 +34,7 @@
 #include "../Partition.h"
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
-#include "ExhaustiveSearch.h"
+#include "UCurveSearch.h"
 #include <omp.h>
 
 #define UCS_CUTOFF 10

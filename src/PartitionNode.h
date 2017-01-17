@@ -98,6 +98,7 @@ public:
   //
   ElementSubset * get_least_subset ();
 
+  /* TODO: store the greatest subset */
   // Returns the maximal subset of this part
   //
   ElementSubset * get_greatest_subset ();

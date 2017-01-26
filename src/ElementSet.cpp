@@ -44,10 +44,22 @@ ElementSet::ElementSet (string set_name)
 ElementSet::ElementSet (ElementSet * elm_set)
 {
   this->number_of_elements = elm_set->number_of_elements;
-  this->list_of_elements = new Element*[number_of_elements];
-  for (unsigned int i = 0; i < number_of_elements; i++)
-    this->list_of_elements[i] = 
-      new Element (elm_set->list_of_elements[i]);
+  if (elm_set->has_extra_element)
+  {
+    unsigned int real_nof_elements;
+    real_nof_elements = elm_set->number_of_elements + NUMBER_OF_LABELS;
+    this->list_of_elements = new Element*[real_nof_elements];
+    for (unsigned int i = 0; i < real_nof_elements; i++)
+      this->list_of_elements[i] = 
+        new Element (elm_set->list_of_elements[i]);
+  }
+  else 
+  {
+    this->list_of_elements = new Element*[number_of_elements];
+    for (unsigned int i = 0; i < number_of_elements; i++)
+      this->list_of_elements[i] = 
+        new Element (elm_set->list_of_elements[i]);  
+  }
   this->has_extra_element = elm_set->has_extra_element;
   this->name = elm_set->name;
   this->explicit_cost = elm_set->explicit_cost;
@@ -176,7 +188,21 @@ ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
   unsigned int size)
 {
   this->number_of_elements = size;
-  this->list_of_elements = new Element*[size];
+
+  if (elm_set->has_extra_element)
+  {
+    unsigned int real_nof_elements;
+    real_nof_elements = size + NUMBER_OF_LABELS;
+    this->list_of_elements = new Element*[real_nof_elements];
+    for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++) 
+    {
+      unsigned int j = elm_set->number_of_elements + i;
+      Element * elm = elm_set->list_of_elements[j];
+      this->list_of_elements[size + i] = new Element (elm);
+    }
+  }
+  else 
+    this->list_of_elements = new Element*[size];
   for (unsigned int i = 0; i < size; i++)
   {
     Element * elm = elm_set->list_of_elements[map[i]];

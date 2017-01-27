@@ -49,23 +49,23 @@ TARGET =	bin/featsel
 TEST =		bin/featselTest
 
 $(TARGET):	featsel.o $(OBJS)
-	$(CXX) -o $(TARGET) src/featsel.o $(OBJS) $(LIBS) \
+	$(CXX) $(CXXFLAGS) -o $(TARGET) src/featsel.o $(OBJS) $(LIBS) \
 			src/parsers/XmlParser.cpp src/parsers/XmlScanner.cpp \
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
 
 $(TEST):	featselTest.o $(TOBJS) $(OBJS)
-	$(CXX) -o $(TEST) test/featselTest.o $(TOBJS) $(OBJS) $(LIBS) \
+	$(CXX) $(CXXFLAGS) -o $(TEST) test/featselTest.o $(TOBJS) $(OBJS) $(LIBS) \
 			src/parsers/XmlParser.cpp src/parsers/XmlScanner.cpp \
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
 
 
 featsel.o:
-	$(CXX)	-c -o src/featsel.o src/featsel.cpp
+	$(CXX) $(CXXFLAGS)	-c -o src/featsel.o src/featsel.cpp
 
 featselTest.o:
-	$(CXX)	-c -o test/featselTest.o test/featselTest.cpp
+	$(CXX) $(CXXFLAGS)	-c -o test/featselTest.o test/featselTest.cpp
 
 help:
 	groff -man -Tascii docs/featsel.1 > docs/featsel.txt

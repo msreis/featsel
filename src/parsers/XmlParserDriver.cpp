@@ -37,7 +37,7 @@ XmlParserDriver::~XmlParserDriver ()
 {
   if (list_of_elements != NULL)
   {
-    for (int i = 0; i < number_of_elements; i++)
+    for (unsigned int i = 0; i < number_of_elements; i++)
       delete list_of_elements[i];
     delete [] list_of_elements;
   }

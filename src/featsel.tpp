@@ -66,7 +66,6 @@ int main(int argc, char * argv[])
   string algorithm ("ubb");
   string file_name;
   bool store_visited_subsets = false;
-  float threshold = FLT_MIN;
   ofstream log_file;
 
   // Parse the parameters

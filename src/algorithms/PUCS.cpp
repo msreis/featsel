@@ -47,7 +47,7 @@ PUCS::~PUCS ()
 void PUCS::set_partition_model ()
 {
   unsigned int set_size = set->get_set_cardinality ();
-  unsigned int partition_set_size = set_size * (1 / 2.0) + 1;
+  unsigned int partition_set_size = set_size * (3 / 8.0) + 1;
   bool * fixed = new bool[set_size];
   for (unsigned int i = 0; i < set_size; i++)
     fixed[i] = false;

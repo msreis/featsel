@@ -124,7 +124,6 @@ namespace PartitionNodeTest
     if (!answ_minimal->is_equal (&expected_least))
       answ = false;
     delete partition;
-    delete answ_minimal;
     return answ;
   }
 
@@ -157,7 +156,6 @@ namespace PartitionNodeTest
     if (!answ_greatest->is_equal (&expected_greatest))
       answ = false;
     delete partition;
-    delete answ_greatest;
     return answ;
   }
 

@@ -38,11 +38,15 @@ private:
   //
   ElementSubset * selected_elements;
 
-  // Stores the minimal element of the partition. This is the same
+  // Stores the minimal element of the part. This is the same
   // as the ElementSubset selected_elements but defined over the 
   // original ElementSet
   //
   ElementSubset * least_subset;
+
+  // Stores the greatest subset of the part. This is the same
+  //
+  ElementSubset * greatest_subset;
 
   // A pointer to the partition this part is from
   //
@@ -51,6 +55,11 @@ private:
   // Find the minimal subset of this partition
   // 
   void find_least_subset ();
+
+
+  // Find the minimal subset of this partition
+  // 
+  void find_greatest_subset ();
 
 public:
 
@@ -98,7 +107,6 @@ public:
   //
   ElementSubset * get_least_subset ();
 
-  /* TODO: store the greatest subset */
   // Returns the maximal subset of this part
   //
   ElementSubset * get_greatest_subset ();

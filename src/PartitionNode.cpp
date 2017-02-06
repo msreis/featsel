@@ -24,7 +24,9 @@ PartitionNode::PartitionNode (Partition * partition, ElementSubset * X)
 {
   this->selected_elements = new ElementSubset (X);
   this->partition = partition;
+  least_subset = greatest_subset = NULL;
   find_least_subset ();
+  find_greatest_subset ();
 }
 
 
@@ -32,6 +34,7 @@ PartitionNode::PartitionNode (PartitionNode * Q)
 {
   this->selected_elements = new ElementSubset (Q->selected_elements);
   this->least_subset = new ElementSubset (Q->least_subset);
+  this->greatest_subset = new ElementSubset (Q->greatest_subset);
   this->partition = Q->partition;
 }
 
@@ -40,6 +43,7 @@ PartitionNode::~PartitionNode ()
 {
   delete selected_elements;
   delete least_subset;
+  delete greatest_subset;
 }
 
 
@@ -53,6 +57,19 @@ void PartitionNode::find_least_subset ()
   for (unsigned int i = 0; i < fixed_elm_set_size; i++)
     if (selected_elements->has_element (i))
       least_subset->add_element (fixed_map[i]);
+}
+
+
+void PartitionNode::find_greatest_subset ()
+{
+  ElementSet * unfixed_set;
+  unsigned int n, * unfixed_map;
+  unfixed_set = partition->get_unfixed_elm_set ();
+  n = unfixed_set->get_set_cardinality ();
+  unfixed_map = partition->get_unfixed_elm_map ();
+  greatest_subset = new ElementSubset (least_subset);
+  for (unsigned int i = 0; i < n; i++)
+    greatest_subset->add_element (unfixed_map[i]);
 }
 
 
@@ -79,7 +96,7 @@ ElementSet * PartitionNode::get_original_set ()
 
 ElementSubset * PartitionNode::get_selected_elements ()
 {
-  return new ElementSubset (selected_elements);
+  return selected_elements;
 }
 
 
@@ -112,21 +129,11 @@ bool PartitionNode::is_upper_adjacent (PartitionNode * Q)
 
 ElementSubset * PartitionNode::get_least_subset ()
 {
-  return new ElementSubset (least_subset);
+  return least_subset;
 }
 
 
-// TODO: saving the greatest subset probably speeds up the code
 ElementSubset * PartitionNode::get_greatest_subset ()
 {
-  ElementSet * unfixed_set;
-  ElementSubset * greatest;
-  unsigned int n, * unfixed_map;
-  unfixed_set = partition->get_unfixed_elm_set ();
-  n = unfixed_set->get_set_cardinality ();
-  unfixed_map = partition->get_unfixed_elm_map ();
-  greatest = new ElementSubset (least_subset);
-  for (unsigned int i = 0; i < n; i++)
-    greatest->add_element (unfixed_map[i]);
-  return greatest;
+  return greatest_subset;
 }

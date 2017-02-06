@@ -40,7 +40,7 @@
 //
 // Use two labels for a binary classifier (for instance, W-operator estimation).
 //
-# define NUMBER_OF_LABELS 7
+# define NUMBER_OF_LABELS 2
 
 
 using namespace std;

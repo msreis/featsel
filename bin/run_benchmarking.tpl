@@ -290,7 +290,7 @@ print OUT "<EM>Cost Function Time (sec):</EM> required time for the " .
   "computation of all calls the cost function, during the running of each " .
   "algorithm (average of $number_of_instances_per_size runnings).<BR>\n";
 
-print OUT "<EM>\# Computed nodes:</EM> number of times the chosen " . 
+print OUT "<EM>\# Calls of Cost Function:</EM> number of times the chosen " . 
   "cost function ($cost_function_name) " .
   "is computed by each algorithm (average of $number_of_instances_per_size " . 
   "runnings).<BR>\n";
@@ -310,8 +310,8 @@ print OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>Cost Function Time (sec)</CENTER>" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
-  "<TD colspan=$number_of_algorithms><CENTER>\# Computed nodes</CENTER></TD>\n" .
-  "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
+  "<TD colspan=$number_of_algorithms><CENTER>\# Calls of Cost Function" . 
+  "</CENTER></TD>\n<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>\# The best solution</CENTER>" .
   "</TD>\n</TR>\n";
 

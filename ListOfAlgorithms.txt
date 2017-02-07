@@ -1,2 +1,6 @@
+                 ubb UcurveBranchandBound
+                  es ExhaustiveSearch
+                 sfs SFS
+                sffs SFFS
                 pucs PUCS
                  ucs UCurveSearch

@@ -37,7 +37,7 @@
 #include "UCurveSearch.h"
 #include <omp.h>
 
-#define UCS_CUTOFF 15
+#define UCS_CUTOFF 10
 
 class PUCS : public Solver
 {

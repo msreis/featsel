@@ -84,8 +84,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   }
 
   list<ElementSubset *> * min_list = &list_of_minima;
-  // #pragma omp parallel shared (min_list, parts_to_solve)
-  #pragma omp parallel
+  #pragma omp parallel shared (min_list, parts_to_solve)
   #pragma omp single nowait
   solve_parts (&parts_to_solve, min_list, max_size_of_minima_list);
   // this could go to the end of solve_parts
@@ -165,10 +164,10 @@ void PUCS::solve_parts (list<PartitionNode *> * parts,
       delete P;
     }
   }
-  #pragma omp critical
-  {
-    cout << "finished single area" << endl;
-  }
+  // #pragma omp critical
+  // {
+  //   cout << "finished single area" << endl;
+  // }
 }
 
 
@@ -191,11 +190,11 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
 Collection * PUCS::part_minimum (PartitionNode * P, 
   unsigned int max_size_of_minima_list)
 {
-  #pragma omp critical
-  {
-    int tid = omp_get_thread_num ();
-    cout << "Part " << P << " being solved by: " << tid << endl;
-  }
+  // #pragma omp critical
+  // {
+  //   int tid = omp_get_thread_num ();
+  //   cout << "Part " << P << " being solved by: " << tid << endl;
+  // }
   Collection * L = new Collection ();
   list<ElementSubset *> p_min_lst;
   ElementSet * p_elm_set = partition->get_unfixed_elm_set ();

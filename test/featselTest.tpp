@@ -72,6 +72,10 @@ void result (string test_name, bool passed)
 
 int main (void)
 {
+  // Initialize the pseudo-random number generator.
+  //
+  srand ( (unsigned) time(NULL) );
+
   cout << endl << "Starting Unit Tests... " << endl << endl;
 
   // Testing Class "Element"

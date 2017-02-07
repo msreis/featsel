@@ -139,7 +139,6 @@ void ElementSubset::set_complete_subset ()
   // PERMUTE-IN-PLACE algorithm
   for (i = 0; i < n - 1; i++)
   {
-    srand ( (unsigned) time(NULL) );
     j = ((unsigned int) rand () % (n-i)) + i;  // random number in [i, n]
     k = uniform_permutation[i];
     uniform_permutation[i] = uniform_permutation[j];

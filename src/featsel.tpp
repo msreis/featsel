@@ -46,7 +46,8 @@
 //
 int parse_parameters
   (int, char **, string *, unsigned int *, string *,
-   unsigned int *, unsigned int *, bool *, string *, unsigned int *);
+   unsigned int *, unsigned int *, bool *, string *, unsigned int *, float * p,
+   unsigned int *);
 
 
 // The main function.
@@ -56,7 +57,9 @@ int main(int argc, char * argv[])
   unsigned int max_number_of_minima = 1;
   unsigned int n = 3;
   unsigned int range = 1000,
+  l = 2, // special parameter for PUCS
   max_number_of_calls_of_cost_function = 0; // if == 0, then there is no limit
+  float p = .5; // special parameter for PUCS
   int i;
   CostFunction * cost_function;
   Solver * solver;
@@ -72,7 +75,9 @@ int main(int argc, char * argv[])
   //
   i = parse_parameters(argc, argv, &file_name, &max_number_of_minima,
       &a_cost_function, &n, &range, &store_visited_subsets, &algorithm,
-      &max_number_of_calls_of_cost_function);
+      &max_number_of_calls_of_cost_function, &p, &l);
+
+  cout << "p = " << p << " , l = " << l << endl;
 
   if (i != EXIT_SUCCESS)    // Help or error in parameters
     return EXIT_FAILURE;
@@ -175,7 +180,8 @@ int main(int argc, char * argv[])
 int parse_parameters (int argc, char ** argv, string * file_name,
 	              unsigned int * m, string * c, unsigned int * n,
 	              unsigned int * range, bool * keep_subsets, string * a,
-	              unsigned int * max_number_of_calls_of_cost_function)
+	              unsigned int * max_number_of_calls_of_cost_function,
+                float * p, unsigned int * l)
 {
   int i;
   bool error = false;
@@ -303,6 +309,13 @@ https://github.com/msreis/featsel \n\n \
       {
         a->clear ();
         a->append (argv[i]);
+        if (strcmp (argv[i], "pucs") == 0) 
+        {
+          if (argv[i + 1][0] != '-')
+            *p = atof (argv[++i]);
+          if (argv[i + 1][0] != '-')
+            *l = atoi (argv[++i]);
+        }
       }
       else
       {

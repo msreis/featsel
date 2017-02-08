@@ -10,7 +10,7 @@
 //   M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera
 //   "featsel: A Framework for Benchmarking of
 //   Feature Selection Algorithms and Cost Functions"
-//   Journal of Statistical Software (submitted)
+//   https://github.com/msreis/featsel
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -66,7 +66,6 @@ int main(int argc, char * argv[])
   string algorithm ("ubb");
   string file_name;
   bool store_visited_subsets = false;
-  float threshold = FLT_MIN;
   ofstream log_file;
 
   // Parse the parameters
@@ -192,7 +191,7 @@ by citing the paper that describes this framework: \n\n \
 M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera \n \
 'featsel: A Framework for Benchmarking of \n \
 Feature Selection Algorithms and Cost Functions' \n \
-Journal of Statistical Software (submitted) \n\n \
+https://github.com/msreis/featsel \n\n \
 ");
 
   // Parse the arguments

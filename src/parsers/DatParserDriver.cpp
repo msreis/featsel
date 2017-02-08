@@ -34,7 +34,7 @@ DatParserDriver::~DatParserDriver ()
 {
   if (list_of_elements != NULL)
   {
-    for (int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
       delete list_of_elements[i];
     delete [] list_of_elements;
   }

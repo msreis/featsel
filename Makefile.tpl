@@ -11,7 +11,7 @@
 #    M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera
 #    "featsel: A Framework for Benchmarking of
 #    Feature Selection Algorithms and Cost Functions"
-#    Journal of Statistical Software (submitted)
+#    https://github.com/msreis/featsel
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -68,10 +68,10 @@ $(TEST):	featselTest.o $(TOBJS) $(OBJS)
 
 
 featsel.o:
-	$(CXX) 	-c -o src/featsel.o src/featsel.cpp
+	$(CXX) $(CXXFLAGS)	-c -o src/featsel.o src/featsel.cpp
 
 featselTest.o:
-	$(CXX)	-c -o test/featselTest.o test/featselTest.cpp
+	$(CXX) $(CXXFLAGS)	-c -o test/featselTest.o test/featselTest.cpp
 
 help:
 	groff -man -Tascii docs/featsel.1 > docs/featsel.txt

@@ -60,11 +60,6 @@ void PUCS::set_partition_model ()
   unsigned int set_size = set->get_set_cardinality ();
   unsigned int fixed_set_size = set_size * p;
   if (fixed_set_size == 0) fixed_set_size++;
-  #pragma omp critical
-  {
-    cout << "Part set size = " << fixed_set_size << endl;
-    cout.flush ();
-  }
   bool * fixed = new bool[set_size];
   for (unsigned int i = 0; i < set_size; i++)
     fixed[i] = false;
@@ -198,7 +193,6 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
   {
     ElementSubset * pX = l->back ();
     l->pop_back ();
-    cout << "Finding the original of " << pX->print_subset () << endl;
     ElementSubset * X = P->get_original_subset (pX);
     X->cost = pX->cost;
     L->add_subset (X);
@@ -216,6 +210,7 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   //   int tid = omp_get_thread_num ();
   //   cout << "Part " << P << " being solved by: " << tid << endl;
   // }
+  Solver * sub_solver = NULL;
   Collection * L = new Collection ();
   list<ElementSubset *> p_min_lst;
   ElementSet * p_elm_set = partition->get_unfixed_elm_set ();
@@ -228,7 +223,6 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   }
   else
   {
-    Solver * sub_solver;
     Collection * visited_subsets;
     if (p_elm_set->get_set_cardinality () <= SFS_CUTOFF ||
         l <= 1)
@@ -236,9 +230,12 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);
-    #pragma omp critical
-    cout << "Solving the problem recursively with element set of size: " <<
-      p_elm_set->get_set_cardinality () << endl;
+    // #pragma omp critical
+    // {
+    //   cout << "Solving the problem recursively with element set of size: " <<
+    //     p_elm_set->get_set_cardinality () << endl;
+    //   cout << "max_size_of_minima_list = " << max_size_of_minima_list << endl;
+    // }
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
   
     #pragma omp task
@@ -248,9 +245,10 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     visited_subsets = sub_solver->get_list_of_visited_subsets ();
     update_visited_subsets (visited_subsets, P);
     delete P_cost;
-    delete sub_solver;
   }
   part_minima_collection (L, P, &p_min_lst);
+  if (sub_solver != NULL)
+    delete sub_solver;
   return L;
 }
 

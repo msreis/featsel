@@ -77,8 +77,6 @@ int main(int argc, char * argv[])
       &a_cost_function, &n, &range, &store_visited_subsets, &algorithm,
       &max_number_of_calls_of_cost_function, &p, &l);
 
-  cout << "p = " << p << " , l = " << l << endl;
-
   if (i != EXIT_SUCCESS)    // Help or error in parameters
     return EXIT_FAILURE;
 

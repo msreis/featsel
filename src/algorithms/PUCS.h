@@ -34,10 +34,10 @@
 #include "../Partition.h"
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
-#include "UCurveSearch.h"
+#include "SFS.h"
 #include <omp.h>
 
-#define UCS_CUTOFF 10
+#define SFS_CUTOFF 10
 
 class PUCS : public Solver
 {
@@ -55,6 +55,17 @@ private:
   // The number of elements that are fixed inside each part
   //
   unsigned int nof_unfixed_elms;
+
+
+  // The maximum depth that the algorithm can recurse until solve the
+  // instance using SFS
+  //
+  unsigned int l;
+
+  // The percentage of the element set that will be fixed in the 
+  // partition model.
+  //
+  float p;
 
   // Sets the partition model used
   //
@@ -132,9 +143,13 @@ private:
 
 public:
 
-  // Default constructor.
+  // Default Constructor
   //
   PUCS ();
+
+  // Constructor that defines p and l
+  //
+  PUCS (float, unsigned int);
 
   // Default destructor.
   //

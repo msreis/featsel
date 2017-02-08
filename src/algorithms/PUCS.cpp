@@ -23,13 +23,24 @@
 
 #include "PUCS.h"
 
-
 PUCS::PUCS ()
 {
   list_of_visited_subsets = new Collection ();
   cost_function = NULL;
   cand_part = NULL;
   partition = NULL;
+  this->p = .5;
+  this->l = 2;
+}
+
+PUCS::PUCS (float p, unsigned int l)
+{
+  list_of_visited_subsets = new Collection ();
+  cost_function = NULL;
+  cand_part = NULL;
+  partition = NULL;
+  this->p = p;
+  this->l = l;
 }
 
 
@@ -47,11 +58,13 @@ PUCS::~PUCS ()
 void PUCS::set_partition_model ()
 {
   unsigned int set_size = set->get_set_cardinality ();
-  unsigned int partition_set_size = set_size * (4 / 8.0) + 1;
+  unsigned int fixed_set_size = set_size * p;
+  if (fixed_set_size == set_size) fixed_set_size--;
+  unsigned int partition_set_size = set_size - fixed_set_size;
   bool * fixed = new bool[set_size];
   for (unsigned int i = 0; i < set_size; i++)
     fixed[i] = false;
-  // Random partitioning
+  
   ElementSubset X ("", set);
   X.set_complete_subset ();
   for (unsigned int i = 0; i < partition_set_size; i++)
@@ -209,10 +222,11 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   {
     Solver * sub_solver;
     Collection * visited_subsets;
-    if (p_elm_set->get_set_cardinality () > UCS_CUTOFF)
-      sub_solver = new PUCS ();
+    if (p_elm_set->get_set_cardinality () <= SFS_CUTOFF ||
+        l < 1)
+      sub_solver = new SFS ();
     else
-      sub_solver = new UCurveSearch ();
+      sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
   

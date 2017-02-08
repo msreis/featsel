@@ -3,3 +3,4 @@
     hamming_distance      HammingDistance                  xml
           subset_sum            SubsetSum                  xml
                   mi    MutualInformation                  dat
+                 cmi ConditionalMutualInformation                  dat

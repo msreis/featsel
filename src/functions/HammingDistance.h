@@ -18,6 +18,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Original cost function published in:
+//
+// Hamming, R.W. (1950).
+// "Error detecting and error correcting codes".
+// Bell System Technical Journal, 29(2):147–160.
+
+
 #ifndef HAMMING_DISTANCE_H_
 #define HAMMING_DISTANCE_H_
 

@@ -18,6 +18,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Original cost function published in:
+//
+// Reis, M.S. (2012).
+// "Minimization of Decomposable in U-shaped Curves Functions Defined on Poset
+//  Chains -- Algorithms and Applications". (PhD Thesis).
+// Institute of Mathematics and Statistics, University of Sao Paulo, Brazil.
+
+
 #ifndef SUBSET_SUM_H_
 #define SUBSET_SUM_H_
 

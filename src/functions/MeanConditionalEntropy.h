@@ -18,6 +18,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Original cost function published in:
+//
+// Martins-Jr, D.C. and Cesar-Jr, R.M. and Barrera, J. (2006).
+// "W-operator Window Design by Minimization of Mean Conditional Entropy".
+// Pattern Analysis and Applications, 9(2), 139--153.
+
+
 #ifndef MEAN_CONDITIONAL_ENTROPY_H_
 #define MEAN_CONDITIONAL_ENTROPY_H_
 

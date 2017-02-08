@@ -3,7 +3,7 @@
 // ("Sequential Forward Floating Selection").
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,6 +18,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+// Original algorithm published in:
+//
+// Pudil, P. and Novovicova, J. and Kittler, J. (1994).
+// "Floating Search Methods in Feature Selection".
+// Pattern Recognition Letters, 15(11), 1119--1125.
+
 
 #ifndef SFFS_H_
 #define SFFS_H_

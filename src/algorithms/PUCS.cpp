@@ -59,15 +59,19 @@ void PUCS::set_partition_model ()
 {
   unsigned int set_size = set->get_set_cardinality ();
   unsigned int fixed_set_size = set_size * p;
-  if (fixed_set_size == set_size) fixed_set_size--;
-  unsigned int partition_set_size = set_size - fixed_set_size;
+  if (fixed_set_size == 0) fixed_set_size++;
+  #pragma omp critical
+  {
+    cout << "Part set size = " << fixed_set_size << endl;
+    cout.flush ();
+  }
   bool * fixed = new bool[set_size];
   for (unsigned int i = 0; i < set_size; i++)
     fixed[i] = false;
   
   ElementSubset X ("", set);
   X.set_complete_subset ();
-  for (unsigned int i = 0; i < partition_set_size; i++)
+  for (unsigned int i = 0; i < fixed_set_size; i++)
   {
     unsigned int e = X.remove_random_element ();
     fixed[e] = true;
@@ -95,6 +99,9 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     delete p_subset;
     p_subset = cand_part->get_random_zero_evaluated_element ();
   }
+
+  #pragma omp critical
+  cout << "Finished walking" << endl;
 
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list, parts_to_solve)
@@ -191,6 +198,7 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
   {
     ElementSubset * pX = l->back ();
     l->pop_back ();
+    cout << "Finding the original of " << pX->print_subset () << endl;
     ElementSubset * X = P->get_original_subset (pX);
     X->cost = pX->cost;
     L->add_subset (X);
@@ -223,11 +231,14 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     Solver * sub_solver;
     Collection * visited_subsets;
     if (p_elm_set->get_set_cardinality () <= SFS_CUTOFF ||
-        l < 1)
+        l <= 1)
       sub_solver = new SFS ();
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);
+    #pragma omp critical
+    cout << "Solving the problem recursively with element set of size: " <<
+      p_elm_set->get_set_cardinality () << endl;
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
   
     #pragma omp task

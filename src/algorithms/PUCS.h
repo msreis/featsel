@@ -52,11 +52,6 @@ private:
   //
   Partition * partition;
 
-  // The number of elements that are fixed inside each part
-  //
-  unsigned int nof_unfixed_elms;
-
-
   // The maximum depth that the algorithm can recurse until solve the
   // instance using SFS
   //

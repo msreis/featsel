@@ -2,5 +2,5 @@
                  mce MeanConditionalEntropy                  dat
     hamming_distance      HammingDistance                  xml
           subset_sum            SubsetSum                  xml
-   MutualInformation                   mi                  dat
-ConditionalMutualInformation                  cmi                  dat
+                  mi    MutualInformation                  dat
+                 cmi ConditionalMutualInformation                  dat

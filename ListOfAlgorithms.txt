@@ -4,4 +4,4 @@
                 sffs SFFS
                 pucs PUCS
                  ucs UCurveSearch
-             SpecCMI spec_cmi
+            spec_cmi SpecCMI

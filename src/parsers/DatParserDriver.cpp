@@ -34,7 +34,7 @@ DatParserDriver::~DatParserDriver ()
 {
   if (list_of_elements != NULL)
   {
-    for (int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
       delete list_of_elements[i];
     delete [] list_of_elements;
   }
@@ -48,14 +48,14 @@ int DatParserDriver::parse (unsigned int n, string f)
   // 0 1 1 0 1 11 27 1212\n
   // 1 0 0 1 0  7 320  0\n
   //
-  // For each row, the first five digits are the characteristic vector of the 
-  // subset, and the last three numbers are the number of occurrences of the 
+  // For each row, the first five digits are the characteristic vector of the
+  // subset, and the last three numbers are the number of occurrences of the
   // labels "0", "1" and "2" to the respective subset.
   //
   unsigned int i, current_value;
   long begin, end;
   ifstream my_file (f.c_str ());
-  
+
   number_of_elements = n;
 
   begin = my_file.tellg ();
@@ -66,7 +66,7 @@ int DatParserDriver::parse (unsigned int n, string f)
   // A conservative estimation, since the values of the last two numbers
   // often have more than 2 digits.
   //
-  max_number_of_values = (end - begin) / 
+  max_number_of_values = (end - begin) /
                          (2 * (number_of_elements + NUMBER_OF_LABELS));
 
   // The extra positions are to store the classification for a given subset,
@@ -77,7 +77,7 @@ int DatParserDriver::parse (unsigned int n, string f)
   {
     cout << "Error in ElementSet: could not allocate memory for " <<
     "ElementSet elements!" << endl;
-    return 1; 
+    return 1;
   }
 
   for (i = 0; i < (number_of_elements + NUMBER_OF_LABELS); i++)

@@ -32,7 +32,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp	-O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
 			src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -52,6 +52,7 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/algorithms/SpecCMI.o \
 			src/Collection.o src/Solver.o src/CostFunction.o \
 			src/algorithms/UCurveToolBox.o \
+			src/alglib/optimization.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/ROBDDTest.o test/PartitionTest.o \
@@ -74,7 +75,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o \
 
-LIBS = -lm
+LIBS = -lm -lalglib
 
 
 TARGET =	bin/featsel

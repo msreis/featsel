@@ -48,6 +48,25 @@ using namespace alglib;
 class SpecCMI : public Solver
 {
 
+private:
+
+  // Symmetric matrix containing the pairwise conditional mutual information,
+  // as described in Xuan Vinh et al. (2014).
+  //
+  real_2d_array Q;
+
+  // Cardinality of the subset that will be selected by the algorithm.
+  //
+  unsigned int k;
+
+  // Compute the symmetric matrix Q of the quadratic term.
+  //
+  void compute_Q_matrix ();
+
+  // Set the value of k with k_value.
+  //
+  void set_k (unsigned int k_value);
+
 public:
 
   // Default constructor.

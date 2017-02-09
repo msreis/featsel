@@ -25,7 +25,7 @@ namespace PartitionNodeTest
   
   bool it_map_subsets_correctly ()
   {
-    bool answ;
+    bool answ = true;
     unsigned int set_size = 12;
     ElementSet original_set ("", set_size, 100);
     bool * is_fixed = new bool[set_size];
@@ -43,9 +43,9 @@ namespace PartitionNodeTest
     part_subset.add_element (2);
     part_subset.add_element (4);
     PartitionNode P (&partition, &part_subset);
-    // P        = 1X01X0X1XXXXX 
-    // expected = 1001100101000
+    // P        = 1X01X0X1XXXX 
     // input    =  0  1 0 01000
+    // expected = 1001100101000
     ElementSubset expected_subset ("", &original_set);
     expected_subset.add_element (0);
     expected_subset.add_element (3);
@@ -60,9 +60,38 @@ namespace PartitionNodeTest
     answ_subset = P.get_original_subset (&input_subset);
     if (!answ_subset->is_equal (&expected_subset))
       answ = false;
-    else
-      answ = true;
     delete answ_subset;
+
+    ElementSet * p_set = partition.get_unfixed_elm_set ();
+    // original   =  0 1 2 3 4 5 6 7 8 9 10 11
+    // partition  =  f X f f X f X f X X X  X
+    // P          =  1 X 0 1 X 0 X 1 X X X  X 
+    // p_set      = {  1     4   6   8 9 10 11}
+    // partition2 =    f     X   f   f X f  X  
+    // P2         =    1     X   0   0 X 0  X
+    // input2     =          1         1    0
+    // expected2  =    1     1   0   0 1 0  0
+    // expected   =  1 1 0 1 1 0 0 1 0 1 0  0
+    Partition partition2 (p_set, is_fixed);
+    ElementSet * fixed_set2 = partition2.get_fixed_elm_set ();
+    ElementSet * unfixed_set2 = partition2.get_unfixed_elm_set ();
+    ElementSubset part_subset2 ("", fixed_set2);
+    part_subset2.add_element (0);
+    PartitionNode P2 (&partition2, &part_subset2);
+    ElementSubset input2 ("", unfixed_set2);
+    input2.add_element (0);
+    input2.add_element (1);
+    ElementSubset * answ_subset2 = P2.get_original_subset (&input2);
+    cout << "answ_subset2 = " << answ_subset2->print_subset () << endl;
+    answ_subset = P.get_original_subset (answ_subset2);
+    expected_subset.add_element (1);
+    cout << "expected = " << expected_subset.print_subset () << endl;
+    cout << "got = " << answ_subset->print_subset () << endl;
+    if (!answ_subset->is_equal (&expected_subset))
+        answ = false;
+    delete answ_subset;
+    delete answ_subset2;
+
     delete[] is_fixed;
     return answ;
   }

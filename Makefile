@@ -53,6 +53,9 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
 			src/Collection.o src/Solver.o src/CostFunction.o \
 			src/algorithms/UCurveToolBox.o \
 			src/alglib/optimization.o \
+		    src/alglib/ap.o src/alglib/alglibinternal.o \
+		    src/alglib/alglibmisc.o src/alglib/linalg.o src/alglib/solvers.o  \
+            
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/ROBDDTest.o test/PartitionTest.o \

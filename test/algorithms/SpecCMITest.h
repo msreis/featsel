@@ -5,7 +5,7 @@
 // SpecCMITest.h -- definition of the namespace "SpecCMITest".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -21,20 +21,23 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SPECCMITEST_H_
-#define SPECCMITEST_H_
+# ifndef SPECCMITEST_H_
+# define SPECCMITEST_H_
 
-#include "../../src/algorithms/SpecCMI.h"
-#include "../../src/functions/SubsetSum.h"
-#include "../../src/functions/HammingDistance.h"
+# include "../../src/algorithms/SpecCMI.h"
+# include "../../src/functions/SubsetSum.h"
+# include "../../src/functions/HammingDistance.h"
+# include "../../src/functions/ConditionalMutualInformation.h"
 
 namespace SpecCMITest
 {
 
-  bool it_should_store_all_the_visited_subsets ();
+  bool it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ();
 
-  bool it_should_give_the_number_of_the_visited_subsets ();
+  bool it_should_converge_for_instances_with_hundreds_of_features ();
+
+  bool it_should_converge_for_instances_with_thousands_of_features ();
 
 }
 
-#endif /* SPECCMITEST_H_ */
+# endif /* SPECCMITEST_H_ */

@@ -25,6 +25,7 @@ SpecCMI::SpecCMI ()
 {
   list_of_visited_subsets = new Collection ();
   cost_function = NULL;
+  k = 1;  // A default value for k
 }
 
 
@@ -66,12 +67,9 @@ void SpecCMI::compute_Q_matrix ()
 }
 
 
-void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
+string SpecCMI::rank_features (unsigned int k_value)
 {
   int n = set->get_set_cardinality ();
-
-  timeval begin_program, end_program;
-  gettimeofday (& begin_program, NULL);
 
   // IMPORTANT: this solver minimizes the following function:
   //     f(x) = 0.5*x'*A*x + b'*x.
@@ -90,16 +88,16 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   minqpstate state;
   minqpcreate (n, state);
 
-  // Set the linear constraint: x_1 + ...+ x_n = k, which generalizes a 
-  // constraint composed of the
-  // Euclidean norm ||x|| = sqrt(k) for x_i in {0, 1}.
+  // Set the linear constraint: x_1 + ...+ x_n = k, which is a relaxation on a 
+  // constraint composed of ||x|| = sqrt(k) for x_i in {0, 1}, where
+  // ||x|| is the Euclidean norm.
   //
   string str_c = "[[1";
   for (int i = 1; i < n; i++)
   {
     str_c.append (",1");
   }
-  stringstream ss; ss << k;
+  stringstream ss; ss << k_value;
   str_c.append ("," + ss.str () + "]]");
   real_2d_array c = str_c.c_str ();
   integer_1d_array ct = "[0]";
@@ -160,8 +158,25 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   real_1d_array x;
   minqpresults (state, x, rep);
 
-  printf ("Report: %d\n", int (rep.terminationtype));
-  printf ("Result: %s\n", x.tostring (2).c_str ()); // EXPECTED: [2,2]
+  if ((int (rep.terminationtype)) == 7)
+  {
+    return x.tostring (2);
+  }
+  else
+  {
+    return "Error";
+  }
+}
+
+
+void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
+{
+  timeval begin_program, end_program;
+  gettimeofday (& begin_program, NULL);
+
+  string result = rank_features (k);
+
+  printf ("Result: %s\n", result.c_str ());
 
   ElementSubset * X;
   X = new ElementSubset ("best", set);    

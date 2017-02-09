@@ -10891,8 +10891,8 @@ bool rmatrixschur(real_2d_array &a, const ae_int_t n, real_2d_array &s)
 /////////////////////////////////////////////////////////////////////////
 namespace alglib_impl
 {
-static ae_int_t ablas_rgemmparallelsize = 64;
-static ae_int_t ablas_cgemmparallelsize = 64;
+// static ae_int_t ablas_rgemmparallelsize = 64;
+// static ae_int_t ablas_cgemmparallelsize = 64;
 static void ablas_ablasinternalsplitlength(ae_int_t n,
      ae_int_t nb,
      ae_int_t* n1,
@@ -11363,7 +11363,7 @@ static void rcond_internalcomplexrcondloadall(/* Integer */ ae_vector* isave,
      ae_state *_state);
 
 
-static ae_int_t matinv_parallelsize = 64;
+// static ae_int_t matinv_parallelsize = 64;
 static void matinv_rmatrixtrinverserec(/* Real    */ ae_matrix* a,
      ae_int_t offs,
      ae_int_t n,
@@ -38972,7 +38972,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
     double temp;
 
 
-    
+
     /*
      *Executable Statements ..
      */
@@ -38994,7 +38994,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         return;
     }
     rcond_internalcomplexrcondloadall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
-    
+
     /*
      * ENTRY   (JUMP = 1)
      * FIRST ITERATION.  X HAS BEEN OVERWRITTEN BY A*X.
@@ -39027,7 +39027,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         rcond_internalcomplexrcondsaveall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
         return;
     }
-    
+
     /*
      * ENTRY   (JUMP = 2)
      * FIRST ITERATION.  X HAS BEEN OVERWRITTEN BY CTRANS(A)*X.
@@ -39036,7 +39036,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
     {
         j = rcond_internalcomplexrcondicmax1(x, n, _state);
         iter = 2;
-        
+
         /*
          * MAIN LOOP - ITERATIONS 2,3,...,ITMAX.
          */
@@ -39050,7 +39050,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         rcond_internalcomplexrcondsaveall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
         return;
     }
-    
+
     /*
      * ENTRY   (JUMP = 3)
      * X HAS BEEN OVERWRITTEN BY A*X.
@@ -39060,13 +39060,13 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         ae_v_cmove(&v->ptr.p_complex[1], 1, &x->ptr.p_complex[1], 1, "N", ae_v_len(1,n));
         estold = *est;
         *est = rcond_internalcomplexrcondscsum1(v, n, _state);
-        
+
         /*
          * TEST FOR CYCLING.
          */
         if( ae_fp_less_eq(*est,estold) )
         {
-            
+
             /*
              * ITERATION COMPLETE.  FINAL STAGE.
              */
@@ -39098,7 +39098,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         rcond_internalcomplexrcondsaveall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
         return;
     }
-    
+
     /*
      * ENTRY   (JUMP = 4)
      * X HAS BEEN OVERWRITTEN BY CTRANS(A)*X.
@@ -39110,7 +39110,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         if( ae_fp_neq(ae_c_abs(x->ptr.p_complex[jlast], _state),ae_c_abs(x->ptr.p_complex[j], _state))&&iter<itmax )
         {
             iter = iter+1;
-            
+
             /*
              * MAIN LOOP - ITERATIONS 2,3,...,ITMAX.
              */
@@ -39124,7 +39124,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
             rcond_internalcomplexrcondsaveall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
             return;
         }
-        
+
         /*
          * ITERATION COMPLETE.  FINAL STAGE.
          */
@@ -39139,7 +39139,7 @@ static void rcond_cmatrixestimatenorm(ae_int_t n,
         rcond_internalcomplexrcondsaveall(isave, rsave, &i, &iter, &j, &jlast, &jump, &absxi, &altsgn, &estold, &temp, _state);
         return;
     }
-    
+
     /*
      * ENTRY   (JUMP = 5)
      * X HAS BEEN OVERWRITTEN BY A*X.

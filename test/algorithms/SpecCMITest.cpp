@@ -5,7 +5,7 @@
 // SpecCMITest.cpp -- implementation of the namespace "SpecCMITest".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016 Marcelo S. Reis
+//    Copyright (C) 2017 Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -21,13 +21,43 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "SpecCMITest.h"
+# include "SpecCMITest.h"
 
 namespace SpecCMITest
 {
 
-  bool it_should_store_all_the_visited_subsets ()
+  bool it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ()
   {
+    // In the example of the paper, we have a pair of features [S,G]^T, where   
+    // S and G means smoking and coughing, respectively, and the label is C
+    // (cancer). The given distributions are:
+
+    // P(S,C):            C = 0      C = 1
+    //          S = 0      0.25        0
+    //          S = 2      0.25        0
+    //          S = 3       0         0.25
+    //          S = 4       0         0.25
+
+    // P(C,G):            C = 0      C = 1
+    //          G = 0     0.475      0.025
+    //          G = 2     0.025      0.475
+
+    // P(S,G):            G = 0      G = 1
+    //          S = 0     0.2375     0.0125
+    //          S = 2     0.2375     0.0125
+    //          S = 3     0.0125     0.2375
+    //          S = 4     0.0125     0.2375
+
+    // The computed Hessian symmetric matrix is:
+    //            
+    //        |    1       0.2864/2  |   
+    //    Q = |                      |
+    //        | 0.2864/2    0.7136   |
+
+    // And the result of SPEC-CMI is the vector [0.92, 0.38]^T, in which
+    // feature S ranks higher than G.
+
+
     ElementSet set ("S1", 3, 1);    // |S1| = 3
     SpecCMI t;
     string list;
@@ -47,20 +77,15 @@ namespace SpecCMITest
       return false;
   }
 
-
-  bool it_should_give_the_number_of_the_visited_subsets ()
+  bool it_should_converge_for_instances_with_hundreds_of_features ()
   {
-    ElementSet set ("S1", 3, 1);    // |S1| = 3
-    SpecCMI t;
-    SubsetSum c (&set);
-    t.set_parameters (&c, &set, true);
-    t.get_minima_list (1);
-    if ((t.print_list_of_visited_subsets ().size () /
-        (set.get_set_cardinality() + 4)) >= 7)
-      return true;
-    else
-      return false;
+    return false;
   }
 
+  bool it_should_converge_for_instances_with_thousands_of_features ()
+  {
+    return false;
+  }
 
 } // end of namespace
+

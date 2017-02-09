@@ -43,6 +43,8 @@
 # include "../Solver.h"
 # include "../ElementSubset.h"
 
+# include "../functions/ConditionalMutualInformation.h"
+
 using namespace alglib;
 
 class SpecCMI : public Solver
@@ -81,9 +83,11 @@ public:
   //
   void get_minima_list (unsigned int);
 
-
+  // 
+  //
   string rank_features (unsigned int k_value);
 
 };
 
 #endif /* SPECCMI_H_ */
+

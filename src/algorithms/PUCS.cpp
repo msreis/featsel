@@ -95,9 +95,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     p_subset = cand_part->get_random_zero_evaluated_element ();
   }
 
-  #pragma omp critical
-  cout << "Finished walking" << endl;
-
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list, parts_to_solve)
   #pragma omp single nowait

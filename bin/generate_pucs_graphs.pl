@@ -95,7 +95,6 @@ foreach my $i (1..$p_values)
     {
       my ($t0, $t1);
       $t0 = [gettimeofday];
-      print "instance size = $instance_size\n";
       system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
               "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
               " > $LOG_FILE");
@@ -153,7 +152,7 @@ printf PLOT "set ytics 1\n";
 printf PLOT "set ylabel \"l\" rotate parallel\n";
 printf PLOT "set zlabel \"Average Total time (seconds)\" rotate parallel\n";
 printf PLOT "unset colorbox\n";
-printf PLOT "set dgrid3d $grid_points, $max_l\n";
+printf PLOT "set dgrid3d $l_values, $max_l\n";
 printf PLOT "set hidden3d\n";  
 printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:4 with lines\n";
 

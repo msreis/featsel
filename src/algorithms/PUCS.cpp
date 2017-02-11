@@ -29,7 +29,7 @@ PUCS::PUCS ()
   cost_function = NULL;
   cand_part = NULL;
   partition = NULL;
-  this->p = .5;
+  this->p = 0;  // set later
   this->l = 2;
 }
 
@@ -80,6 +80,11 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 {
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
+
+  if (p == 0)
+    p = 15.0 / set->get_set_cardinality ();
+  if (p > .7)
+    p = .7;
 
   list<PartitionNode *> parts_to_solve;
   ElementSubset * p_subset;

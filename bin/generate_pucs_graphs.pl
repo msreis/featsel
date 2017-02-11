@@ -53,7 +53,7 @@ my @instance_file;             # Store the list of instance file names.
 my $MAX_ELEM_VALUE = 100000;   # Maximum value of an element of S.
 foreach my $i (1..$number_of_instances)
 {
-  random_subset_sum_instance ($i, $MAX_ELEM_VALUE, $INPUT_DIR, $_);
+  random_subset_sum_instance ($instance_size, $MAX_ELEM_VALUE, $INPUT_DIR, $_);
 }
 # Load files
 opendir (my $dh, $INPUT_DIR) or die "Cannot open input directory: $!\n";

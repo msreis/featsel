@@ -50,7 +50,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 			test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o \
 
-LIBS = -lm -lalglib
+LIBS = -lm
 
 
 TARGET =	bin/featsel

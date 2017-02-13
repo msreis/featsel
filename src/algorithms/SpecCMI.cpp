@@ -188,18 +188,43 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
 
   compute_Q_matrix ();
 
+  // Result contains the rank of each feature. Now we need to, starting by the
+  // empty set, include one feature at a time and compute the cost function.
+  // The subset with lowest cost in this process will be returned as the
+  // best one according to the SPEC-CMI algorithm ranking coupled with the
+  // chosen cost function (e.g. regular Mutual Information).
+  // 
   double * result = rank_features ();
 
+  map <double, unsigned int> feature_queue;
+  map <double, unsigned int>::iterator it;
+
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
-    cout << result[i] << endl;
+  {
+    result[i] = abs (result[i]); // TODO: must check Theorem 2 and 
+                                 // other results in Vinh et al. (2014).
+    feature_queue.insert (pair<double, unsigned int>(result[i], i));
+  }
+
+  ElementSubset X ("", set), * Y;
+
+  Y = new ElementSubset ("", set);
+  Y->copy (&X);
+  Y->cost = cost_function->cost (Y);   
+  list_of_minima.push_back (Y); 
+
+  // map C++ container has its keys ordered by default.
+  //
+  for (it = feature_queue.begin (); it != feature_queue.end (); it++)
+  {
+    X.add_element (it->second);
+    Y = new ElementSubset ("", set);
+    Y->copy (&X);
+    Y->cost = cost_function->cost (Y);   
+    list_of_minima.push_back (Y); 
+  }
 
   delete [] result;
-
-  ElementSubset * X;
-  X = new ElementSubset ("", set);
-  X->set_complete_subset ();
-  X->cost = cost_function->cost (X);   
-  list_of_minima.push_back (X); 
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();

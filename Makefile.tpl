@@ -49,7 +49,6 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 
 LIBS = -lm -loctave -loctinterp
 
-
 TARGET =	bin/featsel
 
 TEST =		bin/featselTest

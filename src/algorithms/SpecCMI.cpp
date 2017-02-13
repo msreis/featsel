@@ -148,7 +148,11 @@ double * SpecCMI::Rayleigh (double epsilon, double mu, double * x_0)
     in(0) = y;
     out = Fnorm (in, 1);
     err = err / out(0).double_value ();
+
+    // cout << "Estimated dominant eigenvalue: " << mu << endl;
+
   }
+
 
   double * result = new double [n];
 
@@ -163,17 +167,20 @@ double * SpecCMI::rank_features ()
 {
   compute_Q_matrix ();
 
-  double epsilon = 0.0001;    // Precision of the Rayleigh quotient iteration.
+  unsigned int n = set->get_set_cardinality ();
 
-  double      mu = 0;         // Initial estimate for the dominant eigenvalue.
-
-  // Initial estimate for a dominant eigenvector.
+  // Initial estimate for the dominant eigenvalue.
   //
-  double * x = new double [set->get_set_cardinality ()];
-  for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
-    x[i] = 1;
+  double mu = 0;         
 
-  double * result = Rayleigh (epsilon, mu, x);
+  // Initial estimate for a dominant eigenvector, which must be an unit-norm
+  // vector, that is, ||x|| = sqrt (x1^2 + ... + xn^2) = 1.
+  //
+  double * x = new double [n];
+  for (unsigned int i = 0; i < n; i++)
+    x[i] =  1;
+
+  double * result = Rayleigh ((double) EPSILON, mu, x);
 
   delete [] x;
 
@@ -201,8 +208,11 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
 
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
   {
-    result[i] = abs (result[i]); // TODO: must check Theorem 2 and 
-                                 // other results in Vinh et al. (2014).
+
+    // cout << result[i] << endl;
+
+    result[i] = abs (result[i]);
+
     feature_queue.insert (pair<double, unsigned int>(result[i], i));
   }
 

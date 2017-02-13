@@ -27,6 +27,7 @@ DatParserDriver::DatParserDriver ()
 {
   list_of_elements = NULL;
   number_of_elements = 0;
+  number_of_labels = 0;
 }
 
 
@@ -34,13 +35,13 @@ DatParserDriver::~DatParserDriver ()
 {
   if (list_of_elements != NULL)
   {
-    for (unsigned int i = 0; i < number_of_elements + NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < number_of_elements + number_of_labels; i++)
       delete list_of_elements[i];
     delete [] list_of_elements;
   }
 }
 
-int DatParserDriver::parse (unsigned int n, string f)
+int DatParserDriver::parse (unsigned int n, unsigned int l, string f)
 {
   // Example of a line of a .dat file with two subsets of a set of 5 elements
   // and three labels:
@@ -58,6 +59,8 @@ int DatParserDriver::parse (unsigned int n, string f)
 
   number_of_elements = n;
 
+  number_of_labels = l;
+
   begin = my_file.tellg ();
   my_file.seekg (0, ios::end);
   end = my_file.tellg ();
@@ -67,12 +70,12 @@ int DatParserDriver::parse (unsigned int n, string f)
   // often have more than 2 digits.
   //
   max_number_of_values = (end - begin) /
-                         (2 * (number_of_elements + NUMBER_OF_LABELS));
+                         (2 * (number_of_elements + number_of_labels));
 
   // The extra positions are to store the classification for a given subset,
   // which requires one index per label.
   //
-  list_of_elements = new Element * [number_of_elements + NUMBER_OF_LABELS];
+  list_of_elements = new Element * [number_of_elements + number_of_labels];
   if (list_of_elements == 0)
   {
     cout << "Error in ElementSet: could not allocate memory for " <<
@@ -80,7 +83,7 @@ int DatParserDriver::parse (unsigned int n, string f)
     return 1;
   }
 
-  for (i = 0; i < (number_of_elements + NUMBER_OF_LABELS); i++)
+  for (i = 0; i < (number_of_elements + number_of_labels); i++)
     list_of_elements [i] = new Element (max_number_of_values, "");
 
   i = 0;
@@ -88,7 +91,7 @@ int DatParserDriver::parse (unsigned int n, string f)
   {
     list_of_elements [i]->add_element_value (current_value);
     i++;
-    if (i == (number_of_elements + NUMBER_OF_LABELS))
+    if (i == (number_of_elements + number_of_labels))
       i = 0;
   }
   my_file.close ();

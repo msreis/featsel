@@ -35,6 +35,11 @@
 
 # include "../functions/ConditionalMutualInformation.h"
 
+// Precision of the Rayleigh quotient iteration.
+//
+# define EPSILON 0.0001
+
+
 class SpecCMI : public Solver
 {
 

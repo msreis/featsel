@@ -123,13 +123,13 @@ float MeanConditionalEntropy::calculate_conditional_entropy (ElementSubset * x)
   float  Pr_Y_is_y_given_x,
          H_of_Y_given_x = 0;
 
-  for (y = 0; y < NUMBER_OF_LABELS; y++)
+  for (y = 0; y < set->get_number_of_labels (); y++)
   {
     Pr_Y_is_y_given_x = (float) x->Y[y] /
                         x->cost; // cost stores the sum of Y[i..k]
     if (Pr_Y_is_y_given_x > 0)
       H_of_Y_given_x -= Pr_Y_is_y_given_x *
-      (log (Pr_Y_is_y_given_x) / log ((float) NUMBER_OF_LABELS));
+      (log (Pr_Y_is_y_given_x) / log ((float) set->get_number_of_labels ()));
   }
 
   return H_of_Y_given_x;
@@ -166,10 +166,10 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     {
       B = new ElementSubset ("", S);
       B->copy (& A);
-      B->Y = new (nothrow) unsigned int [NUMBER_OF_LABELS];
+      B->Y = new (nothrow) unsigned int [set->get_number_of_labels ()];
       B->cost = 0;
    
-      for (k = 0; k < NUMBER_OF_LABELS; k++)
+      for (k = 0; k < set->get_number_of_labels (); k++)
       {
         B->Y[k] = set->get_element
         (set->get_set_cardinality () + k)->get_element_value (j);
@@ -183,7 +183,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     //
     else
     {
-      for (k = 0; k < NUMBER_OF_LABELS; k++)
+      for (k = 0; k < set->get_number_of_labels (); k++)
       {
         it->second->Y[k] += set->get_element
         (set->get_set_cardinality () + k)->get_element_value (j);

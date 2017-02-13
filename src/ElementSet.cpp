@@ -38,16 +38,18 @@ ElementSet::ElementSet (string set_name)
   list_of_elements = NULL;
   has_extra_element = false;
   value = 0;
+  number_of_labels = 0;
 }
 
 
 ElementSet::ElementSet (ElementSet * elm_set)
 {
   this->number_of_elements = elm_set->number_of_elements;
+  this->number_of_labels = elm_set->get_number_of_labels ();
   if (elm_set->has_extra_element)
   {
     unsigned int real_nof_elements;
-    real_nof_elements = elm_set->number_of_elements + NUMBER_OF_LABELS;
+    real_nof_elements = elm_set->number_of_elements + this->number_of_labels;
     this->list_of_elements = new Element*[real_nof_elements];
     for (unsigned int i = 0; i < real_nof_elements; i++)
       this->list_of_elements[i] = 
@@ -74,6 +76,7 @@ ElementSet::ElementSet (string a_set_name, string file_name)
   list_of_elements = NULL;
   has_extra_element = false;
   number_of_elements = 0;
+  number_of_labels = 0;
 
   if (driver->parse (file_name.data ()))
   {
@@ -108,26 +111,23 @@ ElementSet::ElementSet (string a_set_name, string file_name)
 }
 
 
-// Load .dat files, in order to perform morphological operator design.
-//
-ElementSet::ElementSet (string file_name, unsigned int n)
+void ElementSet::load_dat_file (string file_name, unsigned int n)
 {
   DatParserDriver * driver = new DatParserDriver ();  
-
   has_extra_element = true;
-  name = "Morphological operator design";
+  name = "Classifier design";
   number_of_elements = n;
   value = 0;
   
-  if (driver->parse (n, file_name))
+  if (driver->parse (n, number_of_labels, file_name))
   {
     std::cout << "Error in ElementSet, processing the DAT file!" << std::endl;
   }
   else
   {
-    list_of_elements = new Element * [number_of_elements + NUMBER_OF_LABELS];
+    list_of_elements = new Element * [number_of_elements + number_of_labels];
 
-    for (unsigned int i = 0; i < (number_of_elements + NUMBER_OF_LABELS); i++)
+    for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
     {
       unsigned int max = 
         driver->list_of_elements[i]->get_number_of_values ();
@@ -144,6 +144,24 @@ ElementSet::ElementSet (string file_name, unsigned int n)
 }
 
 
+// Load .dat files for an arbitrary number of labels.
+//
+ElementSet::ElementSet (unsigned int l, string file_name, unsigned int n)
+{
+  number_of_labels = l;
+  load_dat_file (file_name, n);
+}
+
+
+// Load .dat files for binary labels.
+//
+ElementSet::ElementSet (string file_name, unsigned int n)
+{
+  number_of_labels = 2;
+  load_dat_file (file_name, n);
+}
+
+
 ElementSet::ElementSet (string set_name, unsigned int n, unsigned int range)
 {
   unsigned int i;
@@ -151,6 +169,7 @@ ElementSet::ElementSet (string set_name, unsigned int n, unsigned int range)
   has_extra_element = false;
   number_of_elements = n;
   value = 0;
+  number_of_labels = 0;
 
   if (set_name.length () > 0)
     name = set_name;
@@ -188,13 +207,14 @@ ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
   unsigned int size)
 {
   this->number_of_elements = size;
+  this->number_of_labels = elm_set->get_number_of_labels ();
 
   if (elm_set->has_extra_element)
   {
     unsigned int real_nof_elements;
-    real_nof_elements = size + NUMBER_OF_LABELS;
+    real_nof_elements = size + this->number_of_labels;
     this->list_of_elements = new Element*[real_nof_elements];
-    for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++) 
+    for (unsigned int i = 0; i < this->number_of_labels; i++) 
     {
       unsigned int j = elm_set->number_of_elements + i;
       Element * elm = elm_set->list_of_elements[j];
@@ -222,7 +242,7 @@ ElementSet::~ElementSet ()
   }
   if (has_extra_element)
   {
-    for (i = 0; i < NUMBER_OF_LABELS; i++)
+    for (i = 0; i < number_of_labels; i++)
     {
       delete list_of_elements [number_of_elements + i];
     }
@@ -254,7 +274,7 @@ Element * ElementSet::get_element (unsigned int index)
 {
   if ((has_extra_element 
         && 
-      (index < (number_of_elements + NUMBER_OF_LABELS)) )
+      (index < (number_of_elements + number_of_labels)) )
       ||
       (index < number_of_elements))
     return list_of_elements[index];
@@ -313,3 +333,11 @@ void ElementSet::permute_set ()
   if (uniform_permutation != NULL)
     delete [] uniform_permutation;
 }
+
+
+unsigned int ElementSet::get_number_of_labels ()
+{
+  return number_of_labels;
+}
+
+

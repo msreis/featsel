@@ -37,6 +37,10 @@ private:
   //
   bool has_extra_element;
 
+  // Number of labels of an .DAT file (default == 2, for binary classification).
+  //
+  unsigned int number_of_labels;
+
   // Name of this set.
   //
   string name;
@@ -57,6 +61,10 @@ private:
   //
   map <string, float> explicit_cost;
 
+  // Auxiliary method to load .DAT files.
+  //
+  void load_dat_file (string file_name, unsigned int n);
+
 public:
 
   // Default constructor: an empty set with a given name.
@@ -72,6 +80,12 @@ public:
   ElementSet (string, string);
 
   // Constructor: a set with elements imported from a DAT file with n elements.
+  // (number of labels specified by user.
+  //
+  ElementSet (unsigned int, string, unsigned int);
+
+  // Constructor: a set with elements imported from a DAT file with n elements.
+  // (binary labels).
   //
   ElementSet (string, unsigned int);
 
@@ -120,6 +134,9 @@ public:
   //
   void print_list_of_elements ();
 
+  // Return the number of labels of a given set.
+  //
+  unsigned int get_number_of_labels ();
 };
 
 #endif /* ELEMENTSET_H_ */

@@ -54,11 +54,11 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 
   for (unsigned int k = 0; k < number_of_rows; k++)
   {
-    unsigned int * row_labels = new unsigned int [NUMBER_OF_LABELS];
+    unsigned int * row_labels = new unsigned int [set->get_number_of_labels ()];
 
     // Count frequency of each label for the current observation x1.
     //
-    for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
     {
       row_labels[i] = set->get_element (n + i)->get_element_value (k);
       m += row_labels[i];
@@ -72,14 +72,14 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 
     if (it == table.end ())
     {
-      unsigned int * new_row = new unsigned int [NUMBER_OF_LABELS];
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      unsigned int * new_row = new unsigned int [set->get_number_of_labels ()];
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         new_row[i] = row_labels[i];
       table.insert (pair<unsigned int, unsigned int *>(x1_row_value, new_row));
     }
     else
     {
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         (table[x1_row_value])[i] += row_labels[i];
     }
 
@@ -88,18 +88,18 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 
   // Compute P(Y = y) for all y in Y.
   //
-  float Pr_Y [NUMBER_OF_LABELS];
-  for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+  float Pr_Y [set->get_number_of_labels ()];
+  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
     Pr_Y[i] = 0;
   for (it = table.begin (); it != table.end (); it++)
-    for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
       Pr_Y[i] += it->second[i];
-  for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
     Pr_Y[i] /= (float) m;
 
   // sum_{y \in Y}, iterates over all labels.
   //
-  for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
   {
     //
     // sum_{x \in x1}, iterates over the observed values of x1. 
@@ -109,7 +109,7 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
       // P(x1=x)
       //
       float Pr_X = 0;
-      for (unsigned int k = 0; k < NUMBER_OF_LABELS; k++)
+      for (unsigned int k = 0; k < set->get_number_of_labels (); k++)
         Pr_X += it->second[k];
       Pr_X /= (float) m;
 
@@ -121,7 +121,7 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
       //
       if ((Pr_X_and_Y != 0) && (Pr_X != 0) && (Pr_Y[i] != 0))
         result += Pr_X_and_Y * (log (Pr_X_and_Y / (Pr_X * Pr_Y[i])) / 
-                                log ((float) NUMBER_OF_LABELS));
+                                log ((float) set->get_number_of_labels ()));
     }
   }
 
@@ -157,11 +157,11 @@ float ConditionalMutualInformation::conditional_mutual_information
 
   for (unsigned int k = 0; k < number_of_rows; k++)
   {
-    unsigned int * row_labels = new unsigned int [NUMBER_OF_LABELS];
+    unsigned int * row_labels = new unsigned int [set->get_number_of_labels ()];
 
     // Count frequency of each label for the current observation of x1 and x2.
     //
-    for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
     {
       row_labels[i] = set->get_element (n + i)->get_element_value (k);
       m += row_labels[i];
@@ -180,15 +180,15 @@ float ConditionalMutualInformation::conditional_mutual_information
 
     if (it == table_x1_x2_Y.end ())
     {
-      unsigned int * new_row = new unsigned int [NUMBER_OF_LABELS];
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      unsigned int * new_row = new unsigned int [set->get_number_of_labels ()];
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         new_row[i] = row_labels[i];
       table_x1_x2_Y.insert (pair<string, unsigned int *>
                            (x1_x2_row_value, new_row));
     }
     else
     {
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         (table_x1_x2_Y[x1_x2_row_value])[i] += row_labels[i];
     }
   
@@ -198,14 +198,14 @@ float ConditionalMutualInformation::conditional_mutual_information
 
     if (it1 == table_x1_Y.end ())
     {
-      unsigned int * new_row = new unsigned int [NUMBER_OF_LABELS];
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      unsigned int * new_row = new unsigned int [set->get_number_of_labels ()];
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         new_row[i] = row_labels[i];
       table_x1_Y.insert (pair<unsigned int, unsigned int *>(x1_value, new_row));
     }
     else
     {
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         (table_x1_Y[x1_value])[i] += row_labels[i];
     }
 
@@ -215,14 +215,14 @@ float ConditionalMutualInformation::conditional_mutual_information
 
     if (it2 == table_x2_Y.end ())
     {
-      unsigned int * new_row = new unsigned int [NUMBER_OF_LABELS];
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      unsigned int * new_row = new unsigned int [set->get_number_of_labels ()];
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         new_row[i] = row_labels[i];
       table_x2_Y.insert (pair<unsigned int, unsigned int *>(x2_value, new_row));
     }
     else
     {
-      for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+      for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         (table_x2_Y[x2_value])[i] += row_labels[i];
     }
 
@@ -231,7 +231,7 @@ float ConditionalMutualInformation::conditional_mutual_information
 
   // sum_{y \in Y}, iterates over all labels.
   //
-  for (unsigned int i = 0; i < NUMBER_OF_LABELS; i++)
+  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
   {
     //
     // sum_{x \in x1}, iterates over the observed values of x1. 
@@ -258,7 +258,7 @@ float ConditionalMutualInformation::conditional_mutual_information
         // P(x2=x')
         //
         float Pr_X2 = 0;
-        for (unsigned int j = 0; j < NUMBER_OF_LABELS; j++)
+        for (unsigned int j = 0; j < set->get_number_of_labels (); j++)
           Pr_X2 += it2->second[j];
         Pr_X2 /= (float) m;
 
@@ -266,7 +266,7 @@ float ConditionalMutualInformation::conditional_mutual_information
         //
         float Pr_X1_X2 = 0;
         if (it != table_x1_x2_Y.end ())
-          for (unsigned int j = 0; j < NUMBER_OF_LABELS; j++)
+          for (unsigned int j = 0; j < set->get_number_of_labels (); j++)
             Pr_X1_X2 += it->second[j];
         Pr_X1_X2 /= (float) m;
 
@@ -280,7 +280,7 @@ float ConditionalMutualInformation::conditional_mutual_information
         if ((Pr_X1_Y_X2 != 0) && (Pr_X2 != 0) &&
             (Pr_X1_X2 != 0) && (Pr_Y_X2 != 0))
           result += Pr_X1_Y_X2 * (log ((Pr_X1_Y_X2 * Pr_X2)/
-                   (Pr_X1_X2 * Pr_Y_X2)) / log ((float) NUMBER_OF_LABELS));
+            (Pr_X1_X2 * Pr_Y_X2)) / log ((float) set->get_number_of_labels ()));
       }
     }
   }

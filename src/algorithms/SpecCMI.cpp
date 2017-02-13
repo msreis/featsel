@@ -18,14 +18,16 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "SpecCMI.h"
+# include "SpecCMI.h"
 
+# include <oct.h>
+# include <builtin-defun-decls.h>
 
 SpecCMI::SpecCMI ()
 {
   list_of_visited_subsets = new Collection ();
   cost_function = NULL;
-  k = 1;  // A default value for k
+  Q = NULL;
 }
 
 
@@ -33,139 +35,149 @@ SpecCMI::~SpecCMI ()
 {
   if (list_of_visited_subsets != NULL)
   delete list_of_visited_subsets;
+  if (Q != NULL)
+  {
+    for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
+      delete [] Q[i];
+    delete [] Q;
+  }
 }
-
-
-void SpecCMI::set_k (unsigned int k_value)
-{
-  k = k_value;
-}
-
 
 void SpecCMI::compute_Q_matrix ()
 {
   int index = 0, n = set->get_set_cardinality ();
   ElementSubset X ("subset", set);
 
-  double * data = new double [n * n];
+  this->Q = new double * [n];
   
   for (int i = 0; i < n; i++)
+  {
+    this->Q[i] = new double [n];    
+
     for (int j = 0; j < n; j++)
     {
       X.add_element (i);
       X.add_element (j);
-      data[index] = cost_function->cost (&X);
+      this->Q[i][j] = cost_function->cost (&X);
       index++;
       X.remove_element (i);
       X.remove_element (j);
     }
-
-  ae_int_t irows = n, icols = n;
-  Q.setcontent (irows, icols, data);
-
-  delete [] data;
+  }
 }
 
 
-string SpecCMI::rank_features (unsigned int k_value)
+double SpecCMI::get_Q_matrix_value (unsigned int i, unsigned int j)
+{
+  return Q[i][j];
+}
+
+
+double * SpecCMI::Rayleigh (double epsilon, double mu, double * x_0)
 {
   int n = set->get_set_cardinality ();
 
-  // IMPORTANT: this solver minimizes the following function:
-  //     f(x) = 0.5*x'*A*x + b'*x.
-  //
-  // Note that quadratic term has 0.5 before it. So if you want to minimize
-  // quadratic function, you should rewrite it in such way that quadratic term
-  // is multiplied by 0.5 too.
-  //
-  // For example, if the function is f(x)=-(x0^2+x1^2), then we rewrite it as 
-  //     f(x) = 0.5*(-2*x0^2-2*x1^2)
-  // and pass diag(-2,-2) as quadratic term - NOT diag(-1,-1)!
-  //
+  octave_value_list in;     // Input/Output lists to exchange data with 
+  octave_value_list out;    // octace native functions.
 
-  // Create solver.
-  //
-  minqpstate state;
-  minqpcreate (n, state);
+  Matrix A  = Matrix (n, n),
+         B  = Matrix (n, n),
+         I  = Matrix (n, n);
 
-  // Set the linear constraint: x_1 + ...+ x_n = k, which is a relaxation on a 
-  // constraint composed of ||x|| = sqrt(k) for x_i in {0, 1}, where
-  // ||x|| is the Euclidean norm.
-  //
-  string str_c = "[[1";
-  for (int i = 1; i < n; i++)
+  ColumnVector x = ColumnVector (n),
+               y = ColumnVector (n);
+
+  for (octave_idx_type i = 0; i < n; i++)
   {
-    str_c.append (",1");
-  }
-  stringstream ss; ss << k_value;
-  str_c.append ("," + ss.str () + "]]");
-  real_2d_array c = str_c.c_str ();
-  integer_1d_array ct = "[0]";
-  minqpsetlc (state, c, ct);
+    x(i) = x_0[i];
 
-  // Set upper and lower bounds.
+    for (octave_idx_type j = 0; j < n; j++)
+      A(i,j) = this->Q[i][j];
+  }
+
+  // Compute an identity matrix with n rows and n columns.
   //
-  string str_bndl = "[0", str_bndu = "[+inf";
-  for (int i = 1; i < n; i++)
+  in(0) = n;                    
+  out = Feye (in, 1);
+  I = out(0).matrix_value ();
+
+  // Compute the norm of row vector x.
+  //
+  in(0) = x;
+  out = Fnorm (in, 1);
+  x = x / out(0).double_value ();
+
+  // Compute y = (A - mu * I)^(-1) * x.
+  //
+  B = A - (mu * I);
+  y = B.solve (x); //  B \ x  <=>  B^(-1) * x
+
+  // Compute y' * x.
+  //
+  double lambda = y.transpose () * x;
+
+  mu = mu + (1 / lambda);
+
+  // Compute err = ||y - lambda * x|| / ||y||.
+  //
+  in(0) = y - lambda * x;
+  out = Fnorm (in, 1);
+  double err = out(0).double_value ();
+  in(0) = y;
+  out = Fnorm (in, 1);
+  err = err / out(0).double_value ();
+
+  while (err > epsilon)
   {
-    str_bndl.append (",0");
-    str_bndu.append (",+inf");
-  }
-  str_bndl.append ("]");
-  str_bndu.append ("]");
-  real_1d_array bndl = str_bndl.c_str ();
-  real_1d_array bndu = str_bndu.c_str ();
-  minqpsetbc (state, bndl, bndu);
+    in(0) = y;
+    out = Fnorm (in, 1);
+    x = y / out(0).double_value ();  // x = y / ||y||.
 
-  // Upload the matrix of the quadratic term; since it is symmetric, the matrix
-  // Q must have filled only its upper triangle.
-  //
+    B = A - (mu * I);
+    y = B.solve (x);
+
+    lambda = y.transpose () * x;
+
+    mu = mu + (1 / lambda);
+ 
+    // Compute err = ||y - lambda * x|| / ||y||.
+    //
+    in(0) = y - lambda * x;
+    out = Fnorm (in, 1);
+    err = out(0).double_value ();
+    in(0) = y;
+    out = Fnorm (in, 1);
+    err = err / out(0).double_value ();
+  }
+
+  double * result = new double [n];
+
+  for (octave_idx_type i = 0; i < n; i++)
+    result[i] = x(i);
+
+  return result;
+}
+
+
+double * SpecCMI::rank_features ()
+{
   compute_Q_matrix ();
-  minqpsetquadraticterm (state, Q, true);
 
-  // Set the starting point of the optimization.
+  double epsilon = 0.0001;    // Precision of the Rayleigh quotient iteration.
+
+  double      mu = 0;         // Initial estimate for the dominant eigenvalue.
+
+  // Initial estimate for a dominant eigenvector.
   //
-  string str_x0 = "[0";
-  for (int i = 1; i < n; i++)
-    str_x0.append (",0");
-  str_x0.append ("]");
-  real_1d_array x0   = str_x0.c_str ();
-  minqpsetstartingpoint (state, x0);
+  double * x = new double [set->get_set_cardinality ()];
+  for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
+    x[i] = 1;
 
-  // Set scale of the parameters.
-  // It is strongly recommended that you set scale of your variables.
-  // Knowing their scales is essential for evaluation of stopping criteria
-  // and for preconditioning of the algorithm steps.
-  // You can find more information on scaling at 
-  // http://www.alglib.net/optimization/scaling.php
-  //
-  string str_s = "[1";
-  for (int i = 1; i < n; i++)
-    str_s.append (",1");
-  str_s.append ("]");
-  real_1d_array s   = str_s.c_str ();
-  minqpsetscale (state, s);
+  double * result = Rayleigh (epsilon, mu, x);
 
-  // Solve problem with BLEIC-QP solver.
-  // Default stopping criteria are used.
-  //
-  minqpsetalgobleic (state, 0.0, 0.0, 0.0, 0);
-  minqpoptimize (state);
+  delete [] x;
 
-  // Collect the results.
-  //
-  minqpreport rep;
-  real_1d_array x;
-  minqpresults (state, x, rep);
-
-  if ((int (rep.terminationtype)) == 7)
-  {
-    return x.tostring (2);
-  }
-  else
-  {
-    return "Error";
-  }
+  return result;
 }
 
 
@@ -174,12 +186,18 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
 
-  string result = rank_features (k);
+  compute_Q_matrix ();
 
-  printf ("Result: %s\n", result.c_str ());
+  double * result = rank_features ();
+
+  for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
+    cout << result[i] << endl;
+
+  delete [] result;
 
   ElementSubset * X;
-  X = new ElementSubset ("best", set);    
+  X = new ElementSubset ("", set);
+  X->set_complete_subset ();
   X->cost = cost_function->cost (X);   
   list_of_minima.push_back (X); 
 

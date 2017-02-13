@@ -25,57 +25,89 @@
 
 namespace SpecCMITest
 {
+  // In Example 1 of the paper, we have a pair of features [S,G]^T, where   
+  // S and G means smoking and coughing, respectively, and the label is C
+  // (cancer). The given distributions are:
+
+  // P(S,C):            C = 0      C = 1
+  //          S = 1      0.25        0
+  //          S = 2      0.25        0
+  //          S = 3       0         0.25
+  //          S = 4       0         0.25
+
+  // P(C,G):            C = 0      C = 1
+  //          G = 0     0.475      0.025
+  //          G = 1     0.025      0.475
+
+  // P(S,G):            G = 0      G = 1
+  //          S = 1     0.2375     0.0125
+  //          S = 2     0.2375     0.0125
+  //          S = 3     0.0125     0.2375
+  //          S = 4     0.0125     0.2375
+
+  // The computed Hessian symmetric matrix is:
+  //            
+  //        |    1       0.2864/2  |   
+  //    Q = |                      |
+  //        | 0.2864/2    0.7136   |
+
+  // And the result of SPEC-CMI is the vector [0.92, 0.38]^T, in which
+  // feature S ranks higher than G.
+
 
   bool it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ()
   {
-    // In the example of the paper, we have a pair of features [S,G]^T, where   
-    // S and G means smoking and coughing, respectively, and the label is C
-    // (cancer). The given distributions are:
+    bool result = true;
 
-    // P(S,C):            C = 0      C = 1
-    //          S = 0      0.25        0
-    //          S = 2      0.25        0
-    //          S = 3       0         0.25
-    //          S = 4       0         0.25
+    ElementSet set ("S", "input/explicit/Test_01_A.xml");
 
-    // P(C,G):            C = 0      C = 1
-    //          G = 0     0.475      0.025
-    //          G = 2     0.025      0.475
+    Explicit c (&set);
 
-    // P(S,G):            G = 0      G = 1
-    //          S = 0     0.2375     0.0125
-    //          S = 2     0.2375     0.0125
-    //          S = 3     0.0125     0.2375
-    //          S = 4     0.0125     0.2375
-
-    // The computed Hessian symmetric matrix is:
-    //            
-    //        |    1       0.2864/2  |   
-    //    Q = |                      |
-    //        | 0.2864/2    0.7136   |
-
-    // And the result of SPEC-CMI is the vector [0.92, 0.38]^T, in which
-    // feature S ranks higher than G.
-
-
-    ElementSet set ("S1", 3, 1);    // |S1| = 3
     SpecCMI t;
-    string list;
-    SubsetSum c (&set);
     t.set_parameters (&c, &set, true);
-    t.get_minima_list (1);
-    list = t.print_list_of_visited_subsets ();
-    //
-    // For 2^3 it should have at least 7 elements (# visited nodes by SFS)!
-    //
-    if ((list.find ("<000>") != string::npos) &&
-        (list.find ("<001>") != string::npos) &&
-        (list.find ("<011>") != string::npos) &&
-        (list.find ("<111>") != string::npos))
-      return true;
-    else
-      return false;
+
+    t.compute_Q_matrix ();   
+
+    double * rank = new double [set.get_set_cardinality ()]; 
+    rank = t.rank_features ();   
+
+    if ((rank[0] <= 0.91) || (rank[0] >= 0.93) ||
+        (rank[1] <= 0.37) || (rank[1] >= 0.39))
+      result = false;
+
+    delete [] rank;                
+    return result;
   }
+
+
+  bool it_should_compute_the_Q_matrix ()
+  {
+    // Instance of Example 1 in Xuan Vinh et al. (2014).
+    //
+    bool result = true;
+
+    ElementSet set ("input/cmi/Test_01_A.dat", 2);    
+
+    ConditionalMutualInformation c (&set);
+
+    SpecCMI t;
+    t.set_parameters (&c, &set, true);
+
+    t.compute_Q_matrix ();   
+ 
+    if ((t.get_Q_matrix_value (0,0) >= 1.0001) ||
+        (t.get_Q_matrix_value (0,0) <= 0.9999) ||
+        (t.get_Q_matrix_value (0,1) >= 0.1433) ||
+        (t.get_Q_matrix_value (0,1) <= 0.1431) || 
+        (t.get_Q_matrix_value (1,0) >= 0.1433) ||
+        (t.get_Q_matrix_value (1,0) <= 0.1431) || 
+        (t.get_Q_matrix_value (1,1) >= 0.7137) ||
+        (t.get_Q_matrix_value (1,1) <= 0.7135))
+      result = false;
+
+    return result;
+  }
+
 
   bool it_should_converge_for_instances_with_hundreds_of_features ()
   {

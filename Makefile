@@ -32,11 +32,11 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/octave-4.0.0/octave
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
-			src/ROBDD.o src/Vertex.o src/Partition.o \
-			src/PartitionNode.o src/functions/PartCost.o \
+      src/ROBDD.o src/Vertex.o src/Partition.o \
+      src/PartitionNode.o src/functions/PartCost.o \
       src/functions/Explicit.o \
       src/functions/MeanConditionalEntropy.o \
       src/functions/HammingDistance.o \
@@ -47,20 +47,16 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/algorithms/ExhaustiveSearch.o \
       src/algorithms/SFS.o \
       src/algorithms/SFFS.o \
-      src/algorithms/PUCS.o \
       src/algorithms/UCurveSearch.o \
+      src/Collection.o src/Solver.o src/CostFunction.o \
+      src/algorithms/UCurveToolBox.o \
       src/algorithms/SpecCMI.o \
-			src/Collection.o src/Solver.o src/CostFunction.o \
-			src/algorithms/UCurveToolBox.o \
-			src/alglib/optimization.o \
-		    src/alglib/ap.o src/alglib/alglibinternal.o \
-		    src/alglib/alglibmisc.o src/alglib/linalg.o src/alglib/solvers.o  \
-            
+      src/algorithms/PUCS.o
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
-			test/ROBDDTest.o test/PartitionTest.o \
-			test/PartitionNodeTest.o test/functions/PartCostTest.o \
-			test/algorithms/UCurveToolBoxTest.o \
+      test/ROBDDTest.o test/PartitionTest.o \
+      test/PartitionNodeTest.o test/functions/PartCostTest.o \
+      test/algorithms/UCurveToolBoxTest.o \
       test/functions/ExplicitTest.o \
       test/functions/MeanConditionalEntropyTest.o \
       test/functions/HammingDistanceTest.o \
@@ -71,15 +67,14 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/algorithms/ExhaustiveSearchTest.o \
       test/algorithms/SFSTest.o \
       test/algorithms/SFFSTest.o \
-      test/algorithms/PUCSTest.o \
       test/algorithms/UCurveSearchTest.o \
       test/algorithms/SpecCMITest.o \
       test/ElementSubsetTest.o test/CollectionTest.o \
-			test/functions/MeanConditionalEntropyMock.o \
+      test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o \
+      test/algorithms/PUCSTest.o
 
-LIBS = -lm -lalglib
-
+LIBS = -lm -loctave -loctinterp
 
 TARGET =	bin/featsel
 
@@ -91,12 +86,11 @@ $(TARGET):	featsel.o $(OBJS)
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
 
-$(TEST):	featselTest.o $(TOBJS) $(OBJS)
+$(TEST):	featselTest.o $(OBJS) $(TOBJS)
 	$(CXX) $(CXXFLAGS) -o $(TEST) test/featselTest.o $(TOBJS) $(OBJS) $(LIBS) \
 			src/parsers/XmlParser.cpp src/parsers/XmlScanner.cpp \
 			src/parsers/XmlParserDriver.cpp \
 			src/parsers/DatParserDriver.cpp
-
 
 featsel.o:
 	$(CXX) $(CXXFLAGS)	-c -o src/featsel.o src/featsel.cpp

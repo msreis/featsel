@@ -187,7 +187,7 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
   {
 
-    cout << result[i] << endl;
+    // cout << result[i] << endl;
 
     feature_queue.insert (pair<double, unsigned int>(result[i], i));
   }

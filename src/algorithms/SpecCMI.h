@@ -39,6 +39,9 @@
 //
 # define EPSILON 0.0001
 
+// Maximum number of iterations of the Rayleigh quotient iteration algorithm.
+//
+# define MAX_NUM_ITER 100
 
 class SpecCMI : public Solver
 {
@@ -51,8 +54,8 @@ private:
   double ** Q;
 
   // Execute the Rayleigh quotient iteration algorithm on matrix Q,
-  // with precision epsilon, mu and x as initial guesses for the dominant
-  // eigenvalue and eigenvector, respectively.
+  // with precision epsilon, maximum number of iterations max_num_iter and x as 
+  // initial guess for a dominant eigenvector.
   //
   double * Rayleigh (double epsilon, double mu, double * x);
 

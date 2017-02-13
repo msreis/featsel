@@ -73,9 +73,13 @@ double SpecCMI::get_Q_matrix_value (unsigned int i, unsigned int j)
 }
 
 
-double * SpecCMI::Rayleigh (double epsilon, double mu, double * x_0)
+// Algorithm 8.5.3 of the book "Numerical Linear Algebra and Applications",
+// from Biswa Datta.
+// 
+double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
 {
   int n = set->get_set_cardinality ();
+  double err = epsilon + 1;
 
   octave_value_list in;     // Input/Output lists to exchange data with 
   octave_value_list out;    // octace native functions.
@@ -101,63 +105,41 @@ double * SpecCMI::Rayleigh (double epsilon, double mu, double * x_0)
   out = Feye (in, 1);
   I = out(0).matrix_value ();
 
-  // Compute the norm of row vector x.
-  //
-  in(0) = x;
-  out = Fnorm (in, 1);
-  x = x / out(0).double_value ();
+  double num_iter = 0;
 
-  // Compute y = (A - mu * I)^(-1) * x.
-  //
-  B = A - (mu * I);
-  y = B.solve (x); //  B \ x  <=>  B^(-1) * x
-
-  // Compute y' * x.
-  //
-  double lambda = y.transpose () * x;
-
-  mu = mu + (1 / lambda);
-
-  // Compute err = ||y - lambda * x|| / ||y||.
-  //
-  in(0) = y - lambda * x;
-  out = Fnorm (in, 1);
-  double err = out(0).double_value ();
-  in(0) = y;
-  out = Fnorm (in, 1);
-  err = err / out(0).double_value ();
-
-  while (err > epsilon)
+  while ((err > epsilon) && (num_iter <= max_num_iter))
   {
-    in(0) = y;
-    out = Fnorm (in, 1);
-    x = y / out(0).double_value ();  // x = y / ||y||.
+    num_iter++;
 
-    B = A - (mu * I);
+    // sigma = (x' * A * x) / (x' * x);
+    //
+    double sigma = (x.transpose () * A * x) / (x.transpose () * x);
+
+    // y  = (A - sigma * I)^(-1) * x
+    //
+    B = A - (sigma * I);
     y = B.solve (x);
 
-    lambda = y.transpose () * x;
-
-    mu = mu + (1 / lambda);
- 
-    // Compute err = ||y - lambda * x|| / ||y||.
+    // x = y / ||y||.
     //
-    in(0) = y - lambda * x;
+    in(0) = y;
+    out = Fnorm (in, 1);             // Original algorithm: Fmax instead Fnorm.
+    x = y / out(0).double_value ();
+
+    // Compute err = ||(A - sigma * I) * x||.
+    //
+    in(0) = B * x;
     out = Fnorm (in, 1);
     err = out(0).double_value ();
-    in(0) = y;
-    out = Fnorm (in, 1);
-    err = err / out(0).double_value ();
-
-    // cout << "Estimated dominant eigenvalue: " << mu << endl;
-
   }
-
 
   double * result = new double [n];
 
   for (octave_idx_type i = 0; i < n; i++)
     result[i] = x(i);
+
+  if (num_iter >= max_num_iter)
+    cout << "ERROR: Rayleigh algorithm did not converge!" << endl;
 
   return result;
 }
@@ -169,18 +151,14 @@ double * SpecCMI::rank_features ()
 
   unsigned int n = set->get_set_cardinality ();
 
-  // Initial estimate for the dominant eigenvalue.
-  //
-  double mu = 0;         
-
   // Initial estimate for a dominant eigenvector, which must be an unit-norm
   // vector, that is, ||x|| = sqrt (x1^2 + ... + xn^2) = 1.
   //
   double * x = new double [n];
   for (unsigned int i = 0; i < n; i++)
-    x[i] =  1;
+    x[i] =  1; // sqrt (1 / n);
 
-  double * result = Rayleigh ((double) EPSILON, mu, x);
+  double * result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
 
   delete [] x;
 
@@ -209,9 +187,7 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
   {
 
-    // cout << result[i] << endl;
-
-    result[i] = abs (result[i]);
+    cout << result[i] << endl;
 
     feature_queue.insert (pair<double, unsigned int>(result[i], i));
   }

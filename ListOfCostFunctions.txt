@@ -5,3 +5,4 @@
                   mi    MutualInformation                  dat
                  cmi ConditionalMutualInformation                  dat
                point                Point                  xml
+              tailor     TailorConvexHull                  xml

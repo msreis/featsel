@@ -94,7 +94,6 @@ foreach my $i (1..$p_values)
               "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
               " > $LOG_FILE");
       $t1 = [gettimeofday];
-
       $avg_time[$i][$j] += tv_interval ($t0, $t1);
 
       open (LOG, $LOG_FILE);
@@ -108,9 +107,9 @@ foreach my $i (1..$p_values)
       }
       close(LOG);
       
-      $avg_err[$i][$j] /= $number_of_instances;
-      $avg_time[$i][$j] /= $number_of_instances;
     }
+    $avg_err[$i][$j] /= $number_of_instances * 1.0;
+    $avg_time[$i][$j] /= $number_of_instances;
     print "[done].\n";
   }
 }

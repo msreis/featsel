@@ -55,7 +55,6 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
   bool search_space_is_empty = false;
   ElementSubset * X, Y ("", set);
   UCurveToolBox::Node * M;
-  srand ( (unsigned) time (NULL) );
   do
   {
     // at each iteration it is called either minimal_element or maximal_element

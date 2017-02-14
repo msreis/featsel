@@ -2,7 +2,7 @@
 // HammingDistance.h -- definition of the class "HammingDistance".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017 Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+// Original cost function published in:
+//
+// Hamming, R.W. (1950).
+// "Error detecting and error correcting codes".
+// Bell System Technical Journal, 29(2):147–160.
+
 
 #ifndef HAMMING_DISTANCE_H_
 #define HAMMING_DISTANCE_H_
@@ -47,3 +54,4 @@ public:
 };
 
 #endif /* HAMMING_DISTANCE_H_ */
+

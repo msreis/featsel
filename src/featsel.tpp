@@ -72,6 +72,8 @@ int main(int argc, char * argv[])
   bool store_visited_subsets = false;
   ofstream log_file;
 
+  srand ((unsigned) time (NULL));
+
   // Parse the parameters
   //
   i = parse_parameters(argc, argv, &file_name, &max_number_of_minima,

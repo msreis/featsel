@@ -2,7 +2,7 @@
 // SFS.h -- definition of the class "SFS" ("Sequential Forward Selection").
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+// Original algorithm published in:
+//
+//  Whitney, A.W. (1971).
+//  "A Direct Method of Nonparametric Measurement Selection".
+//  IEEE Transactions on Computers, 20(9), 1100--1103.
+
 
 #ifndef SFS_H_
 #define SFS_H_

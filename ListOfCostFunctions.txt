@@ -4,3 +4,4 @@
           subset_sum            SubsetSum                  xml
                   mi    MutualInformation                  dat
                  cmi ConditionalMutualInformation                  dat
+               point                Point                  xml

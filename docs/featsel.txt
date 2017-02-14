@@ -30,11 +30,13 @@ OOPPTTIIOONNSS
        -c cost-function-name
               Selects  the  _c_o_s_t_-_f_u_n_c_t_i_o_n_-_n_a_m_e  as  the  cost  function of the
               search. The default value is _s_u_b_s_e_t___s_u_m_;  (polynomial  reduction
-              from the subset sum problem); other valid names are _h_a_m_m_i_n_g___d_i_s_-
-              _t_a_n_c_e_, (the Hamming distance), _m_c_e (Mean  Conditional  Entropy),
-              _m_i  (Mutual Information).  _c_m_i (Conditional Mutual Information),
-              and _e_x_p_l_i_c_i_t  (cost  function  values  explicitly  defined  from
-              file).
+              from  the subset sum problem); other valid names are _c_m_i (Condi-
+              tional  Mutual  Information),  _e_x_p_l_i_c_i_t  (cost  function  values
+              explicitly  defined  from  file), _h_a_m_m_i_n_g___d_i_s_t_a_n_c_e_, (the Hamming
+              distance), _m_c_e (Mean Conditional Entropy), _m_i  (Mutual  Informa-
+              tion), and _c_m_i (Conditional Mutual Information), and _p_o_i_n_t (con-
+              stant cost function except  for  a  single  element  of  mininum
+              cost).
 
 
 

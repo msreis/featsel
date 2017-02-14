@@ -9,20 +9,20 @@ and cost functions.
 .B featsel [-h] [-f
 .I input-file-name
 .B ]
-.B [ -c 
+.B [ -c
 .I cost-function-name
 .B ] ...
 .SH DESCRIPTION
 .B featsel
 receives a set
-.B S 
-of objects, values associated with each 
-of them, a cost function 
+.B S
+of objects, values associated with each
+of them, a cost function
 .B c
 with subsets of S as domain
-and real numbers as image, and searches for a subset 
-X in S such as c(X) is minimum (i.e., there are no 
-Y in S, such as c(Y) < c(X)). 
+and real numbers as image, and searches for a subset
+X in S such as c(X) is minimum (i.e., there are no
+Y in S, such as c(Y) < c(X)).
 The minima subsets found are printed into the standard
 output.
 
@@ -31,7 +31,7 @@ output.
 .IP "-a algorithm-name"
 Selects the
 .I algorithm-name
-as the algorithm used in the search. The default value is 
+as the algorithm used in the search. The default value is
 .I ubb
 (U-curve Branch and Bound); other valid names are
 .I es
@@ -52,23 +52,27 @@ as the algorithm used in the search. The default value is
 .IP "-c cost-function-name"
 Selects the
 .I cost-function-name
-as the cost function of the search. The default value is 
+as the cost function of the search. The default value is
 .I subset_sum;
-(polynomial reduction from the subset sum problem); other valid names are 
+(polynomial reduction from the subset sum problem); other valid names are
+.I cmi
+(Conditional Mutual Information),
+.I explicit
+(cost function values explicitly defined from file),
 .I hamming_distance,
 (the Hamming distance),
-.I mce 
+.I mce
 (Mean Conditional Entropy),
-.I mi 
-(Mutual Information).
-.I cmi 
+.I mi
+(Mutual Information), and
+.I cmi
 (Conditional Mutual Information), and
-.I explicit 
-(cost function values explicitly defined from file).
+.I point
+(constant cost function except for a single element of mininum cost).
 
 
 .IP "-f input-file-name"
-Uses as instance either a XML or a DAT file 
+Uses as instance either a XML or a DAT file
 .I input-file-name,
 containing the elements of the set, their names and values.
 .IP -h
@@ -98,7 +102,7 @@ Stores all the visited subsets into the file called
 Set a
 .I max-number-of-calls-of-cost-function,
 a threshold value to end the execution if the cost function is computed
-that number of times. 
+that number of times.
 
 .SH FILES
 .I etc/featsel.conf

@@ -82,11 +82,11 @@ namespace PartitionNodeTest
     input2.add_element (0);
     input2.add_element (1);
     ElementSubset * answ_subset2 = P2.get_original_subset (&input2);
-    cout << "answ_subset2 = " << answ_subset2->print_subset () << endl;
+    // cout << "answ_subset2 = " << answ_subset2->print_subset () << endl;
     answ_subset = P.get_original_subset (answ_subset2);
     expected_subset.add_element (1);
-    cout << "expected = " << expected_subset.print_subset () << endl;
-    cout << "got = " << answ_subset->print_subset () << endl;
+    // cout << "expected = " << expected_subset.print_subset () << endl;
+    // cout << "got = " << answ_subset->print_subset () << endl;
     if (!answ_subset->is_equal (&expected_subset))
         answ = false;
     delete answ_subset;

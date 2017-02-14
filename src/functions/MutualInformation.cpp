@@ -46,6 +46,9 @@ float MutualInformation::cost (ElementSubset * X)
 
   number_of_calls_of_cost_function++;
 
+  if (set->get_set_cardinality () == 0)
+    return 0;
+
   if (! (X->get_set_cardinality() == 0))
   {
     if (X->get_subset_cardinality() > 0)

@@ -35,14 +35,6 @@
 
 # define INFINITY_COST FLT_MAX
 
-// This definition is used by the DatParserDriver and also for the
-// MeanConditionalEntropy cost function.
-//
-// Use two labels for a binary classifier (for instance, W-operator estimation).
-//
-# define NUMBER_OF_LABELS 2
-
-
 using namespace std;
 
 #endif /* GLOBAL_H_ */

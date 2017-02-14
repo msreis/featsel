@@ -3,7 +3,7 @@
 //    featselTest.cpp -- Unit tests of the featsel classes.
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //
 //   If you use featsel in your publication, we kindly ask you to acknowledge us
@@ -37,14 +37,19 @@
 #include "ElementSetTest.h"
 #include "ElementSubsetTest.h"
 #include "CollectionTest.h"
+#include "ROBDDTest.h"
+#include "PartitionTest.h"
+#include "PartitionNodeTest.h"
 
 // Cost (objective) functions
 //
 // <COST FUNCTION TEMPLATE 1>
+#include "functions/PartCostTest.h"
 
 // Solvers (algorithms)
 //
 // <ALGORITHM TEMPLATE 1>
+#include "algorithms/UCurveToolBoxTest.h"
 
 // Number of passed and failed tests
 //
@@ -72,9 +77,7 @@ void result (string test_name, bool passed)
 
 int main (void)
 {
-  // Initialize the pseudo-random number generator.
-  //
-  srand ( (unsigned) time(NULL) );
+  srand ((unsigned) time (NULL));
 
   cout << endl << "Starting Unit Tests... " << endl << endl;
 
@@ -162,7 +165,67 @@ int main (void)
     CollectionTest::it_should_copy_a_collection ());
   cout << endl;
 
+  // Testing Class "ROBDD"
+  //
+  current_class = "ROBDDTest";
+  result ("ROBDDTest::a_new_robdd_has_only_a_terminal_node",
+    ROBDDTest::a_new_robdd_has_only_a_terminal_node ());
+  result ("ROBDDTest::the_union_of_a_new_robdd_with_itself_should_be_itself",
+    ROBDDTest::the_union_of_a_new_robdd_with_itself_should_be_itself ());
+  result ("ROBDDTest::the_union_of_all_subsets_must_be_the_function_1",
+    ROBDDTest::the_union_of_all_subsets_must_be_the_function_1 ());
+  result ("ROBDDTest::a_new_robdd_contais_no_subset",
+    ROBDDTest::a_new_robdd_contais_no_subset ());
+  result ("ROBDDTest::an_added_subset_must_be_covered",
+    ROBDDTest::an_added_subset_must_be_covered ());
+  result ("ROBDDTest::the_function_one_covers_all_subsets",
+    ROBDDTest::the_function_one_covers_all_subsets ());
+  result ("ROBDDTest::the_function_one_have_no_subset_evaluated_zero",
+    ROBDDTest::the_function_one_have_no_subset_evaluated_zero ());
+  result ("ROBDDTest::its_possible_to_get_a_random_subset_evaluated_zero",
+    ROBDDTest::its_possible_to_get_a_random_subset_evaluated_zero ());
+  result ("ROBDDTest::it_should_be_able_to_reduce_an_obdd",
+    ROBDDTest::it_should_be_able_to_reduce_an_obdd ());
+  result ("ROBDDTest::it_should_be_able_to_add_a_subset",
+    ROBDDTest::it_should_be_able_to_add_a_subset ());
+  cout << endl;
+
+  // Testing Class Partition
+  //
+  current_class = "PartitionTest";
+  result ("PartitionTest::it_should_create_the_fixed_elm_set",
+    PartitionTest::it_should_create_the_fixed_elm_set ());
+  result ("PartitionTest::it_should_create_the_unfixed_elm_set",
+    PartitionTest::it_should_create_the_unfixed_elm_set ());
+  cout << endl;
+
+  // Testing Class PartitionNode
+  current_class = "PartitionNodeTest";
+  result ("PartitionNodeTest::it_map_subsets_correctly",
+    PartitionNodeTest::it_map_subsets_correctly ());
+  result ("PartitionNodeTest::it_should_check_upper_adjacent_parts",
+    PartitionNodeTest::it_should_check_upper_adjacent_parts ());
+  result ("PartitionNodeTest::it_should_return_the_least_subset",
+    PartitionNodeTest::it_should_return_the_least_subset ());
+  result ("PartitionNodeTest::it_should_return_the_greatest_subset",
+    PartitionNodeTest::it_should_return_the_greatest_subset ());
+  cout << endl;
+
   // <COST FUNCTION TEMPLATE 2>
+
+  // Testing Class UCurveToolBox
+  current_class = "UCurveToolBoxTest";
+  result ("UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset", 
+    UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset ());
+  result ("UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset", 
+    UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset ());
+  result ("UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset", 
+    UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset ());
+  result ("UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset", 
+    UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset ());
+  result ("UCurveToolBoxTest::it_should_get_a_maximal_subset", 
+    UCurveToolBoxTest::it_should_get_a_maximal_subset ());
+  cout << endl;
 
   // <ALGORITHM TEMPLATE 2>
 

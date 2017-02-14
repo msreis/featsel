@@ -35,15 +35,16 @@ public:
 
   virtual ~DatParserDriver ();
 
-  // Run the parser and return 0 on success.
+  // Run the parser for n number of elements, l number of labels and input
+  // file f, returning 0 on success.
   //
-  int parse (unsigned int n, string f);
+  int parse (unsigned int n, unsigned int l, string f);
 
   // Variable to store data parsed from DAT file.
   //
   Element * * list_of_elements;
   
-  unsigned int number_of_elements, max_number_of_values;
+  unsigned int number_of_elements, number_of_labels, max_number_of_values;
 
 };
 

@@ -126,8 +126,15 @@ while (<IN>)
     {
       printf OUT "  else if (algorithm.compare (\"%s\") == 0)\n",
         $list_of_algorithm_codes[$index];
-      printf OUT "    solver = new %s ();\n", 
-        $list_of_algorithm_class_names[$index];
+      if ($list_of_algorithm_codes[$index] eq "pucs")
+      {
+        printf OUT "    solver = new PUCS (p, l);\n",   
+      }
+      else
+      {
+        printf OUT "    solver = new %s ();\n", 
+          $list_of_algorithm_class_names[$index];
+      }
     }
   }
   elsif ($_ =~ /\<COST\s+FUNCTION\s+TEMPLATE\s+3\>/)

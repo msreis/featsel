@@ -2,7 +2,7 @@
 // MeanConditionalEntropy.h -- definition of the class "MeanConditionalEntropy"
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by

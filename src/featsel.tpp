@@ -46,7 +46,8 @@
 //
 int parse_parameters
   (int, char **, string *, unsigned int *, string *,
-   unsigned int *, unsigned int *, bool *, string *, unsigned int *);
+   unsigned int *, unsigned int *, bool *, string *, unsigned int *, float * p,
+   unsigned int *, unsigned int *);
 
 
 // The main function.
@@ -55,8 +56,11 @@ int main(int argc, char * argv[])
 {
   unsigned int max_number_of_minima = 1;
   unsigned int n = 3;
-  unsigned int range = 1000,
-  max_number_of_calls_of_cost_function = 0; // if == 0, then there is no limit
+  unsigned int range = 1000;
+  unsigned int number_of_labels = 2;
+  unsigned int l = 2;                                         // PUCS parameter.
+  unsigned int max_number_of_calls_of_cost_function = 0;      // 0 for no limit.
+  float p = .5;                                               // PUCS parameter.
   int i;
   CostFunction * cost_function;
   Solver * solver;
@@ -68,15 +72,13 @@ int main(int argc, char * argv[])
   bool store_visited_subsets = false;
   ofstream log_file;
 
-  // Initialize the pseudo-random number generator.
-  //
-  srand ( (unsigned) time(NULL) );
+  srand ((unsigned) time (NULL));
 
   // Parse the parameters
   //
   i = parse_parameters(argc, argv, &file_name, &max_number_of_minima,
       &a_cost_function, &n, &range, &store_visited_subsets, &algorithm,
-      &max_number_of_calls_of_cost_function);
+      &max_number_of_calls_of_cost_function, &p, &l, &number_of_labels);
 
   if (i != EXIT_SUCCESS)    // Help or error in parameters
     return EXIT_FAILURE;
@@ -89,7 +91,7 @@ int main(int argc, char * argv[])
   else if ((file_name.size () > 0) &&
            ((file_name.find (".dat") != string::npos) ||
             (file_name.find (".DAT") != string::npos)))
-    S = new ElementSet (file_name.data (), n); // .dat files require -n option
+    S = new ElementSet (number_of_labels, file_name.data (), n);
   else
     S = new ElementSet ("S", n, range);
 
@@ -179,7 +181,8 @@ int main(int argc, char * argv[])
 int parse_parameters (int argc, char ** argv, string * file_name,
 	              unsigned int * m, string * c, unsigned int * n,
 	              unsigned int * range, bool * keep_subsets, string * a,
-	              unsigned int * max_number_of_calls_of_cost_function)
+	              unsigned int * max_number_of_calls_of_cost_function,
+                float * p, unsigned int * l, unsigned int * number_of_labels)
 {
   int i;
   bool error = false;
@@ -307,6 +310,13 @@ https://github.com/msreis/featsel \n\n \
       {
         a->clear ();
         a->append (argv[i]);
+        if (strcmp (argv[i], "pucs") == 0) 
+        {
+          if (argv[i + 1][0] != '-')
+            *p = atof (argv[++i]);
+          if (argv[i + 1][0] != '-')
+            *l = atoi (argv[++i]);
+        }
       }
       else
       {
@@ -336,6 +346,25 @@ https://github.com/msreis/featsel \n\n \
     else if ( (strcmp (argv[i],"-m") == 0) && ((i+1) >= argc) )
     {
       cout << "\nError: parameter '-m' must have a value." << endl;
+      error = true;
+    }
+
+    // -l
+    //
+    else if ( (strcmp (argv[i], "-l") == 0) && ((i+1) < argc) )
+    {
+      if (atoi (argv[++i]) > 0)
+        *number_of_labels = atoi (argv[i]);
+      else
+      {
+        cout << "\nError: number of labels should be "
+             << "a positive integer!\n";
+        error = true;
+      }
+    }
+    else if ( (strcmp (argv[i],"-l") == 0) && ((i+1) >= argc) )
+    {
+      cout << "\nError: parameter '-l' must have a value." << endl;
       error = true;
     }
 

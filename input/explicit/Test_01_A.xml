@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Example_1_of_Xuan_Vinh_et_al_KDD_2014 </SetName>
+  <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
+  <NumberOfElements> 2 </NumberOfElements>
+  <Element><name>S</name>
+    <value>1</value>
+  </Element><Element>
+    <name>G</name>
+    <value>2</value>
+  </Element>  
+  <Cost>
+    <name>_00</name>
+    <value>0.0</value>
+  </Cost>
+  <Cost>
+    <name>_01</name>
+    <value>0.7136</value>
+  </Cost>
+  <Cost>
+    <name>_10</name>
+    <value>1.0</value>
+  </Cost>
+  <Cost>
+    <name>_11</name>
+    <value>0.1432</value>
+  </Cost>
+</ElementSet>
+

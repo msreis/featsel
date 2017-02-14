@@ -164,3 +164,22 @@ void Solver::store_minimum_subset (ElementSubset * X)
   Y->copy (X);
   list_of_minima.push_back (Y);
 }
+
+
+list<ElementSubset *> Solver::get_list_of_minima ()
+{
+  list<ElementSubset *> lst;
+  list<ElementSubset *>::iterator it = list_of_minima.begin ();
+  while (it != list_of_minima.end ()) 
+  { 
+    lst.push_back (new ElementSubset (*it));
+    it++;
+  }
+  return lst;
+}
+
+
+Collection * Solver::get_list_of_visited_subsets () 
+{
+  return list_of_visited_subsets;
+}

@@ -48,6 +48,10 @@ class SpecCMI : public Solver
 
 private:
 
+  // Cost function employed to build the Hessian Q matrix.
+  //
+  ConditionalMutualInformation * cmi;
+
   // Symmetric matrix containing the pairwise conditional mutual information,
   // as described in Xuan Vinh et al. (2014).
   //

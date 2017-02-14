@@ -59,17 +59,31 @@ namespace SpecCMITest
   {
     bool result = true;
 
-    ElementSet set ("S", "input/explicit/Test_01_A.xml");
+    ElementSet set1 ("S", "input/explicit/Test_01_A.xml");
 
-    Explicit c (&set);
+    Explicit c1 (&set1);
 
     SpecCMI t;
-    t.set_parameters (&c, &set, true);
+    t.set_parameters (&c1, &set1, true);
 
     t.compute_Q_matrix ();   
 
-    double * rank = new double [set.get_set_cardinality ()]; 
+    double * rank = new double [set1.get_set_cardinality ()]; 
     rank = t.rank_features ();   
+
+    if ((rank[0] <= 0.91) || (rank[0] >= 0.93) ||
+        (rank[1] <= 0.37) || (rank[1] >= 0.39))
+      result = false;
+
+    ElementSet set2 (2, "input/cmi/Test_01_A.dat", 2);    
+
+    ConditionalMutualInformation c2 (&set2);
+
+    t.set_parameters (&c2, &set2, true);
+
+    t.compute_Q_matrix ();   
+
+    rank = t.rank_features ();
 
     if ((rank[0] <= 0.91) || (rank[0] >= 0.93) ||
         (rank[1] <= 0.37) || (rank[1] >= 0.39))
@@ -86,7 +100,7 @@ namespace SpecCMITest
     //
     bool result = true;
 
-    ElementSet set ("input/cmi/Test_01_A.dat", 2);    
+    ElementSet set (2, "input/cmi/Test_01_A.dat", 2);    
 
     ConditionalMutualInformation c (&set);
 

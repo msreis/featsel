@@ -26,7 +26,8 @@
 SpecCMI::SpecCMI ()
 {
   list_of_visited_subsets = new Collection ();
-  cost_function = NULL;
+  cost_function = NULL;                        // Main cost function.
+  cmi = NULL;                                  // Cost function of the Q matrix.
   Q = NULL;
 }
 
@@ -47,6 +48,7 @@ void SpecCMI::compute_Q_matrix ()
 {
   int index = 0, n = set->get_set_cardinality ();
   ElementSubset X ("subset", set);
+  cmi = new ConditionalMutualInformation (set);
 
   this->Q = new double * [n];
   
@@ -58,12 +60,14 @@ void SpecCMI::compute_Q_matrix ()
     {
       X.add_element (i);
       X.add_element (j);
-      this->Q[i][j] = cost_function->cost (&X);
+      this->Q[i][j] = cmi->cost (&X);
       index++;
       X.remove_element (i);
       X.remove_element (j);
     }
   }
+
+  delete cmi;
 }
 
 
@@ -182,13 +186,10 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   double * result = rank_features ();
 
   map <double, unsigned int> feature_queue;
-  map <double, unsigned int>::iterator it;
+  map <double, unsigned int>::reverse_iterator it;
 
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
   {
-
-    // cout << result[i] << endl;
-
     feature_queue.insert (pair<double, unsigned int>(result[i], i));
   }
 
@@ -201,7 +202,7 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
 
   // map C++ container has its keys ordered by default.
   //
-  for (it = feature_queue.begin (); it != feature_queue.end (); it++)
+  for (it = feature_queue.rbegin (); it != feature_queue.rend (); it++)
   {
     X.add_element (it->second);
     Y = new ElementSubset ("", set);

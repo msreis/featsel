@@ -22,9 +22,9 @@ OOPPTTIIOONNSS
               Selects the _a_l_g_o_r_i_t_h_m_-_n_a_m_e as the algorithm used in the  search.
               The default value is _u_b_b (U-curve Branch and Bound); other valid
               names are _e_s (Exhaustive Search), _p_u_c_s (Parallelizable  U-Curve-
-              Search),  _s_f_f_s  (Sequential  Forward  Floating  Selection),  _s_f_s
-              (Sequential Forward Selection), _s_p_e_c___c_m_i (SPEC-CMI), and _u_c_s (U-
-              Curve-Search).
+              Search),  _r_c (a Random Chain of the search space), _s_f_f_s (Sequen-
+              tial Forward Floating Selection), _s_f_s (Sequential Forward Selec-
+              tion), _s_p_e_c___c_m_i (SPEC-CMI), and _u_c_s (U-Curve-Search).
 
 
        -c cost-function-name

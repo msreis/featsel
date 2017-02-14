@@ -26,18 +26,8 @@
 // on Knowledge Discovery and Data Mining (KDD 2014).
 
 
-#ifndef SPECCMI_H_
-#define SPECCMI_H_
-
-// This class uses the quadratic programming solver from GPL version of ALGLIB
-// "ALGLIB (www.alglib.net), Sergey Bochkanov":
-//
-// http://www.alglib.net/optimization/quadraticprogramming.php
-// http://www.alglib.net/translator/man/manual.cpp.html#unit_minqp
-//
-
-# include "../alglib/optimization.h"
-# include "../alglib/stdafx.h"
+# ifndef SPECCMI_H_
+# define SPECCMI_H_
 
 # include "../global.h"
 # include "../Solver.h"
@@ -45,29 +35,33 @@
 
 # include "../functions/ConditionalMutualInformation.h"
 
-using namespace alglib;
+// Precision of the Rayleigh quotient iteration.
+//
+# define EPSILON 0.0001
+
+// Maximum number of iterations of the Rayleigh quotient iteration algorithm.
+//
+# define MAX_NUM_ITER 100
 
 class SpecCMI : public Solver
 {
 
 private:
 
+  // Cost function employed to build the Hessian Q matrix.
+  //
+  ConditionalMutualInformation * cmi;
+
   // Symmetric matrix containing the pairwise conditional mutual information,
   // as described in Xuan Vinh et al. (2014).
   //
-  real_2d_array Q;
+  double ** Q;
 
-  // Cardinality of the subset that will be selected by the algorithm.
+  // Execute the Rayleigh quotient iteration algorithm on matrix Q,
+  // with precision epsilon, maximum number of iterations max_num_iter and x as 
+  // initial guess for a dominant eigenvector.
   //
-  unsigned int k;
-
-  // Compute the symmetric matrix Q of the quadratic term.
-  //
-  void compute_Q_matrix ();
-
-  // Set the value of k with k_value.
-  //
-  void set_k (unsigned int k_value);
+  double * Rayleigh (double epsilon, double mu, double * x);
 
 public:
 
@@ -83,9 +77,18 @@ public:
   //
   void get_minima_list (unsigned int);
 
-  // 
+  // Compute and return a unit-norm eigenvector whose corresponding eigenvalue 
+  // is the dominant eigenvalue of Q, that is, the largest eigenvalue of Q.
   //
-  string rank_features (unsigned int k_value);
+  double * rank_features ();
+
+  // Compute the symmetric matrix Q of the quadratic term.
+  //
+  void compute_Q_matrix ();
+  
+  // Return the value Q[i][j].
+  //
+  double get_Q_matrix_value (unsigned int i, unsigned int j);
 
 };
 

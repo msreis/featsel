@@ -25,18 +25,20 @@
 # define SPECCMITEST_H_
 
 # include "../../src/algorithms/SpecCMI.h"
-# include "../../src/functions/SubsetSum.h"
-# include "../../src/functions/HammingDistance.h"
+
+# include "../../src/functions/Explicit.h"
 # include "../../src/functions/ConditionalMutualInformation.h"
 
 namespace SpecCMITest
 {
 
+  bool it_should_compute_the_Q_matrix ();
+
   bool it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ();
+  
+  // bool it_should_converge_for_instances_with_hundreds_of_features ();
 
-  bool it_should_converge_for_instances_with_hundreds_of_features ();
-
-  bool it_should_converge_for_instances_with_thousands_of_features ();
+  // bool it_should_converge_for_instances_with_thousands_of_features ();
 
 }
 

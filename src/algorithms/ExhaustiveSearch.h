@@ -2,7 +2,7 @@
 // ExhaustiveSearch.h -- definition of the class "ExhaustiveSearch".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+// Original algorithm published in:
+//
+// Reis, M.S. (2012).
+// "Minimization of Decomposable in U-shaped Curves Functions Defined on Poset
+//  Chains -- Algorithms and Applications". (PhD Thesis).
+// Institute of Mathematics and Statistics, University of Sao Paulo, Brazil.
 
 #ifndef EXHAUSTIVESEARCH_H_
 #define EXHAUSTIVESEARCH_H_

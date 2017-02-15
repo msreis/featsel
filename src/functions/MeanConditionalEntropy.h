@@ -2,7 +2,7 @@
 // MeanConditionalEntropy.h -- definition of the class "MeanConditionalEntropy"
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+// Original cost function published in:
+//
+// Martins-Jr, D.C. and Cesar-Jr, R.M. and Barrera, J. (2006).
+// "W-operator Window Design by Minimization of Mean Conditional Entropy".
+// Pattern Analysis and Applications, 9(2), 139--153.
+
 
 #ifndef MEAN_CONDITIONAL_ENTROPY_H_
 #define MEAN_CONDITIONAL_ENTROPY_H_

@@ -52,15 +52,15 @@ ElementSet::ElementSet (ElementSet * elm_set)
     real_nof_elements = elm_set->number_of_elements + this->number_of_labels;
     this->list_of_elements = new Element*[real_nof_elements];
     for (unsigned int i = 0; i < real_nof_elements; i++)
-      this->list_of_elements[i] = 
+      this->list_of_elements[i] =
         new Element (elm_set->list_of_elements[i]);
   }
-  else 
+  else
   {
     this->list_of_elements = new Element*[number_of_elements];
     for (unsigned int i = 0; i < number_of_elements; i++)
-      this->list_of_elements[i] = 
-        new Element (elm_set->list_of_elements[i]);  
+      this->list_of_elements[i] =
+        new Element (elm_set->list_of_elements[i]);
   }
   this->has_extra_element = elm_set->has_extra_element;
   this->name = elm_set->name;
@@ -113,12 +113,12 @@ ElementSet::ElementSet (string a_set_name, string file_name)
 
 void ElementSet::load_dat_file (string file_name, unsigned int n)
 {
-  DatParserDriver * driver = new DatParserDriver ();  
+  DatParserDriver * driver = new DatParserDriver ();
   has_extra_element = true;
   name = "Classifier design";
   number_of_elements = n;
   value = 0;
-  
+
   if (driver->parse (n, number_of_labels, file_name))
   {
     std::cout << "Error in ElementSet, processing the DAT file!" << std::endl;
@@ -129,7 +129,7 @@ void ElementSet::load_dat_file (string file_name, unsigned int n)
 
     for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
     {
-      unsigned int max = 
+      unsigned int max =
         driver->list_of_elements[i]->get_number_of_values ();
       list_of_elements[i] = new Element (driver->max_number_of_values, "");
       for (unsigned int j = 0; j < max; j++)
@@ -137,9 +137,9 @@ void ElementSet::load_dat_file (string file_name, unsigned int n)
         list_of_elements[i]->add_element_value
         (driver->list_of_elements[i]->get_element_value (j));
       }
-    }  
+    }
   }
-  
+
   delete driver;
 }
 
@@ -186,7 +186,6 @@ ElementSet::ElementSet (string set_name, unsigned int n, unsigned int range)
     if (list_of_elements == 0)
       cout << "Error in ElementSet: could not allocate memory " <<
       "for elements!" << endl;
-    srand ((unsigned) time (NULL) );
     for (i = 0; i < n; i++)
     {
       stm.str ("");
@@ -214,14 +213,14 @@ ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
     unsigned int real_nof_elements;
     real_nof_elements = size + this->number_of_labels;
     this->list_of_elements = new Element*[real_nof_elements];
-    for (unsigned int i = 0; i < this->number_of_labels; i++) 
+    for (unsigned int i = 0; i < this->number_of_labels; i++)
     {
       unsigned int j = elm_set->number_of_elements + i;
       Element * elm = elm_set->list_of_elements[j];
       this->list_of_elements[size + i] = new Element (elm);
     }
   }
-  else 
+  else
     this->list_of_elements = new Element*[size];
   for (unsigned int i = 0; i < size; i++)
   {
@@ -272,8 +271,8 @@ unsigned int ElementSet::get_set_cardinality ()
 
 Element * ElementSet::get_element (unsigned int index)
 {
-  if ((has_extra_element 
-        && 
+  if ((has_extra_element
+        &&
       (index < (number_of_elements + number_of_labels)) )
       ||
       (index < number_of_elements))
@@ -320,7 +319,6 @@ void ElementSet::permute_set ()
   // PERMUTE-IN-PLACE algorithm
   for (i = 0; i < n - 1; i++)
   {
-    srand ( (unsigned) time(NULL) );
     j = ((unsigned int) rand () % (n - i)) + i; // random number in [i, n]
     k = uniform_permutation[i];
     uniform_permutation[i] = uniform_permutation[j];
@@ -339,5 +337,3 @@ unsigned int ElementSet::get_number_of_labels ()
 {
   return number_of_labels;
 }
-
-

@@ -34,30 +34,30 @@ OOPPTTIIOONNSS
               tional  Mutual  Information),  _e_x_p_l_i_c_i_t  (cost  function  values
               explicitly  defined  from  file), _h_a_m_m_i_n_g___d_i_s_t_a_n_c_e_, (the Hamming
               distance), _m_c_e (Mean Conditional Entropy), _m_i  (Mutual  Informa-
-              tion), and _c_m_i (Conditional Mutual Information), and _p_o_i_n_t (con-
-              stant cost function except  for  a  single  element  of  mininum
-              cost).
-
+              tion), and _c_m_i (Conditional Mutual Information), _p_o_i_n_t (constant
+              cost function except for a single element of mininum cost),  and
+              _t_a_i_l_o_r (computes a convex hull for subsets of an instance of the
+              Tailor problem).
 
 
        -f input-file-name
-              Uses  as  instance  either  a XML or a DAT file _i_n_p_u_t_-_f_i_l_e_-_n_a_m_e_,
+              Uses as instance either a XML or  a  DAT  file  _i_n_p_u_t_-_f_i_l_e_-_n_a_m_e_,
               containing the elements of the set, their names and values.
 
        -h     Displays this help screen.
 
        -m number-of-minima
-              The number of minima to be showed in  the  standard  output.  It
+              The  number  of  minima  to be showed in the standard output. It
               should be and integer grater than zero, and the default value is
               1.
 
        -n number-of-elements
-              If the option -n is not used, featsel creates a random set  with
+              If  the option -n is not used, featsel creates a random set with
               _n_u_m_b_e_r_-_o_f_-_e_l_e_m_e_n_t_s elements with a single value. It should be an
               integer greater than zero. The default value is 3.
 
        -l number-of-labels
-              If the option -l is not used and the input is a .DAT file,  then
+              If  the option -l is not used and the input is a .DAT file, then
               featsel assumes that the instance has 2 labels.
 
        -r range
@@ -69,7 +69,7 @@ OOPPTTIIOONNSS
 
        -t max-number-of-calls-of-cost-function
               Set a _m_a_x_-_n_u_m_b_e_r_-_o_f_-_c_a_l_l_s_-_o_f_-_c_o_s_t_-_f_u_n_c_t_i_o_n_, a threshold value to
-              end the execution if the cost function is computed  that  number
+              end  the  execution if the cost function is computed that number
               of times.
 
 
@@ -77,12 +77,12 @@ FFIILLEESS
        _e_t_c_/_f_e_a_t_s_e_l_._c_o_n_f
               The program configuration file (not implemented yet).
        _e_t_c_/_c_o_s_t_f_u_n_c_._c_o_n_f
-              Configuration  of  the  cost function lexical/syntactic analyzer
+              Configuration of the cost  function  lexical/syntactic  analyzer
               (not implemented yet).
 
 EENNVVIIRROONNMMEENNTT
-       PATH   May be useful to add the full pathname of  the  directory  where
-              the  featsel  binary is located. The configuration files must be
+       PATH   May  be  useful  to add the full pathname of the directory where
+              the featsel binary is located. The configuration files  must  be
               at the same directory of the binary.
 
 DDIIAAGGNNOOSSTTIICCSS

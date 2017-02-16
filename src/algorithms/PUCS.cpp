@@ -104,8 +104,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   #pragma omp parallel shared (min_list, parts_to_solve)
   #pragma omp single nowait
   solve_parts (&parts_to_solve, min_list, max_size_of_minima_list);
-  // this could go to the end of solve_parts
-  #pragma omp taskwait
   number_of_visited_subsets = 
     cost_function->get_number_of_calls_of_cost_function ();
 
@@ -160,13 +158,14 @@ void PUCS::solve_parts (list<PartitionNode *> * parts,
   Collection * L = NULL;
   while (parts->size () > 0) 
   {
-    #pragma omp critical
-    {
+    // #pragma omp critical
+    // {
       P = parts->back ();
       parts->pop_back ();
-    }
-    #pragma omp task 
+    // }
+    #pragma omp task shared (min_list)
     {
+      // #pragma omp single nowait
       L = part_minimum (P, max_size_of_minima_list);
       // #pragma omp taskwait
       while (L->size () > 0) 
@@ -181,10 +180,7 @@ void PUCS::solve_parts (list<PartitionNode *> * parts,
       delete P;
     }
   }
-  // #pragma omp critical
-  // {
-  //   cout << "finished single area" << endl;
-  // }
+  #pragma omp taskwait
 }
 
 
@@ -211,6 +207,7 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   // {
   //   int tid = omp_get_thread_num ();
   //   cout << "Part " << P << " being solved by: " << tid << endl;
+    // cout << "Nested:  " << omp_get_nested () << endl;
   // }
   Solver * sub_solver = NULL;
   Collection * L = new Collection ();
@@ -232,17 +229,12 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);
-    // #pragma omp critical
-    // {
-    //   cout << "Solving the problem recursively with element set of size: " <<
-    //     p_elm_set->get_set_cardinality () << endl;
-    //   cout << "max_size_of_minima_list = " << max_size_of_minima_list << endl;
-    // }
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
-  
-    #pragma omp task
+    
+    // TODO: is this better?
+    // #pragma omp task
     sub_solver->get_minima_list (max_size_of_minima_list);
-    #pragma omp taskwait
+    // #pragma omp taskwait
     p_min_lst = sub_solver->get_list_of_minima ();
     visited_subsets = sub_solver->get_list_of_visited_subsets ();
     update_visited_subsets (visited_subsets, P);

@@ -72,6 +72,10 @@ int main(int argc, char * argv[])
   bool store_visited_subsets = false;
   ofstream log_file;
 
+
+  // enables omp nested parallelization
+  omp_set_nested (true);
+
   srand ((unsigned) time (NULL));
 
   // Parse the parameters

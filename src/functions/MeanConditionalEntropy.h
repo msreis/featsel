@@ -30,7 +30,6 @@
 
 
 #include "../global.h"
-#include "../ElementSet.h"
 #include "../ElementSubset.h"
 #include "../CostFunction.h"
 
@@ -44,9 +43,13 @@ protected:
   //
   int t;
 
+  // Total number of samples.
+  //
+  unsigned int m;
+
   // Samples for a W-operator feature selection.
   //
-  map <string, ElementSubset *> samples;
+  map <string, unsigned int *> samples;
 
   // Return the MCE of a given subset X.
   //
@@ -56,12 +59,12 @@ protected:
   // storing them into as subsets of a set S, where |S| = |X|.
   // |X| must be greater than zero.
   //
-  void calculate_distributions_from_the_samples (ElementSet *, ElementSubset *);
+  void calculate_distributions_from_the_samples (ElementSubset *);
 
   // Return the conditional entropy of Y given X = x; the distribution of the
   // samples must be computed before using this function.
   //
-  float calculate_conditional_entropy (ElementSubset *);
+  float calculate_conditional_entropy (unsigned int *, float);
 
 public:
 

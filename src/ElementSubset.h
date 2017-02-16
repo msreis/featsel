@@ -62,13 +62,6 @@ public:
   //
   unsigned int j;
 
-  // Counting the frequencies of labels of samples, i.e. the number of
-  // occurrences of
-  // Y == i, i in {0, ..., k} possible labels, generally k == 1.
-  // during a W-operator feature selection
-  //
-  unsigned int * Y;
-
   // Default constructor.
   //
   ElementSubset (string, ElementSet *);

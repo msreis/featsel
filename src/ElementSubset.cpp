@@ -26,7 +26,6 @@ ElementSubset::ElementSubset (string subset_name, ElementSet * a_set)
   unsigned int number_of_elements = a_set->get_set_cardinality ();
   set = a_set;
   subset_cardinality = 0;
-  Y = NULL;
   cost = 0;
 
   if (subset_name.length () > 0)
@@ -62,7 +61,6 @@ ElementSubset::ElementSubset (ElementSubset * elm_subset)
     this->list_of_elements[i] = elm_subset->list_of_elements[i];
   this->cost = elm_subset->cost;
   this->j = elm_subset->j;
-  this->Y = elm_subset->Y;
 }
 
 
@@ -70,8 +68,6 @@ ElementSubset::~ElementSubset ()
 {
   if (list_of_elements != NULL)
     delete [] list_of_elements;
-  if (Y != NULL)
-    delete [] Y;
   L.clear ();
 }
 

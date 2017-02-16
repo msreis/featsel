@@ -24,7 +24,7 @@
 TailorConvexHull::TailorConvexHull (ElementSet * a_set)
 {
   set = a_set;
-  cloth_size = atoi (set->get_set_name ().c_str ());
+  cloth_size = set->get_set_value ();
 }
 
 

@@ -1,8 +1,8 @@
 //
-// SFFSTest.cpp -- implementation of the namespace "SFFSTest".
+// SBFSTest.cpp -- implementation of the namespace "SBFSTest".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017 Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,25 +18,31 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "SFFSTest.h"
+#include "SBFSTest.h"
 
-namespace SFFSTest
+namespace SBFSTest
 {
 
   bool it_should_add_the_best_element ()
   {
     ElementSet set ("S", "input/hamming_distance/Test_07_A.xml");
     ElementSubset X ("X", &set);
-    SFFSMock s;
+    SBFSMock s;
     HammingDistance c (&set);
 
+    // Best subset: 0011100.
+
+    X.set_complete_subset ();
     s.set_parameters (&c, &set, 0);
-    X.add_element (2);
-    X.add_element (4);
-    if (s.get_best_element_test (&X) != 3)
+    X.remove_element (0);
+    X.remove_element (1);
+    X.remove_element (5); // X = 0011101
+
+    if (s.get_best_element_test (&X) != 6)
       return false;
 
-    X.add_element (3); // now no element can be added to improve c(X)!
+    X.remove_element (6); // now no element can be removed to improve c(X)!
+
     if (s.get_best_element_test (&X) != set.get_set_cardinality ())
       return false;
 
@@ -48,21 +54,20 @@ namespace SFFSTest
   {
     ElementSet set ("S", "input/hamming_distance/Test_07_A.xml");
     ElementSubset X ("X", &set);
-    SFFSMock s;
+    SBFSMock s;
     HammingDistance c (&set);
     s.set_parameters (&c, &set, 0);
 
-    // Best subset = 0011100.
+    // Best subset: 0011100.
 
-    X.add_element (0);  // X = 1101011
-    X.add_element (1);
-    X.add_element (3);
-    X.add_element (5);
-    X.add_element (6);
-    if (s.get_worst_element_test (&X) != 3)
+    X.set_complete_subset ();
+    X.remove_element (1);
+    X.remove_element (3); // X = 1010111
+
+    if (s.get_worst_element_test (&X) != 1)
       return false;
 
-    X.remove_element (3); // now no element can be removed to worse c(X)!
+    X.add_element (1); // now no element can be removed to worse c(X)!
     if (s.get_worst_element_test (&X) != set.get_set_cardinality ())
       return false;
 
@@ -74,19 +79,19 @@ namespace SFFSTest
   {
     ElementSet set1 ("set", "input/subset_sum/Test_03_A.xml");
     ElementSet set3 ("set", "input/hamming_distance/Test_07_A.xml");
-    SFFS sffs1;
-    SFFS sffs3;
+    SBFS SBFS1;
+    SBFS SBFS3;
     SubsetSum c1 (&set1);
     HammingDistance c3 (&set3);
 
-    sffs1.set_parameters (&c1, &set1, false);
-    sffs1.get_minima_list (1);
-    if (sffs1.print_list_of_minima ().find ("<010>") == string::npos)
+    SBFS1.set_parameters (&c1, &set1, false);
+    SBFS1.get_minima_list (1);
+    if (SBFS1.print_list_of_minima ().find ("<010>") == string::npos)
       return false;
 
-    sffs3.set_parameters (&c3, &set3, false);
-    sffs3.get_minima_list (1);
-    if (sffs3.print_list_of_minima ().find ("<0011100>") == string::npos)
+    SBFS3.set_parameters (&c3, &set3, false);
+    SBFS3.get_minima_list (1);
+    if (SBFS3.print_list_of_minima ().find ("<0011100>") == string::npos)
       return false;
 
     return true;
@@ -96,12 +101,12 @@ namespace SFFSTest
   bool it_should_store_all_the_visited_subsets ()
   {
     ElementSet set1 ("S1", 3, 1);    // |S1| = 3
-    SFFS sffs1;
+    SBFS SBFS1;
     string list;
     SubsetSum c1 (&set1);
-    sffs1.set_parameters (&c1, &set1, true);
-    sffs1.get_minima_list (1);
-    list = sffs1.print_list_of_visited_subsets ();
+    SBFS1.set_parameters (&c1, &set1, true);
+    SBFS1.get_minima_list (1);
+    list = SBFS1.print_list_of_visited_subsets ();
     //
     // For 2^3 it should have at least 7 elements (# visited nodes by SFS)!
     //
@@ -122,10 +127,10 @@ namespace SFFSTest
     unsigned int i, n = 64;
     string minimum = " <";
     ElementSet set1 ("set", n, 2);  // rand() % 2 results in Hamming instance.
-    SFFS sffs1;
+    SBFS SBFS1;
     HammingDistance c1 (&set1);
-    sffs1.set_parameters (&c1, &set1, false);
-    sffs1.get_minima_list (1);
+    SBFS1.set_parameters (&c1, &set1, false);
+    SBFS1.get_minima_list (1);
     for (i = 0; i < n; i++)
     { // gets the minimum from the set1
       if ((set1.get_element (i))->get_element_value (0) == 0)
@@ -134,7 +139,7 @@ namespace SFFSTest
         minimum.append ("1");
     }
     minimum.append("> ");
-    if (sffs1.print_list_of_minima ().find (minimum) == string::npos)
+    if (SBFS1.print_list_of_minima ().find (minimum) == string::npos)
       return false;
     return true;
   }
@@ -143,11 +148,11 @@ namespace SFFSTest
   bool it_should_give_the_number_of_the_visited_subsets ()
   {
     ElementSet set1 ("S1", 3, 1);    // |S1| = 3
-    SFFS sffs;
+    SBFS SBFS;
     SubsetSum c1 (&set1);
-    sffs.set_parameters (&c1, &set1, true);
-    sffs.get_minima_list (1);
-    if ((sffs.print_list_of_visited_subsets ().size () /
+    SBFS.set_parameters (&c1, &set1, true);
+    SBFS.get_minima_list (1);
+    if ((SBFS.print_list_of_visited_subsets ().size () /
         (set1.get_set_cardinality() + 4)) >= 7)
       return true;
     else

@@ -20,6 +20,8 @@ Promoters         - Converted in .DAT instances from: https://archive.ics.uci.ed
 
 subset_sum        - Examples of the SubsetSum cost function.
 
+tailor            - Examples of the TailorConvexHull cost function.
+
 tmp               - Directory used to store temporary instances.
 
 Zoo               - Converted in .DAT instances from: https://archive.ics.uci.edu/ml/datasets/Zoo

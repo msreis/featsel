@@ -5,3 +5,5 @@
                  ucs UCurveSearch
             spec_cmi SpecCMI
                   rc RandomChain
+                sbfs SBFS
+                 sbs SBS

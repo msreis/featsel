@@ -171,8 +171,8 @@ printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:3 with lines\n";
 # Execute Gnuplot.
 system ("gnuplot $GNUPLOT_PLOT_FILE");
 # Remove temporary files.
-# system ("rm $GNUPLOT_PLOT_FILE");
-# system ("rm $GNUPLOT_DATA_FILE");
+system ("rm $GNUPLOT_PLOT_FILE");
+system ("rm $GNUPLOT_DATA_FILE");
 system ("rm $INPUT_DIR/*.xml");
 print "[done]\n";
 

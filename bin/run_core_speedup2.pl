@@ -82,6 +82,9 @@ foreach my $i (0..$number_of_instances - 1)
     my ($t0, $t1);
     $t0 = [gettimeofday];
     $ENV{'OMP_NUM_THREADS'} = $k;
+    print "running: " . "$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
+            "-c subset_sum -f $INPUT_DIR/" . $experiment[$i] . 
+            " > $LOG_FILE\n";
     system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
             "-c subset_sum -f $INPUT_DIR/" . $experiment[$i] . 
             " > $LOG_FILE");
@@ -111,12 +114,14 @@ open (PLOT, ">$GNUPLOT_PLOT_FILE");
 printf PLOT "set terminal svg enhanced size 700, 500\n";
 printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_core_speedup2.svg'\n";
 printf PLOT "unset key\n";
+printf PLOT "set title \"Averaging $number_of_instances instances with: \\
+  \\nn = $instance_size\\np = $p \\nl = $l\"\n";
 printf PLOT "set xlabel \"Number of cores\" rotate parallel\n";
 printf PLOT "set ylabel \"Average Time Spent\" rotate parallel\n";
 printf PLOT "plot \"$GNUPLOT_DATA_FILE\" using 1:2 with lines\n";
 # Execute Gnuplot.
 system ("gnuplot $GNUPLOT_PLOT_FILE");
-system ("rm $GNUPLOT_PLOT_FILE");
+# system ("rm $GNUPLOT_PLOT_FILE");
 
-# system ("rm $INPUT_DIR/*.xml");
+system ("rm $INPUT_DIR/*.xml");
 print "[done]\n";

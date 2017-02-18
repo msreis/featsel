@@ -47,7 +47,6 @@ float MeanConditionalEntropy::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
   float cost = 0;
   number_of_calls_of_cost_function++;
 
@@ -175,7 +174,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     if ((it == samples.end ()))
     {
       unsigned int * row = new unsigned int [set->get_number_of_labels ()];
-   
+
       for (k = 0; k < set->get_number_of_labels (); k++)
       {
         row[k] = set->get_element
@@ -197,7 +196,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
         it->second[k] += label_value;
         m             += label_value;
       }
-    }   
+    }
 
     observation.clear ();
   }

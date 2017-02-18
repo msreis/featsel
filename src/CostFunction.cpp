@@ -54,7 +54,7 @@ void CostFunction::add_elapsed_time (int microseconds)
   gettimeofday (& begin, NULL);
 
   usleep (micro_seconds); // pause
-  
+
   gettimeofday (& end, NULL);
 
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
@@ -75,7 +75,7 @@ int CostFunction::get_the_elapsed_time_of_the_calls_of_this_cost_function ()
 
 unsigned int CostFunction::get_max_number_of_calls_of_cost_function ()
 {
-	return max_number_of_calls_of_cost_function;
+  return max_number_of_calls_of_cost_function;
 }
 
 

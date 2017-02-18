@@ -80,7 +80,6 @@ void TailorConvexHull::insert_piece
   Element * piece = set->get_element (piece_index);
   int               i = cloth_index,
       remaining_piece = atoi (piece->get_element_name ().c_str ());
-	
   while ((i < cloth_size) && (remaining_piece > 0))
   {
     if ((cloth [i] == 1) && (piece->get_element_value (i - cloth_index) == 1))
@@ -172,7 +171,7 @@ float TailorConvexHull::branch_and_bound (ElementSubset * X)
     {
       remove_piece (pieces [current_piece->piece_number],
                     current_piece->cloth_index, cloth);
-			
+
       current_piece->cloth_index++;
     }
     else
@@ -229,7 +228,6 @@ float TailorConvexHull::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
 
   float cost;
 

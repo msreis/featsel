@@ -38,8 +38,7 @@ float PartCost::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
-  
+
   number_of_calls_of_cost_function++;
 
   ElementSubset * original_subset;
@@ -49,7 +48,7 @@ float PartCost::cost (ElementSubset * X)
 
   gettimeofday (& end, NULL);
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
-  
+
   // Threshold is a maximum number of calls of the cost function
   //
   if ((has_max_number_of_calls_set) &&

@@ -37,7 +37,6 @@ float HammingDistance::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
   float cost = 0;
   number_of_calls_of_cost_function++;
 

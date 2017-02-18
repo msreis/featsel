@@ -1,8 +1,8 @@
 //
-// Explicit.cpp -- implementation of the class "Explicit".
+// CFS.cpp -- implementation of the class "CFS".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,40 +18,45 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Explicit.h"
+#include "CFS.h"
 
 
-Explicit::Explicit (ElementSet * a_set)
+CFS::CFS (ElementSet * a_set)
 {
   set = a_set;
 }
 
 
-Explicit::~Explicit ()
+CFS::~CFS ()
 {
   // Empty destructor.
 }
 
 
-float Explicit::cost (ElementSubset * X)
+// The CFS cost of a subset X <= S, for a given label Y, is defined as:
+//
+// CFS(X) = 2 * ((H(X) + H(Y) - H(X,Y)) / (H(X) + H(Y))).
+//
+
+float CFS::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  float cost = 0;
+
+  float cost = -1; // This value will make it fail in the empty set
+                   // unit test, which should return zero.
+
   number_of_calls_of_cost_function++;
 
-  unsigned int i;
-  string key = "_";  // example of a key: _010101
+  if (set->get_set_cardinality () == 0)
+    return 0;
 
-  if (! (X->get_set_cardinality() == 0))
-  {
-    for (i = 0; i < set->get_set_cardinality (); i++)
-      if (X->has_element (i))
-        key.append ("1");
-      else
-        key.append ("0");
-    cost = set->get_explicit_cost (key);
-  }
+
+  //
+
+  // TODO: [ADD YOUR COST FUNCTION CODE HERE!]
+
+  //
 
   gettimeofday (& end, NULL);
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);

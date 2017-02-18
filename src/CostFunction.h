@@ -87,48 +87,59 @@ public:
   //
   CostFunction ();
 
+
   // Default destructor.
   //
   virtual ~CostFunction ();
+
 
   // Store some elapsed time for all calls of the cost function. This
   // method is usesul to establish a basal time for unexpensive cost functions.
   //
   void add_elapsed_time (int microseconds);
 
+
   // Return the value of c(X), where X is a subset.
   //
   virtual float cost (ElementSubset *) = 0;
+
 
   // Return the number of times the "cost" method was called.
   //
   unsigned int get_number_of_calls_of_cost_function ();
 
+
   // Return the elapsed time of all calls of the cost function
   //
   int get_the_elapsed_time_of_the_calls_of_this_cost_function ();
+
 
   // Return the maximum number of calls of the cost function
   //
   unsigned int get_max_number_of_calls_of_cost_function ();
 
+
   // Return the threshold value
   //
   float get_threshold ();
+
 
   // Return true if this cost function is limited either by a 'threshold'
   // or a maximum number of calls of the cost function, and false otherwise.
   //
   bool has_threshold ();
 
+
   // Return true if this cost function has computed a value that is
   // equal or lower than the 'threshold' and false otherwise.
   //
   bool has_reached_threshold ();
 
+
   // Set the maximum number of calls of the cost function
   //
   void set_max_number_of_calls_of_cost_function (unsigned int);
+
 
   // Set the threshold value
   //

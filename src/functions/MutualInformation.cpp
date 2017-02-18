@@ -41,7 +41,6 @@ float MutualInformation::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
   float cost = INFINITY_COST;
 
   number_of_calls_of_cost_function++;

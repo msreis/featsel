@@ -78,7 +78,7 @@ void PUCS::set_partition_model ()
 
 void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 {
-  timeval begin_program, end_program;
+  timeval begin_program, end_program, end_walk;
   gettimeofday (& begin_program, NULL);
 
   if (p == 0)
@@ -90,7 +90,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   ElementSubset * p_subset;
   set_partition_model ();
   cand_part = new ROBDD (partition->get_fixed_elm_set ());
-
   p_subset = cand_part->get_random_zero_evaluated_element ();
   while (p_subset != NULL)
   {
@@ -99,6 +98,9 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     delete p_subset;
     p_subset = cand_part->get_random_zero_evaluated_element ();
   }
+  gettimeofday (&end_walk, NULL);
+  int time_walking = diff_us (end_walk, begin_program);
+
 
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list, parts_to_solve)
@@ -109,6 +111,9 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
+  // cout << "Time walking: " << time_walking / 1e6 << endl;
+  // cout << "Time updating ROBDD: " << cand_part->get_time_updating () / 1e6 << endl;
+  // cout << "Total time: " << elapsed_time_of_the_algorithm / 1e6 << endl;
 }
 
 
@@ -264,12 +269,18 @@ PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q)
 {
   PartitionNode * P1, * P2, * next;
   ElementSubset * e1, * e2, * p1_sub, * p2_sub;
-  ElementSubset * p_sub = P->get_least_subset ();
-  ElementSubset * q_sub = Q->get_least_subset ();
+  ElementSubset * p_sub = P->get_selected_elements ();
+  ElementSubset * q_sub = Q->get_selected_elements ();
   if (P->is_upper_adjacent (Q))
-    P1 = P, P2 = Q;
+  {
+    P1 = P;
+    P2 = Q;
+  }
   else
-    P1 = Q; P2 = P;
+  {
+    P1 = Q;
+    P2 = P;
+  }
   p1_sub = P1->get_selected_elements ();
   p2_sub = P2->get_selected_elements ();
   e1 = P1->get_least_subset ();

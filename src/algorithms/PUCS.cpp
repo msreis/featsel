@@ -99,7 +99,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     p_subset = cand_part->get_random_zero_evaluated_element ();
   }
   gettimeofday (&end_walk, NULL);
-  int time_walking = diff_us (end_walk, begin_program);
+  // int time_walking = diff_us (end_walk, begin_program);
 
 
   list<ElementSubset *> * min_list = &list_of_minima;

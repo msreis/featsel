@@ -99,7 +99,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     p_subset = cand_part->get_random_zero_evaluated_element ();
   }
   gettimeofday (&end_walk, NULL);
-  // int time_walking = diff_us (end_walk, begin_program);
 
 
   list<ElementSubset *> * min_list = &list_of_minima;
@@ -111,9 +110,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
-  // cout << "Time walking: " << time_walking / 1e6 << endl;
-  // cout << "Time updating ROBDD: " << cand_part->get_time_updating () / 1e6 << endl;
-  // cout << "Total time: " << elapsed_time_of_the_algorithm / 1e6 << endl;
 }
 
 
@@ -121,8 +117,6 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
 {
   unsigned int i = 0;
   unsigned int n = P->get_number_of_fixed_elms ();
-  TQ->push_back (new PartitionNode (P));
-  restrict_part (P);
   PartitionNode * Q;
   while (i < n)
   {
@@ -135,22 +129,30 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
     PartitionNode * next;
     next = prune_and_walk (P, Q);
     if (next == P)
+    {
       delete Q;
+    }
     else if (next == Q)
     {
       i = 0;
+      if (!is_restricted (P))
+      {
+        TQ->push_back (new PartitionNode (P));
+        restrict_part (P);
+      }
       delete P;
       P = Q;
-      TQ->push_back (new PartitionNode (P));
-      restrict_part (P);
     }
     else
     {
+      TQ->push_back (new PartitionNode (P));
       delete P;
       delete Q;
       return;
     }
   }
+  restrict_part (P);
+  TQ->push_back (new PartitionNode (P));
   delete P;
 }
 
@@ -208,12 +210,6 @@ void PUCS::part_minima_collection (Collection * L, PartitionNode * P,
 Collection * PUCS::part_minimum (PartitionNode * P, 
   unsigned int max_size_of_minima_list)
 {
-  // #pragma omp critical
-  // {
-  //   int tid = omp_get_thread_num ();
-  //   cout << "Part " << P << " being solved by: " << tid << endl;
-    // cout << "Nested:  " << omp_get_nested () << endl;
-  // }
   Solver * sub_solver = NULL;
   Collection * L = new Collection ();
   list<ElementSubset *> p_min_lst;
@@ -237,9 +233,9 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
     
     // TODO: is this better?
-    // #pragma omp task
+    #pragma omp task
     sub_solver->get_minima_list (max_size_of_minima_list);
-    // #pragma omp taskwait
+    #pragma omp taskwait
     p_min_lst = sub_solver->get_list_of_minima ();
     visited_subsets = sub_solver->get_list_of_visited_subsets ();
     update_visited_subsets (visited_subsets, P);
@@ -254,13 +250,14 @@ Collection * PUCS::part_minimum (PartitionNode * P,
 
 PartitionNode * PUCS::adjacent_part (PartitionNode * P, unsigned int i)
 {
-  ElementSubset * sel_elms = P->get_selected_elements ();
+  ElementSubset * sel_elms = new ElementSubset (P->get_selected_elements ());
   if (sel_elms->has_element (i))
     sel_elms->remove_element (i);
   else
     sel_elms->add_element (i);
   Partition * partition = P->get_partition ();
   PartitionNode * Q = new PartitionNode (partition, sel_elms);
+  delete sel_elms;
   return Q;
 }
 

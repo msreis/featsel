@@ -2,6 +2,8 @@
 
 Arrhythmia        - Converted in .DAT instances from: https://archive.ics.uci.edu/ml/datasets/Arrhythmia
 
+cfs               - Examples of the CFS cost function.
+
 cmi               - Examples of the ConditionalMutualInformation cost function.
 
 explicit          - Examples of the Explicit cost function.

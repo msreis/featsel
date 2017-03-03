@@ -25,10 +25,66 @@
 
 namespace CFSTest
 {
+
+  bool it_should_compute_the_correlation_based_feature_selection ()
+  {
+    // This instance is the same as "Test_3_1" in the Zoo data set, and applying
+    // the CFS cost function onto it yields the following results:
+    //
+    // <111> : -0.611839
+    // <011> : -0.575681
+    // <110> : -0.548041
+    // <101> : -0.543844
+    // <001> : -0.511101
+    // <100> : -0.463452
+    // <010> : -0.359794
+    // <000> : 3.40282e+38
+    //
+    ElementSet set (7, "input/cfs/Test_3_1.dat", 3);
+
+    ElementSubset X ("X", &set);
+
+    CFS c (&set);
+
+    if (c.cost (&X) != FLT_MAX)      // X = 000
+      return false;
+
+    X.add_element (0);               // X = 100 
+    if ((c.cost (&X) <= -0.463453) || (c.cost (&X) >= -0.463451))
+      return false;
+
+    X.add_element (1);               // X = 110
+    if ((c.cost (&X) <= -0.548042) || (c.cost (&X) >= -0.548040))
+      return false;
+
+    X.add_element (2);               // X = 111
+    if ((c.cost (&X) <= -0.611840) || (c.cost (&X) >= -0.611838))
+      return false;
+
+    X.remove_element (1);            // X = 101
+    if ((c.cost (&X) <= -0.543845) || (c.cost (&X) >= -0.543843))
+      return false;
+
+    X.remove_element (0);            // X = 001
+    if ((c.cost (&X) <= -0.511102) || (c.cost (&X) >= -0.511100))
+      return false;
+    
+    X.add_element (1);               // X = 011
+    if ((c.cost (&X) <= -0.575682) || (c.cost (&X) >= -0.575680))
+      return false;
+
+    X.remove_element (2);            // X = 010
+    if ((c.cost (&X) <= -0.359795) || (c.cost (&X) >= -0.359793))
+      return false;
+
+    return true;
+  }
+
+
   bool it_should_add_and_retrieve_the_elapsed_time ()
   {
     ElementSet set ("a_set", 1, 1);
-    CFS c (& set);
+    CFS c (&set);
     int t1 =    10,     // 0.00001 second
         t2 =   100,     // 0.0001 second
         t3 =   500,     // 0.0005 second
@@ -40,7 +96,7 @@ namespace CFSTest
     c.add_elapsed_time (t3);
     c.add_elapsed_time (t4);
     elapsed_time =
-    c.get_the_elapsed_time_of_the_calls_of_this_cost_function();
+    c.get_the_elapsed_time_of_the_calls_of_this_cost_function ();
     if (!(elapsed_time >= 0 && elapsed_time <= 3500)) // 2 ms precision
 			return false;
 
@@ -48,7 +104,7 @@ namespace CFSTest
     c.add_elapsed_time (t1);
     c.add_elapsed_time (t1);
     elapsed_time =
-    c.get_the_elapsed_time_of_the_calls_of_this_cost_function();
+    c.get_the_elapsed_time_of_the_calls_of_this_cost_function ();
     if (!(elapsed_time >= 0 && elapsed_time <= 3520)) // 2 ms precision
       return false;
 
@@ -56,7 +112,7 @@ namespace CFSTest
     c.add_elapsed_time (t3);
     c.add_elapsed_time (t2);
     elapsed_time =
-    c.get_the_elapsed_time_of_the_calls_of_this_cost_function();
+    c.get_the_elapsed_time_of_the_calls_of_this_cost_function ();
     if (!(elapsed_time >= 120 && elapsed_time <= 4120)) // 2 ms precision
       return false;
 

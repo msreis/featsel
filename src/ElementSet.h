@@ -80,7 +80,7 @@ public:
   ElementSet (string, string);
 
   // Constructor: a set with elements imported from a DAT file with n elements.
-  // (number of labels specified by user.
+  // (number of labels specified by user).
   //
   ElementSet (unsigned int, string, unsigned int);
 

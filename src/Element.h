@@ -77,7 +77,7 @@ public:
   //
   unsigned int get_max_number_of_values ();
 
-  // Return the number of elements added already.
+  // Return the number of values added already.
   //
   unsigned int get_number_of_values ();
 

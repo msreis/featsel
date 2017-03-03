@@ -101,7 +101,7 @@ int Element::get_element_value (unsigned int index)
   else
   {
     cout << "Error in Element::get_element_value: index " <<
-    index << " is out of range!" << endl;
+            index << " is out of range!" << endl;
     return -1;
   }
 }

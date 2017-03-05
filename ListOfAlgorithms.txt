@@ -7,3 +7,4 @@
                   rc RandomChain
                 sbfs SBFS
                  sbs SBS
+                 bfs BFS

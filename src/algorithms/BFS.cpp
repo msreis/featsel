@@ -78,6 +78,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
 
     if (v->cost <= (BEST + epsilon))
     {
+      BEST = v->cost;
       number_of_expansions_without_improvement = 0;
 
       for (unsigned int i = 0; i < set->get_set_cardinality (); i++)

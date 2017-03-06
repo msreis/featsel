@@ -34,9 +34,22 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
+#define MAXIMUM_NUMBER_OF_EXPANSIONS 5
+
+#define ACCURACY 0
 
 class BFS : public Solver
 {
+private:
+
+  // Allowed number of expansions during search.
+  //
+  unsigned int k;
+
+  // Minimum improvement against the current minimum an evaluated subset must
+  // have in order to consider it the new current minimum.
+  //
+  double epsilon;
 
 public:
 

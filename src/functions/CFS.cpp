@@ -25,19 +25,14 @@ CFS::CFS (ElementSet * a_set)
 {
   set = a_set;
   n = set->get_set_cardinality ();
-  m = 0;
-  H_Y = -1;
 
   if (n > 0)
   {
     number_of_rows = set->get_element (0)->get_number_of_values ();
     correlation = new double * [n];
 
-    H_X = new double [n];
-
     for (unsigned int i = 0; i < n; i++)
     {
-      H_X[i] = -1;
       correlation[i] = new double [n];
       for (unsigned int j = 0; j < n; j++)
         correlation[i][j] = -1;
@@ -50,8 +45,6 @@ CFS::~CFS ()
 {
   if (n > 0)
   {
-    delete [] H_X;
-
     for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
       delete [] correlation[i];
     delete [] correlation;
@@ -59,77 +52,31 @@ CFS::~CFS ()
 }
 
 
-void CFS::compute_H_Y ()
+void CFS::compute_entropies
+(unsigned int i, unsigned int j, double * H_X1, double * H_X2, double * H_X1_X2)
 {
-  // Computes H(Y):
-  //
-  double * Pr_Y = new double [set->get_number_of_labels ()];
+  double * Pr_X1, * Pr_X2, ** Pr_X1_X2, 
+         m = number_of_rows;
 
-  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-    Pr_Y[i] = 0;
+  Pr_X1 = new double [set->get_element(i)->get_max_value() + 1];
 
-  for (unsigned int k = 0; k < number_of_rows; k++)
-  {  
-    // Count frequency of each label.
-    //
-    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-    {
-      Pr_Y[i] += set->get_element (n + i)->get_element_value (k);
-            m += set->get_element (n + i)->get_element_value (k);
-    }
-  }
-
-  H_Y = 0;
-
-  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-    if (Pr_Y[i] > 0)
-      H_Y -= (Pr_Y[i] / m) * (log (Pr_Y[i] / m) / log (2));
-
-  delete [] Pr_Y;
-}
-
-
-void CFS::compute_H_X (unsigned int i)
-{
-  // Computes H(X):
-  //
-  map <unsigned int, double> Pr_X;
-  map <unsigned int, double>::iterator it;
-
-  for (unsigned int k = 0; k < number_of_rows; k++)
-  {  
-    // Count frequency of each label.
-    //
-    unsigned int frequency = 0;
-
-    for (unsigned int j = 0; j < set->get_number_of_labels (); j++)
-       frequency += set->get_element (n + j)->get_element_value (k);
-
-    unsigned int value = set->get_element (i)->get_element_value (k);
-  
-    it = Pr_X.find (value);
-
-    if (it == Pr_X.end ())
-      Pr_X.insert (pair<unsigned int, unsigned int>(value, frequency));
-    else
-      Pr_X[value] += frequency;
-  }
-
-  H_X[i] = 0;
-
-  for (it = Pr_X.begin (); it != Pr_X.end (); it++)
-    if (it->second > 0)
-      H_X[i] -= (it->second / m) * (log (it->second / m) / log (2));
-}
-
-
-double CFS::compute_H_X1_X2 (unsigned int i, unsigned int j)
-{
-  map <string, double> Pr_X1_X2;
-  map <string, double>::iterator it;
+  Pr_X1_X2 = new double * [set->get_element(i)->get_max_value() + 1];
 
   if (i == j) // X2 is the label Y.
   {
+    Pr_X2 = new double [set->get_number_of_labels ()];
+
+    for (unsigned int ii = 0; ii <= set->get_element(i)->get_max_value(); ii++)
+    { 
+      Pr_X1_X2[ii] = new double [set->get_number_of_labels ()];
+      Pr_X1[ii] = 0;
+      for (unsigned int jj = 0; jj < set->get_number_of_labels (); jj++)
+      {
+        Pr_X1_X2[ii][jj] = 0;
+        Pr_X2[jj] = 0;
+      }
+    }
+
     for (unsigned int k = 0; k < number_of_rows; k++)
     {
       unsigned int X_value = set->get_element (i)->get_element_value (k);
@@ -137,82 +84,89 @@ double CFS::compute_H_X1_X2 (unsigned int i, unsigned int j)
       for (unsigned int label = 0; label < set->get_number_of_labels(); label++)
       {
         double frequency = set->get_element (n + label)->get_element_value (k);
-
-        if (frequency > 0)
-        {
-          string X_Y_row_value;
-          ostringstream oss;
-          oss << X_value << " " << label;
-          X_Y_row_value.append (oss.str ());
-
-          it = Pr_X1_X2.find (X_Y_row_value);
-
-          if (it == Pr_X1_X2.end ())
-            Pr_X1_X2.insert (pair<string, double>(X_Y_row_value, frequency));
-          else
-            Pr_X1_X2 [X_Y_row_value] += frequency;
-        }
+        Pr_X1_X2 [X_value][label] += frequency;
+        Pr_X1 [X_value] += frequency;
+        Pr_X2 [label] += frequency; 
       }
     }
+
+    for (unsigned int jj = 0; jj < set->get_number_of_labels (); jj++)
+      if (Pr_X2[jj] > 0)
+        *H_X2 -= (Pr_X2[jj]/m) * (log (Pr_X2[jj]/m) / log (2));
+
+    for (unsigned int ii = 0; ii <= set->get_element(i)->get_max_value(); ii++)
+    {
+      if (Pr_X1[ii] > 0)
+        *H_X1 -= (Pr_X1[ii]/m) * (log (Pr_X1[ii]/m) / log (2));
+
+      for (unsigned int jj = 0; jj < set->get_number_of_labels (); jj++)
+        if (Pr_X1_X2 [ii][jj] > 0)
+          *H_X1_X2 -= (Pr_X1_X2[ii][jj]/m) *
+                      (log (Pr_X1_X2[ii][jj]/m) / log (2));
+
+      delete Pr_X1_X2 [ii];
+    }
   }
+
   else // X2 is a feature.
   {
+    Pr_X2 = new double [set->get_element(j)->get_max_value() + 1];
+
+    for (unsigned int ii = 0; ii <= set->get_element(i)->get_max_value(); ii++)
+    { 
+      Pr_X1_X2[ii] = new double [set->get_element(j)->get_max_value() + 1];
+      Pr_X1[ii] = 0;
+      for (unsigned int jj =0; jj <= set->get_element(j)->get_max_value(); jj++)
+      {
+        Pr_X1_X2[ii][jj] = 0;
+        Pr_X2[jj] = 0;
+      }
+    }
+
     for (unsigned int k = 0; k < number_of_rows; k++)
     {
       unsigned int X1_value = set->get_element (i)->get_element_value (k);
       unsigned int X2_value = set->get_element (j)->get_element_value (k);
+      Pr_X1_X2 [X1_value][X2_value]++;
+      Pr_X1[X1_value]++;
+      Pr_X2[X2_value]++;
+    }
 
-      string X1_X2_row_value;
-      ostringstream oss;
-      oss << X1_value << " " << X2_value;
-      X1_X2_row_value.append (oss.str ());
+    for (unsigned int jj =0; jj <= set->get_element(j)->get_max_value(); jj++)
+      if (Pr_X2[jj] > 0)
+        *H_X2 -= (Pr_X2[jj]/m) * (log (Pr_X2[jj]/m) / log (2));
 
-      it = Pr_X1_X2.find (X1_X2_row_value);
+    for (unsigned int ii = 0; ii <= set->get_element(i)->get_max_value(); ii++)
+    {
+      if (Pr_X1[ii] > 0)
+        *H_X1 -= (Pr_X1[ii]/m) * (log (Pr_X1[ii]/m) / log (2));
 
-      if (it == Pr_X1_X2.end ())
-        Pr_X1_X2.insert (pair<string, double>(X1_X2_row_value, 1));
-      else
-        Pr_X1_X2 [X1_X2_row_value]++;
+      for (unsigned int jj =0; jj <= set->get_element(j)->get_max_value(); jj++)
+        if (Pr_X1_X2 [ii][jj] > 0)
+          *H_X1_X2 -= (Pr_X1_X2[ii][jj]/m) *
+                      (log (Pr_X1_X2[ii][jj]/m) / log (2));
+
+      delete Pr_X1_X2 [ii];
     }
   }
 
-  double H_X1_X2 = 0;
-
-  for (it = Pr_X1_X2.begin (); it != Pr_X1_X2.end (); it++)
-    H_X1_X2 -= (it->second / m) * (log (it->second / m) / log (2));  
-
-  return H_X1_X2;
+  delete Pr_X1;
+  delete Pr_X2;
+  delete [] Pr_X1_X2;
 }  
 
 
 double CFS::symmetrical_uncertainity (unsigned int i, unsigned int j)
 { 
-  if (H_Y == -1)
-    compute_H_Y ();
-
   // SU(X1,X2) = 2 * ((H(X1) + H(X2) - H(X1,X2)) / (H(X1) + H(X2))),
   //
   // where X1 is a feature and X2 is either another feature or the class Y.
 
-  if (H_X[i] == -1)
-    compute_H_X (i);
+  double H_X1 = 0, H_X2 = 0, H_X1_X2 = 0;
 
-  double H_X1 = H_X[i];
-
-  // Compute the joint entropy of X1 and X2.
+  // Compute H(X1), H(X2) and H(X1,X2).
   //
-  double H_X1_X2 = compute_H_X1_X2 (i, j);  
-
-  double H_X2;
-
-  if (i == j)
-    H_X2 = H_Y;
-  else
-  {
-    if (H_X[j] == -1)
-      compute_H_X (j);
-    H_X2 = H_X[j];
-  }
+  compute_entropies (i, j, &H_X1, &H_X2, &H_X1_X2);  
 
   if ((H_X1 + H_X2) == 0)
     return 0;
@@ -225,7 +179,7 @@ double CFS::evaluateSubset (ElementSubset * X)
 {
   // Merit(X) = (k * avg_f_c_corr) / sqrt (k + k * (k - 1) * avg_f_f_corr)
   //  
-  double   numerator = 0, 
+  double numerator = 0, 
          denominator = X->get_subset_cardinality (); // k value.
 
   // Compute the numerator: 

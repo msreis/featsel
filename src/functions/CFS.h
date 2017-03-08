@@ -45,18 +45,6 @@ private:
   //
   double ** correlation;
 
-  // Array that stores the entropy of each feature.
-  //
-  double * H_X;
-
-  // Variable that stores the entropy of the class.
-  //
-  double H_Y;
-
-  // Number of samples.
-  //
-  unsigned int m;
-
   // Number of features.
   //
   unsigned int n;
@@ -65,17 +53,11 @@ private:
   //
   unsigned int number_of_rows;
 
-  // Compute H(X_i) = - sum_{x \in X_i} Pr(X_i=x) * log (Pr(X_i=x)).
+  // It computes H(X_i), H(X_j) and H(X_i,X_j), where X_j may be either a
+  // feature or a label Y.
   //
-  void compute_H_X (unsigned int i);
-
-  // It computes and returns H(X1,X2).
-  //
-  double compute_H_X1_X2 (unsigned int i, unsigned int j);  
-
-  // Compute H(Y) = - sum_{y \in Y} Pr(Y=y) * log (Pr(Y=y)).
-  //
-  void compute_H_Y ();
+  void compute_entropies
+  (unsigned int i, unsigned int j, double *H_X1, double *H_X2, double *H_X1_X2);  
 
   // Computes the symmetrical uncertainity (SU) as a measure of correlation
   // between two features or between a feature and a class. It is given by: 

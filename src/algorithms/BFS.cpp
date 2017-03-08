@@ -70,7 +70,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
     v = *top;
     OPEN.erase (top);
 
-    if (v->cost < (BEST - epsilon))
+    if (v->cost <= (BEST - epsilon))
     {
       BEST = v->cost;
       current_number_of_expansions = 1;

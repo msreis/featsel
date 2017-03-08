@@ -114,6 +114,25 @@ namespace CFSTest
     if (cf.cost (&Y) != -0.36845877766609192)
       return false;      
 
+    unsigned int values[60] = {0, 1, 4, 5, 6, 7, 14, 17, 20, 29, 32, 39, 51, 52,
+                              63, 64, 75, 86, 89, 90, 92, 94, 99, 101, 102, 104,
+                              111, 112, 113, 120, 136, 142, 148, 159, 165, 166,
+                              176, 179, 180, 189, 196, 206, 215, 216, 223, 227,
+                              229, 231, 232, 233, 236, 239, 242, 249, 255, 257,
+                              261, 266, 269, 276};
+ 
+    // c(Y) = -0.41128125 786781311 (it matches with Weka's result up to the 
+    // seventh precision digit (5); probably this discrepancy is due the 
+    // conversion from double to float within featsel, which is absent in Weka.
+    //
+    Y.set_empty_subset ();
+
+    for (unsigned int i = 0; i < 60; i++)
+      Y.add_element (values[i]);
+
+    if ((cf.cost (&Y) > -0.41128125) || (cf.cost (&Y) < -0.41128126)) 
+      return false;      
+
     return true;
   }
 

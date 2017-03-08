@@ -42,82 +42,69 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
 
-  unsigned int number_of_expansions_without_improvement = 0;
+  unsigned int current_number_of_expansions = 0;
 
-  map <string, ElementSubset *> OPEN, CLOSED; 
+  std::set <ElementSubset *, comp_function> OPEN;
+  std::set <ElementSubset *, comp_function>::iterator top, bottom;
+
+  map <string, ElementSubset *> CLOSED;
   map <string, ElementSubset *>::iterator it; 
 
   ElementSubset * X = new ElementSubset ("X", set);    
 
   float BEST = X->cost = cost_function->cost (X); // X == empty set.  
 
-  OPEN.insert (pair<string, ElementSubset *>(X->print_subset (), X));
+  CLOSED.insert (pair<string, ElementSubset *>(X->print_subset (), X));
+  OPEN.insert (X);
+
+  if (store_visited_subsets)
+    list_of_visited_subsets->add_subset (X);
 
   do
   {
     ElementSubset * v = NULL;
-    float maximal_subset_value = FLT_MAX;
 
     // Get the subset from OPEN with maximal c(X).
     //
-    for (it = OPEN.begin (); it != OPEN.end (); it++)
+    top = OPEN.begin ();
+    v = *top;
+    OPEN.erase (top);
+
+    if (v->cost < (BEST - epsilon))
     {
-      if (it->second->cost <= maximal_subset_value)
+      BEST = v->cost;
+      current_number_of_expansions = 1;
+    }
+    else
+      current_number_of_expansions++;
+
+    for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
+    {
+      if (! v->has_element (i))
       {
-        v = it->second;
-        maximal_subset_value = v->cost;
+        v->add_element (i);
+        if (CLOSED.find (v->print_subset ()) == CLOSED.end ())
+        {
+          X = new ElementSubset ("X", set);
+          X->copy (v);
+          X->cost = cost_function->cost (X);
+          CLOSED.insert (pair<string, ElementSubset *>(X->print_subset(), X));
+          OPEN.insert (X);
+          if (OPEN.size () == k + 1)
+          {
+            bottom = OPEN.end ();
+            bottom--;
+            OPEN.erase (bottom);           
+          }
+          if (store_visited_subsets)
+            list_of_visited_subsets->add_subset (v);
+        }
+        v->remove_element (i);
       }
     }
 
-    OPEN.erase (v->print_subset ());
-
-    CLOSED.insert (pair<string, ElementSubset *>(v->print_subset (), v));
-
-    if (store_visited_subsets)
-      list_of_visited_subsets->add_subset (v);
-
-    if (v->cost <= (BEST + epsilon))
-    {
-      BEST = v->cost;
-      number_of_expansions_without_improvement = 0;
-
-      for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
-      {
-        if (v->has_element (i))
-        {
-          v->remove_element (i);
-          if ((OPEN.find (v->print_subset ()) == OPEN.end ()) && 
-              (CLOSED.find (v->print_subset ()) == CLOSED.end ()))
-          {
-            X = new ElementSubset ("X", set);
-            X->copy (v);
-            X->cost = cost_function->cost (X);
-            OPEN.insert (pair<string, ElementSubset *>(X->print_subset (), X));
-          }
-          v->add_element (i);
-        }
-        else
-        {
-          v->add_element (i);
-
-          if ((OPEN.find (v->print_subset ()) == OPEN.end ()) && 
-              (CLOSED.find (v->print_subset ()) == CLOSED.end ()))
-          {
-            X = new ElementSubset ("X", set);
-            X->copy (v);
-            X->cost = cost_function->cost (X);
-            OPEN.insert (pair<string, ElementSubset *>(X->print_subset (), X));
-          }
-          v->remove_element (i);
-        }
-      }   // for (unsigned int i = 0 ...
-    }
-    else
-    {
-      number_of_expansions_without_improvement++;
-    }
   }
-  while ((number_of_expansions_without_improvement < k) && (OPEN.size () > 0));
+  while ((current_number_of_expansions < k) && (! OPEN.empty ()));
 
   for (it = CLOSED.begin (); it != CLOSED.end (); it++)
   {

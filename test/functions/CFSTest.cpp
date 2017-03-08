@@ -77,6 +77,43 @@ namespace CFSTest
     if ((c.cost (&X) <= -0.359795) || (c.cost (&X) >= -0.359793))
       return false;
 
+
+    // This instance is from "Arrhythmia" data set from UCI Machine Learning
+    // repository (279 features, 16 labels).
+    //
+    ElementSet arrhythmia (16, "input/Arrhythmia/Test_01_A.dat", 279);
+
+    CFS cf (& arrhythmia);
+
+    ElementSubset Y ("Y", & arrhythmia);
+
+    Y.add_element (4);
+    Y.add_element (6);
+    Y.add_element (14);
+    Y.add_element (89);
+    Y.add_element (90);
+    Y.add_element (92);
+    Y.add_element (99);
+    Y.add_element (102);
+    Y.add_element (111);
+    Y.add_element (112);
+    Y.add_element (166);
+    Y.add_element (176);
+    Y.add_element (180);
+    Y.add_element (189);
+    Y.add_element (206);
+    Y.add_element (227);
+    Y.add_element (242);
+    Y.add_element (266);
+    Y.add_element (276);
+    Y.add_element (278); 
+
+    // c(Y) = -0.36845877766609192, which is also the value obtained when this
+    // instance is evaluated with the "CfsSubsetEval" class in Weka program.
+    //
+    if (cf.cost (&Y) != -0.36845877766609192)
+      return false;      
+
     return true;
   }
 

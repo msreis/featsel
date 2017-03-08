@@ -82,7 +82,8 @@ void CFS::compute_H_Y ()
   H_Y = 0;
 
   for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-    H_Y -= (Pr_Y[i] / m) * (log (Pr_Y[i] / m) / log (2));
+    if (Pr_Y[i] > 0)
+      H_Y -= (Pr_Y[i] / m) * (log (Pr_Y[i] / m) / log (2));
 
   delete [] Pr_Y;
 }
@@ -117,7 +118,8 @@ void CFS::compute_H_X (unsigned int i)
   H_X[i] = 0;
 
   for (it = Pr_X.begin (); it != Pr_X.end (); it++)
-    H_X[i] -= (it->second / m) * (log (it->second / m) / log (2));
+    if (it->second > 0)
+      H_X[i] -= (it->second / m) * (log (it->second / m) / log (2));
 }
 
 
@@ -212,7 +214,10 @@ double CFS::symmetrical_uncertainity (unsigned int i, unsigned int j)
     H_X2 = H_X[j];
   }
 
-  return 2 * ((H_X1 + H_X2 - H_X1_X2) / (H_X1 + H_X2));
+  if ((H_X1 + H_X2) == 0)
+    return 0;
+  else
+    return 2 * ((H_X1 + H_X2 - H_X1_X2) / (H_X1 + H_X2));
 }
 
 
@@ -258,7 +263,15 @@ double CFS::evaluateSubset (ElementSubset * X)
     }
   }
 
-  return numerator / sqrt (denominator);
+  if (denominator == 0.0)
+    return 0.0;
+
+  double merit = numerator / sqrt (denominator);
+
+  if (merit < 0.0)
+      merit *= -1.0;
+
+  return merit;
 }
 
 

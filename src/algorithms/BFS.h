@@ -34,12 +34,15 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
-#define MAXIMUM_NUMBER_OF_EXPANSIONS 5
+#include <set>
 
-#define ACCURACY 0
+#define MAXIMUM_NUMBER_OF_EXPANSIONS 5   // Same default value in Weka.
+
+#define ACCURACY 0.00001                 // Same default value in Weka. 
 
 class BFS : public Solver
 {
+
 private:
 
   // Allowed number of expansions during search.
@@ -49,7 +52,17 @@ private:
   // Minimum improvement against the current minimum an evaluated subset must
   // have in order to consider it the new current minimum.
   //
-  double epsilon;
+  float epsilon;
+
+  // Structure that stores the priority queue comparison function.
+  //
+  struct comp_function
+  {
+    bool operator () (const ElementSubset * X, const ElementSubset * Y)
+    {
+      return (X->cost < Y->cost);
+    }
+  };
 
 public:
 

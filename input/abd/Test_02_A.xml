@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Test_ABD_2 </SetName>
+  <SetValue> 1 </SetValue>
+  <MaxNumberOfElementValues> 3 </MaxNumberOfElementValues>
+  <NumberOfElements> 2 </NumberOfElements>
+  <Element>
+    <name>x01</name>
+    <value>1</value>
+    <value>0</value>
+    <value>0</value>
+  </Element>
+  <Element>
+    <name>x02</name>
+    <value>0</value>
+    <value>1</value>
+    <value>1</value>
+  </Element>
+</ElementSet>

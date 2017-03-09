@@ -3,7 +3,7 @@
 //         (Atashpaz-Gargari, Braga-Neto, Dougherty).
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -35,8 +35,34 @@
 #include "../ElementSubset.h"
 #include "../CostFunction.h"
 
+
+#define C_MAX_VALUE 1
+
+
 class ABD : public CostFunction
 {
+private:
+
+  // Cost scale, or ideal maximum value of cost.
+  //
+  float c_max;
+
+  // Global minimum of the cost function.
+  //
+  ElementSubset * F0;
+
+  // Size of the feature set.
+  //
+  unsigned int n;
+
+  // Positive-definite weighting matrix (shapping matrix).
+  //
+  float ** W;
+
+  // This method receives the vector (F - F0), computes
+  // (F - F0)^T * W * (F - F0) and returns the resulting scalar.
+  //
+  float compute_products (float * F_minus_F0);
 
 public:
 
@@ -50,9 +76,9 @@ public:
   virtual ~ABD ();
 
 
-  // Returns the value of c(X), where X is a subset.
+  // Returns the value of c(F), where F is a subset.
   //
-  float cost (ElementSubset *);
+  float cost (ElementSubset * F);
 
 };
 

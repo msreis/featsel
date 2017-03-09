@@ -2,7 +2,7 @@
 // ABD.cpp -- implementation of the class "ABD".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -24,33 +24,90 @@
 ABD::ABD (ElementSet * a_set)
 {
   set = a_set;
+  c_max = C_MAX_VALUE;
+  n = set->get_set_cardinality ();
+
+  W = new float * [n];
+
+  F0 = new ElementSubset ("F0", set);
+
+  for (unsigned int i = 0; i < n; i++)
+  {
+    // Values of the positive-definite matrix.
+    //
+    W[i] = new float [n];
+    for (unsigned int j = 0; j < n; j++)
+       W[i][j] = set->get_element (i)->get_element_value (j);
+
+    // For each element i, if its value with index n is "1", then i 
+    // belongs to the global optimum F0.
+    //
+    if (set->get_element (i)->get_element_value (n) == 1)
+      F0->add_element (i);
+  }
 }
 
 
 ABD::~ABD ()
 {
-  // Empty destructor.
+  delete F0;
+  for (unsigned int i = 0; i < n; i++)
+    delete W[i];
+  delete [] W;
 }
 
 
-float ABD::cost (ElementSubset * X)
+float ABD::compute_products (float * F_minus_F0)
+{
+  // first_product = (F - F0)^T * W.
+  //
+  float * first_product = new float [n];
+  for (unsigned int j = 0; j < n; j++)    // slide through the columns
+  {
+    first_product[j] = 0;
+    for (unsigned int i = 0; i < n; i++)  // slide through the rows
+    {
+      first_product[j] += F_minus_F0[i] * W[i][j];
+    }
+  }
+
+  // second_product = first_product * (F - F0).
+  //
+  float second_product = 0;
+  for (unsigned int i = 0; i < n; i++)
+    second_product += first_product[i] * F_minus_F0[i];
+
+  delete first_product;
+  return second_product;
+}
+
+
+// c(F) = c_max * (1 - exp (-1/2 * (F - F0)^T * W * (F - F0) ) ). 
+//
+float ABD::cost (ElementSubset * F)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost = -1; // This value will make it fail in the empty set
-                   // unit test, which should return zero.
+  float cost = 0;
 
   number_of_calls_of_cost_function++;
 
   if (set->get_set_cardinality () == 0)
-    return 0;
+    return cost;
 
-  //
+  float * F_minus_F0 = new float [n];
 
-  // TODO: [ADD YOUR COST FUNCTION CODE HERE!]
+  for (unsigned int i = 0; i < n; i++)
+    if (((F0->has_element (i)) && (F->has_element (i))) || 
+        (!F0->has_element (i)))
+      F_minus_F0[i] = 0;
+    else
+      F_minus_F0[i] = 1;
 
-  //
+  cost = 1 - exp ((-0.5) * compute_products (F_minus_F0));
+
+  delete F_minus_F0;
 
   gettimeofday (& end, NULL);
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);

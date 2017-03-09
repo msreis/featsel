@@ -289,9 +289,10 @@ string ElementSubset::print_subset ()
 {
   unsigned int i;
   string subset_string (" <");
+  subset_string.reserve (2 + set->get_set_cardinality () + 2);
   for (i = 0; i < set->get_set_cardinality (); i++)
     if (has_element (i))
-      subset_string.append("1");  // string's append method performs better than +=.
+      subset_string.append("1");  // append method performs better than +=.
     else
       subset_string.append("0");
   subset_string += "> ";

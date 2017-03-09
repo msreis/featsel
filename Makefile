@@ -5,7 +5,7 @@
 # Makefile -- featsel's Makefile
 #
 #    This file is part of the featsel framework
-#    Copyright (C) 2016  Marcelo S. Reis
+#    Copyright (C) 2017  Marcelo S. Reis
 #
 #
 #    If you use featsel in your publication, we kindly ask you to acknowledge us

@@ -63,7 +63,7 @@ bool Element::add_element_value (int current_value)
   {
     value [number_of_values] = current_value;
     number_of_values++;
-    if (current_value > max_value)
+    if (current_value > (int) max_value)
       max_value = current_value;
     return true;
   }

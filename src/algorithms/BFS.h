@@ -54,7 +54,7 @@ private:
   //
   float epsilon;
 
-  // Structure that stores the priority queue comparison function.
+  // Structure that stores a priority queue comparison function.
   //
   struct comp_function
   {
@@ -63,6 +63,30 @@ private:
       return (X->cost < Y->cost);
     }
   };
+
+  // Structure to store a simple queue.
+  //
+  typedef struct Queue
+  {
+    ElementSubset ** queue;
+
+    unsigned int maximum_size;
+
+    unsigned int current_size;
+
+  } Queue;
+
+  // Get the index of the element with lowest cost in the queue.
+  //
+  unsigned int get_top (Queue * OPEN);
+
+  // Replace the element of highest cost by X.
+  //
+  void insert_subset (Queue * OPEN, ElementSubset * X);
+
+  // Remove the element with index "index".
+  //
+  void remove_subset (Queue * OPEN, unsigned int index);
 
 public:
 

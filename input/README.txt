@@ -13,6 +13,7 @@ explicit          - Examples of the Explicit cost function.
 
 Gisette           - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Gisette
+                    (the file of this data set is zipped.)
 
 hamming_distance  - Examples of the Hamming distance cost function.
 

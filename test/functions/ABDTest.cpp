@@ -27,7 +27,7 @@ namespace ABDTest
 {
   bool it_should_add_and_retrieve_the_elapsed_time ()
   {
-    ElementSet set ("a_set", 1, 1);
+    ElementSet set ("a_set", "input/abd/Test_02_A.xml");
     ABD c (& set);
     int t1 =    10,     // 0.00001 second
         t2 =   100,     // 0.0001 second

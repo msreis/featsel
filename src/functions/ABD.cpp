@@ -27,33 +27,39 @@ ABD::ABD (ElementSet * a_set)
   c_max = C_MAX_VALUE;
   n = set->get_set_cardinality ();
 
-  W = new float * [n];
-
-  F0 = new ElementSubset ("F0", set);
-
-  for (unsigned int i = 0; i < n; i++)
+  if (n > 0)
   {
-    // Values of the positive-definite matrix.
-    //
-    W[i] = new float [n];
-    for (unsigned int j = 0; j < n; j++)
-       W[i][j] = set->get_element (i)->get_element_value (j);
+    W = new float * [n];
 
-    // For each element i, if its value with index n is "1", then i 
-    // belongs to the global optimum F0.
-    //
-    if (set->get_element (i)->get_element_value (n) == 1)
-      F0->add_element (i);
+    F0 = new ElementSubset ("F0", set);
+
+    for (unsigned int i = 0; i < n; i++)
+    {
+      // Values of the positive-definite matrix.
+      //
+      W[i] = new float [n];
+      for (unsigned int j = 0; j < n; j++)
+         W[i][j] = set->get_element (i)->get_element_value (j);
+
+      // For each element i, if its value with index n is "1", then i 
+      // belongs to the global optimum F0.
+      //
+      if (set->get_element (i)->get_element_value (n) == 1)
+        F0->add_element (i);
+    }
   }
 }
 
 
 ABD::~ABD ()
 {
-  delete F0;
-  for (unsigned int i = 0; i < n; i++)
-    delete W[i];
-  delete [] W;
+  if (n > 0)
+  {
+    delete F0;
+    for (unsigned int i = 0; i < n; i++)
+      delete W[i];
+    delete [] W;
+  }
 }
 
 

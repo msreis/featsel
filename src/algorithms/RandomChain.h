@@ -26,8 +26,6 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
-#define VERBOSE false
-
 class RandomChain : public Solver
 {
 

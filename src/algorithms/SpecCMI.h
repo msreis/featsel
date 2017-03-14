@@ -37,7 +37,7 @@
 
 // Precision of the Rayleigh quotient iteration.
 //
-# define EPSILON 0.0001
+# define EPSILON 0.001
 
 // Maximum number of iterations of the Rayleigh quotient iteration algorithm.
 //
@@ -56,6 +56,16 @@ private:
   // as described in Xuan Vinh et al. (2014).
   //
   double ** Q;
+
+  // Compute the inverse of a matrix A using Gauss--Jordan elimination method.
+  // To this end, it receives A augmented by the column vector b of size n,
+  // and returns:
+  //
+  // * a pointer to a vector x, a solution for the linear equation Ax = b;
+  // 
+  // * NULL, if the matrix A is singular.
+  //
+  double * Gauss_Jordan_elimination (unsigned int n, double ** A);
 
   // Execute the Rayleigh quotient iteration algorithm on matrix Q,
   // with precision epsilon, maximum number of iterations max_num_iter and x as 

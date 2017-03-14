@@ -20,9 +20,6 @@
 
 # include "SpecCMI.h"
 
-# include <oct.h>
-# include <builtin-defun-decls.h>
-
 SpecCMI::SpecCMI ()
 {
   list_of_visited_subsets = new Collection ();
@@ -77,75 +74,181 @@ double SpecCMI::get_Q_matrix_value (unsigned int i, unsigned int j)
 }
 
 
+// Implemented pseudocode of Gauss--Jordan elimination:
+// (https://en.wikipedia.org/wiki/Gaussian_elimination#Pseudocode)
+//
+// for k = 1 ... min(m,n):
+//   Find the k-th pivot:
+//   i_max  := argmax (i = k ... m, abs(A[i, k]))
+//   if A[i_max, k] = 0
+//     error "Matrix is singular!"
+//   swap rows(k, i_max)
+//   Do for all rows below pivot:
+//   for i = k + 1 ... m:
+//     f := A[i, k] / A[k, k]
+//     Do for all remaining elements in current row:
+//     for j = k + 1 ... n:
+//       A[i, j]  := A[i, j] - A[k, j] * f
+//     Fill lower triangular matrix with zeros:
+//     A[i, k]  := 0
+//
+double * SpecCMI::Gauss_Jordan_elimination (unsigned int n, double ** A)
+{
+  for (unsigned int k = 0; k < n; k++)
+  {
+    // Compute the argmax.
+    //
+    unsigned int i_max = n;
+    double v_max = 0;
+    for (unsigned int i = k; i < n; i++)
+      if (abs (A[i][k]) >= v_max)
+      {
+        i_max = i;
+        v_max = abs (A[i][k]);
+      }
+
+    if (A[i_max][k] == 0)  // The matrix is singular.
+      return NULL;
+
+    // Swap rows k and i_max.
+    //
+    for (unsigned j = 0; j <= n; j++)
+    {
+      double aux;
+      aux = A[k][j];
+      A[k][j] = A[i_max][j];
+      A[i_max][j] = aux;
+    }
+
+    // Process the rows below pivot.
+    //
+    for (unsigned int i = k + 1; i < n; i++)
+    {
+      double f = A[i][k] / A[k][k];
+
+      for (unsigned int j = k + 1; j <= n; j++)
+      {
+        A[i][j] = A[i][j] - A[k][j] * f;
+      }
+      A[i][k] = 0;
+    }
+  }
+
+  double * x = new double [n];
+  for (unsigned int i = 0; i < n; i++)
+    x[i] = 0; 
+
+  // Retrieve the values of x through back substitution.
+  //
+  x[n-1] = A[n-1][n] / A[n-1][n-1];
+  for (int i = n - 2; i >= 0; i--)
+  {
+    x[i] = A[i][n];
+    for (unsigned int j = 0; j < n; j++)
+      if ((unsigned int) i != j)
+        x[i] -= A[i][j] * x[j];
+    x[i] /= A[i][i];
+  }
+
+  return x;
+}
+
+
 // Algorithm 8.5.3 of the book "Numerical Linear Algebra and Applications",
 // from Biswa Datta.
 // 
 double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
 {
-  int n = set->get_set_cardinality ();
-  double err = epsilon + 1;
+  unsigned int n = set->get_set_cardinality ();
+  double err = epsilon + 1, num_iter = 0, * x, * y, ** A;
 
-  octave_value_list in;     // Input/Output lists to exchange data with 
-  octave_value_list out;    // octace native functions.
-
-  Matrix A  = Matrix (n, n),
-         B  = Matrix (n, n),
-         I  = Matrix (n, n);
-
-  ColumnVector x = ColumnVector (n),
-               y = ColumnVector (n);
-
-  for (octave_idx_type i = 0; i < n; i++)
+  A = new double * [n];
+  x = new double [n];
+  for (unsigned int i = 0; i < n; i++)
   {
-    x(i) = x_0[i];
-
-    for (octave_idx_type j = 0; j < n; j++)
-      A(i,j) = this->Q[i][j];
+    A[i] = new double [n + 1];
+    for (unsigned int j = 0; j < n; j++)
+      A[i][j] = Q[i][j];
+    x[i] = x_0[i];
   }
-
-  // Compute an identity matrix with n rows and n columns.
-  //
-  in(0) = n;                    
-  out = Feye (in, 1);
-  I = out(0).matrix_value ();
-
-  double num_iter = 0;
 
   while ((err > epsilon) && (num_iter <= max_num_iter))
   {
     num_iter++;
 
-    // sigma = (x' * A * x) / (x' * x);
+    // sigma = (x' * Q * x) / (x' * x);
     //
-    double sigma = (x.transpose () * A * x) / (x.transpose () * x);
+    double num = 0, den = 0;
+    for (unsigned int j = 0; j < n; j++)
+    {
+      double aux = 0;
+      for (unsigned int i = 0; i < n; i++)
+        aux += x[i] * A[i][j];
+      num += aux * x[j];
+      den += x[j] * x[j];
+    }
+    double sigma = num / den; 
 
-    // y  = (A - sigma * I)^(-1) * x
+    // y  = (Q - sigma * I)^(-1) * x
     //
-    B = A - (sigma * I);
-    y = B.solve (x);
+    for (unsigned int i = 0; i < n; i++)
+    {
+      for (unsigned int j = 0; j < n; j++)
+        A[i][j] = Q[i][j];
+      A[i][i] -= sigma;
+      A[i][n] = x[i];     // Augmented matrix.
+    }      
 
-    // x = y / ||y||.
-    //
-    in(0) = y;
-    out = Fnorm (in, 1);             // Original algorithm: Fmax instead Fnorm.
-    x = y / out(0).double_value ();
+    y = Gauss_Jordan_elimination (n, A);
 
-    // Compute err = ||(A - sigma * I) * x||.
-    //
-    in(0) = B * x;
-    out = Fnorm (in, 1);
-    err = out(0).double_value ();
+    if (y == NULL)
+    {
+      if (VERBOSE)
+        cout << "Warning: iteration " << num_iter
+             << " yielded a singular matrix!" << endl;
+      num_iter = max_num_iter + 1; // Force the end of the loop.
+    } 
+    else
+    {
+      // x = y / ||y||.
+      //
+      double norm_y, sum = 0;
+      for (unsigned int i = 0; i < n; i++)
+        sum += y[i] * y[i];
+      norm_y = sqrt (sum);
+      for (unsigned int i = 0; i < n; i++)
+        x[i] = y[i] / norm_y;
+
+      delete y;
+
+      // Compute err = ||(A - sigma * I) * x||.
+      //
+      sum = 0;
+      for (unsigned int i = 0; i < n; i++)
+      {
+        double value = 0;
+        for (unsigned int j = 0; j < n; j++)
+        {
+          if (i == j)
+            value += (A[i][i] - sigma) * x[j];
+          else
+            value += A[i][j] * x[j];
+        }
+        sum += value * value;
+      }
+      err = sqrt (sum);
+    }
   }
 
-  double * result = new double [n];
+  if ((num_iter >= max_num_iter) && (VERBOSE))
+    cout << "Warning: Rayleigh algorithm did not converge!" << endl;
 
-  for (octave_idx_type i = 0; i < n; i++)
-    result[i] = x(i);
+  for (unsigned int i = 0; i < n; i++)
+    delete A[i];
 
-  if (num_iter >= max_num_iter)
-    cout << "ERROR: Rayleigh algorithm did not converge!" << endl;
+  delete [] A;
 
-  return result;
+  return x;
 }
 
 
@@ -160,7 +263,7 @@ double * SpecCMI::rank_features ()
   //
   double * x = new double [n];
   for (unsigned int i = 0; i < n; i++)
-    x[i] =  1; // sqrt (1 / n);
+    x[i] =  sqrt (1 / (double) n);
 
   double * result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
 

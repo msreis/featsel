@@ -41,6 +41,10 @@
 //
 # define COST_FUNCTION_PRECISION 17
 
+// Set this flag to 'true' in order to print warnings and errors.
+//
+# define VERBOSE false
+
 using namespace std;
 
 #endif /* GLOBAL_H_ */

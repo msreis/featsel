@@ -290,7 +290,7 @@ print OUT "<EM>Cost Function Time (sec):</EM> required time for the " .
   "computation of all calls the cost function, during the running of each " .
   "algorithm (average of $number_of_instances_per_size runnings).<BR>\n";
 
-print OUT "<EM>\# Computed nodes:</EM> number of times the chosen " . 
+print OUT "<EM>\# Calls of Cost Function:</EM> number of times the chosen " . 
   "cost function ($cost_function_name) " .
   "is computed by each algorithm (average of $number_of_instances_per_size " . 
   "runnings).<BR>\n";
@@ -310,8 +310,8 @@ print OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>Cost Function Time (sec)</CENTER>" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
-  "<TD colspan=$number_of_algorithms><CENTER>\# Computed nodes</CENTER></TD>\n" .
-  "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
+  "<TD colspan=$number_of_algorithms><CENTER>\# Calls of Cost Function" . 
+  "</CENTER></TD>\n<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>\# The best solution</CENTER>" .
   "</TD>\n</TR>\n";
 
@@ -449,9 +449,15 @@ foreach my $i (1..$maximum_instance_size)
 
   # This informaton is extracted from all algorithms
   #
+  my @calls_of_cost_function;
+  my @time_of_cost_function;
+  my @time_of_algorithm;
   my @average_calls_of_cost_function;
   my @average_time_of_cost_function;
   my @average_time_of_algorithm;
+  my @deviation_calls_of_cost_function;
+  my @deviation_time_of_cost_function;
+  my @deviation_time_of_algorithm;
   my @number_of_times_that_has_a_best_solution;
 
   for (my $j = 0; $j < $number_of_algorithms; $j++)
@@ -473,6 +479,9 @@ foreach my $i (1..$maximum_instance_size)
     $average_calls_of_cost_function[$j] = 0;
     $average_time_of_cost_function[$j] = 0;
     $average_time_of_algorithm[$j] = 0;
+    $deviation_calls_of_cost_function[$j] = 0;
+    $deviation_time_of_cost_function[$j] = 0;
+    $deviation_time_of_algorithm[$j] = 0;
     $number_of_times_that_has_a_best_solution[$j] = 0;
   }
     
@@ -493,6 +502,7 @@ foreach my $i (1..$maximum_instance_size)
       $t1 = [gettimeofday];
 
       $average_time_of_algorithm[$j] += tv_interval ($t0, $t1);
+      push @{$time_of_algorithm[$j]}, tv_interval ($t0, $t1);
 
       open (LOG, $LOG_FILE);
       while (<LOG>)
@@ -504,10 +514,12 @@ foreach my $i (1..$maximum_instance_size)
         elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
         { 
           $average_calls_of_cost_function[$j] += $1;
+          push @{$calls_of_cost_function[$j]}, $1;
         }
         elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
         {
           $average_time_of_cost_function[$j] += $1;
+          push @{$time_of_cost_function[$j]}, $1;
         }
       }
       close(LOG);
@@ -531,18 +543,47 @@ foreach my $i (1..$maximum_instance_size)
   
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    $average_calls_of_cost_function[$j] /= $number_of_instances_per_size;	 
+    $average_calls_of_cost_function[$j] /= $number_of_instances_per_size;
 
     $cost_function_calls{$algorithms[$j]}->[$i] = 
       $average_calls_of_cost_function[$j];      
 
-    $average_time_of_cost_function[$j] /= 
-      ($number_of_instances_per_size * 1000000); # convert to seconds
+    $average_time_of_cost_function[$j] /= $number_of_instances_per_size;
       
     $average_time_of_algorithm[$j] /= $number_of_instances_per_size;
 
     $total_time{$algorithms[$j]}->[$i] = $average_time_of_algorithm[$j];
     
+    foreach my $index (0..($number_of_instances_per_size - 1))
+    {
+	$deviation_calls_of_cost_function[$j] +=
+          ($average_calls_of_cost_function[$j] - 
+           $calls_of_cost_function[$j]->[$index])  ** 2;
+
+	$deviation_time_of_cost_function[$j] +=
+          ($average_time_of_cost_function[$j] - 
+           $time_of_cost_function[$j]->[$index])  ** 2;
+
+	$deviation_time_of_algorithm[$j] +=
+          ($average_time_of_algorithm[$j] - 
+           $time_of_algorithm[$j]->[$index])  ** 2;
+    } 
+   
+    $deviation_calls_of_cost_function[$j] = 
+      sqrt ($deviation_calls_of_cost_function[$j] /
+            ($number_of_instances_per_size - 1));
+
+    $deviation_time_of_cost_function[$j] = 
+      sqrt ($deviation_time_of_cost_function[$j] /
+            ($number_of_instances_per_size - 1));
+
+    $deviation_time_of_algorithm[$j] = 
+      sqrt ($deviation_time_of_algorithm[$j] /
+            ($number_of_instances_per_size - 1));
+
+    $average_time_of_cost_function[$j]   /= 1000000; # convert to seconds
+    $deviation_time_of_cost_function[$j] /= 1000000; # convert to seconds
+
     if ($average_time_of_algorithm[$j] > $MAX_TIME_VALUE){    
 	     $MAX_TIME_VALUE = $average_time_of_algorithm[$j];
       }
@@ -556,8 +597,10 @@ foreach my $i (1..$maximum_instance_size)
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;</CENTER></TD>",
-      $average_time_of_algorithm[$j];
+    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;&#8723;&nbsp;%4.2f&nbsp;" . 
+               "</CENTER></TD>",
+      $average_time_of_algorithm[$j],
+      $deviation_time_of_algorithm[$j];
   }
     
   # Cost function time output
@@ -565,8 +608,10 @@ foreach my $i (1..$maximum_instance_size)
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;</CENTER></TD>",
-      $average_time_of_cost_function[$j];
+    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;&#8723;&nbsp;%4.2f&nbsp;" .
+               "</CENTER></TD>",
+      $average_time_of_cost_function[$j],
+      $deviation_time_of_cost_function[$j];
   }
    
   # Number of computed nodes output
@@ -574,8 +619,10 @@ foreach my $i (1..$maximum_instance_size)
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%5.1f&nbsp;</CENTER></TD>",
-      $average_calls_of_cost_function[$j];
+    printf OUT "<TD><CENTER>&nbsp;%5.1f&nbsp;&#8723;&nbsp;%5.1f&nbsp;" .
+               "</CENTER></TD>",
+      $average_calls_of_cost_function[$j],
+      $deviation_calls_of_cost_function[$j],
   }
 
   # Number of best solutions found output
@@ -667,7 +714,7 @@ sub print_time_graphs
 
     open (PLOT, ">$GNUPLOT_PLOT_FILE");
 
-    printf PLOT "set terminal svg enhanced crop size $Xaxis, $Xaxis\n";
+    printf PLOT "set terminal svg enhanced size $Xaxis, $Xaxis\n";
     printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_$algo.svg'\n";
     printf PLOT "unset key\n";
     printf PLOT "set xlabel \"|S|\" rotate parallel\n";

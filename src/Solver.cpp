@@ -85,6 +85,7 @@ string Solver::print_search_report ()
   {
     report_string.append ((*it)->print_subset ());
     report_string.append (": ");
+    value.precision (COST_FUNCTION_PRECISION);
     value <<  (*it)->cost;
     report_string.append (value.str ());
     report_string.append ("\n");

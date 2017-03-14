@@ -34,12 +34,16 @@ Selects the
 as the algorithm used in the search. The default value is
 .I ubb
 (U-curve Branch and Bound); other valid names are
+.I bfs
+(Best-First Search),
 .I es
 (Exhaustive Search),
-.I pucs
-(Parallelizable U-Curve-Search),
 .I rc
 (a Random Chain of the search space),
+.I sbfs
+(Sequential Backward Floating Selection),
+.I sbs
+(Sequential Backward Selection),
 .I sffs
 (Sequential Forward Floating Selection),
 .I sfs
@@ -55,6 +59,10 @@ Selects the
 as the cost function of the search. The default value is
 .I subset_sum;
 (polynomial reduction from the subset sum problem); other valid names are
+.I abd
+(Atashpaz-Gargari, Braga-Neto, Dougherty),
+.I cfs
+(Correlation-based Feature Selection),
 .I cmi
 (Conditional Mutual Information),
 .I explicit

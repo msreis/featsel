@@ -37,6 +37,7 @@ protected:
   unsigned int t;
 
   // Total number of samples.
+  //
   unsigned int m;
 
   // Samples for a W-operator feature selection.

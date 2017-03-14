@@ -37,12 +37,9 @@ float Explicit::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
   float cost = 0;
   number_of_calls_of_cost_function++;
- 
-  //
-  
+
   unsigned int i;
   string key = "_";  // example of a key: _010101
 
@@ -56,8 +53,6 @@ float Explicit::cost (ElementSubset * X)
     cost = set->get_explicit_cost (key);
   }
 
-  //
- 
   gettimeofday (& end, NULL);
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+
+  <SetName> Tailor_Convex_Hull_7_pieces_A </SetName>
+
+  <SetValue> 8 </SetValue>
+
+  <MaxNumberOfElementValues> 4 </MaxNumberOfElementValues>
+
+  <NumberOfElements> 7 </NumberOfElements>
+
+  <Element>
+    <name> 3 </name>
+    <value>1</value> <value>0</value> <value>1</value> <value>0</value>
+  </Element>
+  
+  <Element>
+    <name> 2 </name>
+    <value>1</value> <value>1</value> <value>0</value> <value>0</value>
+  </Element>
+  
+  <Element>
+    <name> 1 </name>
+    <value>1</value> <value>0</value> <value>0</value> <value>0</value>
+  </Element>
+
+  <Element>
+    <name> 1 </name>
+    <value>1</value> <value>0</value> <value>0</value> <value>0</value>
+  </Element>
+
+  <Element>
+    <name> 3 </name>
+    <value>1</value> <value>0</value> <value>1</value> <value>0</value>
+  </Element>
+
+  <Element>
+    <name> 2 </name>
+    <value>1</value> <value>1</value> <value>0</value> <value>0</value>
+  </Element>
+
+  <Element>
+    <name> 4 </name>
+    <value>1</value> <value>1</value> <value>1</value> <value>1</value>
+  </Element>
+
+</ElementSet>
+

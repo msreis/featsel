@@ -2,7 +2,7 @@
 // global.h -- Global libraries, structures, and definitions.
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -32,8 +32,19 @@
 # include <map>
 # include <sstream>
 # include <string>
+# include <omp.h>
 
+// Infinity flag for several algorithms and cost functions.
+//
 # define INFINITY_COST FLT_MAX
+
+// Precision of the cost function value that is printed by the main program.
+//
+# define COST_FUNCTION_PRECISION 17
+
+// Set this flag to 'true' in order to print warnings and errors.
+//
+# define VERBOSE false
 
 using namespace std;
 

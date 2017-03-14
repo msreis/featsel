@@ -29,7 +29,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -45,7 +45,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
 # %template_test%
       test/ElementSubsetTest.o test/CollectionTest.o \
       test/functions/MeanConditionalEntropyMock.o \
-      test/algorithms/SFFSMock.o \
+      test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \
 
 LIBS = -lm -loctave -loctinterp
 

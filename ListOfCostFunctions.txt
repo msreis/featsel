@@ -6,3 +6,5 @@
                  cmi ConditionalMutualInformation                  dat
                point                Point                  xml
               tailor     TailorConvexHull                  xml
+                 cfs                  CFS                  dat
+                 abd                  ABD                  xml

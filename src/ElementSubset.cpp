@@ -26,7 +26,6 @@ ElementSubset::ElementSubset (string subset_name, ElementSet * a_set)
   unsigned int number_of_elements = a_set->get_set_cardinality ();
   set = a_set;
   subset_cardinality = 0;
-  Y = NULL;
   cost = 0;
 
   if (subset_name.length () > 0)
@@ -62,7 +61,6 @@ ElementSubset::ElementSubset (ElementSubset * elm_subset)
     this->list_of_elements[i] = elm_subset->list_of_elements[i];
   this->cost = elm_subset->cost;
   this->j = elm_subset->j;
-  this->Y = elm_subset->Y;
 }
 
 
@@ -70,8 +68,6 @@ ElementSubset::~ElementSubset ()
 {
   if (list_of_elements != NULL)
     delete [] list_of_elements;
-  if (Y != NULL)
-    delete [] Y;
   L.clear ();
 }
 
@@ -165,7 +161,7 @@ void ElementSubset::set_complete_subset ()
 
   for (i = 0; i < n; i++)
   {
-    L.push_back(uniform_permutation[i]);
+    L.push_back (uniform_permutation[i]);
     list_of_elements[i] = true;
   }
 
@@ -177,10 +173,10 @@ void ElementSubset::set_complete_subset ()
 void ElementSubset::copy (ElementSubset * Y)
 {
   unsigned int i;
-  set_complete_subset (); // to guarantee uniform permutation of elements
+  set_empty_subset ();
   for (i = 0; i < set->get_set_cardinality (); i++)
-    if (! Y->has_element (i))
-      remove_element (i);
+    if (Y->has_element (i))
+      add_element (i);
   cost = Y->cost;
 }
 
@@ -293,26 +289,42 @@ string ElementSubset::print_subset ()
 {
   unsigned int i;
   string subset_string (" <");
+  subset_string.reserve (2 + set->get_set_cardinality () + 2);
   for (i = 0; i < set->get_set_cardinality (); i++)
     if (has_element (i))
-      subset_string.append ("1");
+      subset_string.append("1");  // append method performs better than +=.
     else
-      subset_string.append ("0");
-  subset_string.append ("> ");
+      subset_string.append("0");
+  subset_string += "> ";
   return subset_string;
 }
 
 
 string ElementSubset::print_subset_in_hex ()
 {
-  unsigned int i;
-  unsigned long l = 0;
-  std::ostringstream stm;
-  string subset_string;
+  unsigned int i, l = 0x0, count = 0;
+  string subset_string ("");
+  char hex_string [4 * sizeof (int) + 1];
+
   for (i = 0; i < set->get_set_cardinality (); i++)
+  {
     if (has_element (i))
-      l += pow ((double) 2, (int) i);
-  stm << hex << l;
-  subset_string = stm.str ();
+      l += pow (2, (count % 4));
+    
+    count++;    
+
+    if (count % 4 == 0)
+    {
+      sprintf (hex_string,"%i", l);
+      subset_string.append (hex_string);
+      l = 0;
+    }
+  }
+  if (count % 4 != 0)
+  {
+    sprintf (hex_string,"%i", l);
+    subset_string.append (hex_string);
+  }
+
   return subset_string;
 }

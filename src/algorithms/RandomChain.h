@@ -26,7 +26,6 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
-
 class RandomChain : public Solver
 {
 

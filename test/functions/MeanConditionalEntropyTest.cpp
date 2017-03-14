@@ -34,25 +34,25 @@ namespace MeanConditionalEntropyTest
     X.set_complete_subset ();
 
     samples_frequencies = c.print_W_operator_samples_frequencies (& X);
-    if (!((samples_frequencies.find ("<0001001> : 1") != string::npos) &&
-          (samples_frequencies.find ("<0101011> : 2") != string::npos) &&
-          (samples_frequencies.find ("<0111110> : 1") != string::npos) &&
-          (samples_frequencies.find ("<1111111> : ") == string::npos) &&
-          (samples_frequencies.find ("<0000000> : ") == string::npos)))
+    if (!((samples_frequencies.find ("0001001: 1") != string::npos) &&
+          (samples_frequencies.find ("0101011: 2") != string::npos) &&
+          (samples_frequencies.find ("0111110: 1") != string::npos) &&
+          (samples_frequencies.find ("1111111: ") == string::npos) &&
+          (samples_frequencies.find ("0000000: ") == string::npos)))
       return false;
 
     // |X| must be greater than 0
     //
-    X.set_empty_subset ();
+    X.set_empty_subset ();  
     X.add_element(1);
     X.add_element(2);
     X.add_element(3);
     samples_frequencies = c.print_W_operator_samples_frequencies (& X);
-    if (!((samples_frequencies.find ("<101> : 2") != string::npos) &&
-          (samples_frequencies.find ("<001> : 1") != string::npos) &&
-          (samples_frequencies.find ("<111> : 1") != string::npos) &&
-          (samples_frequencies.find ("<000> : ") == string::npos) &&
-          (samples_frequencies.find ("<110> : ") == string::npos)))
+    if (!((samples_frequencies.find ("X101XXX: 2") != string::npos) &&
+          (samples_frequencies.find ("X001XXX: 1") != string::npos) &&
+          (samples_frequencies.find ("X111XXX: 1") != string::npos) &&
+          (samples_frequencies.find ("X000XXX: ") == string::npos) &&
+          (samples_frequencies.find ("X110XXX: ") == string::npos)))
       return false;
 
     X.set_empty_subset ();
@@ -61,18 +61,18 @@ namespace MeanConditionalEntropyTest
     X.add_element(4);
     X.add_element(6);
     samples_frequencies = c.print_W_operator_samples_frequencies (& X);
-    if (!((samples_frequencies.find ("<0001> : 3") != string::npos) &&
-          (samples_frequencies.find ("<0110> : 1") != string::npos) &&
-          (samples_frequencies.find ("<1010> : ") == string::npos) &&
-          (samples_frequencies.find ("<0000> : ") == string::npos) &&
-          (samples_frequencies.find ("<1111> : ") == string::npos)))
+    if (!((samples_frequencies.find ("0X0X0X1: 3") != string::npos) &&
+          (samples_frequencies.find ("0X1X1X0: 1") != string::npos) &&
+          (samples_frequencies.find ("1X0X1X0: ") == string::npos) &&
+          (samples_frequencies.find ("0X0X0X0: ") == string::npos) &&
+          (samples_frequencies.find ("1X1X1X1: ") == string::npos)))
       return false;
 
     X.set_empty_subset ();
     X.add_element(5);
     samples_frequencies = c.print_W_operator_samples_frequencies (& X);
-    if (!((samples_frequencies.find ("<1> : 3") != string::npos) &&
-          (samples_frequencies.find ("<0> : 1") != string::npos)))
+    if (!((samples_frequencies.find ("XXXXX1X: 3") != string::npos) &&
+          (samples_frequencies.find ("XXXXX0X: 1") != string::npos)))
       return false;
 
     return true;
@@ -90,21 +90,21 @@ namespace MeanConditionalEntropyTest
     //
     X.set_complete_subset ();
     samples_frequencies = c.print_label_frequencies (& X);
-    if (!((samples_frequencies.find ("<011> : 2 0") != string::npos) &&
-          (samples_frequencies.find ("<110> : 1 2") != string::npos) &&
-          (samples_frequencies.find ("<010> : 2 2") != string::npos) &&
-          (samples_frequencies.find ("<000> : 3 2") != string::npos) &&
-          (samples_frequencies.find ("<111> : ") == string::npos)))
+    if (!((samples_frequencies.find ("011: 2 0") != string::npos) &&
+          (samples_frequencies.find ("110: 1 2") != string::npos) &&
+          (samples_frequencies.find ("010: 2 2") != string::npos) &&
+          (samples_frequencies.find ("000: 3 2") != string::npos) &&
+          (samples_frequencies.find ("111: ") == string::npos)))
       return false;
 
     // |X| must be greater than 0
     //
     X.remove_element (0);
     samples_frequencies = c.print_label_frequencies (& X);
-    if (!((samples_frequencies.find ("<00> : 3 2") != string::npos) &&
-          (samples_frequencies.find ("<10> : 3 4") != string::npos) &&
-          (samples_frequencies.find ("<11> : 2 0") != string::npos) &&
-          (samples_frequencies.find ("<01> : ") == string::npos)))
+    if (!((samples_frequencies.find ("X00: 3 2") != string::npos) &&
+          (samples_frequencies.find ("X10: 3 4") != string::npos) &&
+          (samples_frequencies.find ("X11: 2 0") != string::npos) &&
+          (samples_frequencies.find ("X01: ") == string::npos)))
       return false;
 
     return true;
@@ -120,10 +120,11 @@ namespace MeanConditionalEntropyTest
 
     X.set_complete_subset ();
     entropy = c.print_conditional_entropy (& X);
-    if (!((entropy.find ("<011> : 0.918296") != string::npos) &&
-          (entropy.find ("<000> : 0.970951") != string::npos) &&
-          (entropy.find ("<010> : 0") != string::npos) &&
-          (entropy.find ("<111> : ") == string::npos)))
+
+    if (!((entropy.find ("011: 0.918296") != string::npos) &&
+          (entropy.find ("000: 0.970951") != string::npos) &&
+          (entropy.find ("010: 0") != string::npos) &&
+          (entropy.find ("111: ") == string::npos)))
       return false;
 
       return true;
@@ -142,6 +143,7 @@ namespace MeanConditionalEntropyTest
 
     X.set_complete_subset ();
     cost = cf_1.cost (& X);
+
     if (!((cost >= 0.760) && (cost <= 0.761)))
       return false;
 
@@ -150,7 +152,7 @@ namespace MeanConditionalEntropyTest
     if (!((cost >= 0.8463) && (cost <= 0.8465)))
       return false;
 
-    Y.set_complete_subset ();  // testing the penalty for one occurrence
+    Y.set_complete_subset ();  // Testing the penalty for one occurrence.
     cost = cf_2.cost (& Y);
     if (!((cost >= 0.6666) && (cost <= 0.6667)))
       return false;

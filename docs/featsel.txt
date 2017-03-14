@@ -21,23 +21,25 @@ OOPPTTIIOONNSS
        -a algorithm-name
               Selects the _a_l_g_o_r_i_t_h_m_-_n_a_m_e as the algorithm used in the  search.
               The default value is _u_b_b (U-curve Branch and Bound); other valid
-              names are _e_s (Exhaustive Search), _p_u_c_s (Parallelizable  U-Curve-
-              Search),  _r_c (a Random Chain of the search space), _s_f_f_s (Sequen-
-              tial Forward Floating Selection), _s_f_s (Sequential Forward Selec-
-              tion), _s_p_e_c___c_m_i (SPEC-CMI), and _u_c_s (U-Curve-Search).
+              names are _b_f_s (Best-First Search), _e_s (Exhaustive Search), _r_c (a
+              Random  Chain  of  the  search space), _s_b_f_s (Sequential Backward
+              Floating Selection), _s_b_s (Sequential Backward  Selection),  _s_f_f_s
+              (Sequential Forward Floating Selection), _s_f_s (Sequential Forward
+              Selection), _s_p_e_c___c_m_i (SPEC-CMI), and _u_c_s (U-Curve-Search).
 
 
        -c cost-function-name
-              Selects  the  _c_o_s_t_-_f_u_n_c_t_i_o_n_-_n_a_m_e  as  the  cost  function of the
-              search. The default value is _s_u_b_s_e_t___s_u_m_;  (polynomial  reduction
-              from  the subset sum problem); other valid names are _c_m_i (Condi-
-              tional  Mutual  Information),  _e_x_p_l_i_c_i_t  (cost  function  values
-              explicitly  defined  from  file), _h_a_m_m_i_n_g___d_i_s_t_a_n_c_e_, (the Hamming
-              distance), _m_c_e (Mean Conditional Entropy), _m_i  (Mutual  Informa-
-              tion), and _c_m_i (Conditional Mutual Information), _p_o_i_n_t (constant
-              cost function except for a single element of mininum cost),  and
-              _t_a_i_l_o_r (computes a convex hull for subsets of an instance of the
-              Tailor problem).
+              Selects the _c_o_s_t_-_f_u_n_c_t_i_o_n_-_n_a_m_e  as  the  cost  function  of  the
+              search.  The  default value is _s_u_b_s_e_t___s_u_m_; (polynomial reduction
+              from the subset sum problem); other valid names are _a_b_d  (Atash-
+              paz-Gargari, Braga-Neto, Dougherty), _c_f_s (Correlation-based Fea-
+              ture Selection), _c_m_i (Conditional Mutual Information),  _e_x_p_l_i_c_i_t
+              (cost  function  values  explicitly  defined  from  file),  _h_a_m_-
+              _m_i_n_g___d_i_s_t_a_n_c_e_, (the Hamming  distance),  _m_c_e  (Mean  Conditional
+              Entropy),  _m_i  (Mutual Information), and _c_m_i (Conditional Mutual
+              Information), _p_o_i_n_t (constant cost function except for a  single
+              element of mininum cost), and _t_a_i_l_o_r (computes a convex hull for
+              subsets of an instance of the Tailor problem).
 
 
        -f input-file-name

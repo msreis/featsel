@@ -3,7 +3,7 @@
 //    featselTest.cpp -- Unit tests of the featsel classes.
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //
 //   If you use featsel in your publication, we kindly ask you to acknowledge us

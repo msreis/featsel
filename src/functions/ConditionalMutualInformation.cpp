@@ -102,7 +102,7 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
   for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
   {
     //
-    // sum_{x \in x1}, iterates over the observed values of x1. 
+    // sum_{x \in x1}, iterates over the observed values of x1.
     //
     for (it = table.begin (); it != table.end (); it++)
     {
@@ -120,7 +120,7 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
       // P(x1=x, Y=y) log P(x1=x, Y=y) / (P(x1=x) P(Y=y)).
       //
       if ((Pr_X_and_Y != 0) && (Pr_X != 0) && (Pr_Y[i] != 0))
-        result += Pr_X_and_Y * (log (Pr_X_and_Y / (Pr_X * Pr_Y[i])) / 
+        result += Pr_X_and_Y * (log (Pr_X_and_Y / (Pr_X * Pr_Y[i])) /
                                 log ((float) set->get_number_of_labels ()));
     }
   }
@@ -132,7 +132,7 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 }
 
 
-// Compute I(x1; Y | x2) = 
+// Compute I(x1; Y | x2) =
 //      \sum_{x1,Y,x2} P(x1, Y, x2) log (P(x1, Y, x2) P(x2))/(P(x1,x2) P(Y,x2)).
 //
 float ConditionalMutualInformation::conditional_mutual_information
@@ -191,7 +191,7 @@ float ConditionalMutualInformation::conditional_mutual_information
       for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
         (table_x1_x2_Y[x1_x2_row_value])[i] += row_labels[i];
     }
-  
+
     // x1 only observation value.
     //
     it1 = table_x1_Y.find (x1_value);
@@ -234,15 +234,15 @@ float ConditionalMutualInformation::conditional_mutual_information
   for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
   {
     //
-    // sum_{x \in x1}, iterates over the observed values of x1. 
+    // sum_{x \in x1}, iterates over the observed values of x1.
     //
     for (it1 = table_x1_Y.begin (); it1 != table_x1_Y.end (); it1++)
-    {  
+    {
       //
-      // sum_{x \in x2}, iterates over the observed values of x2. 
+      // sum_{x \in x2}, iterates over the observed values of x2.
       //
       for (it2 = table_x2_Y.begin (); it2 != table_x2_Y.end (); it2++)
-      {  
+      {
 
         // P(x1=x, Y=y, x2=x')
         //
@@ -272,7 +272,7 @@ float ConditionalMutualInformation::conditional_mutual_information
 
         // P(Y=y, X2=x')
         //
-        float Pr_Y_X2 = (float) it2->second[i] / (float) m;        
+        float Pr_Y_X2 = (float) it2->second[i] / (float) m;
 
         // P(x1=x, Y=y, x2=x') log (P(x1=x, Y=y, x2=x') P(x2=x'))/
         //                          (P(x1=x,x2=x') P(Y=y,x2=x'))
@@ -300,7 +300,6 @@ float ConditionalMutualInformation::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
 
   number_of_calls_of_cost_function++;
 
@@ -333,8 +332,8 @@ float ConditionalMutualInformation::cost (ElementSubset * X)
         else
           x2 = i;
       }
-    
-    cost = 0.5 * (conditional_mutual_information (x1, x2) + 
+
+    cost = 0.5 * (conditional_mutual_information (x1, x2) +
                   conditional_mutual_information (x2, x1));
   }
   //

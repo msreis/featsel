@@ -39,7 +39,6 @@ float Point::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
 
   float cost = 0;
 

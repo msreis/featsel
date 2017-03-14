@@ -52,7 +52,9 @@ namespace SFFSTest
     HammingDistance c (&set);
     s.set_parameters (&c, &set, 0);
 
-    X.add_element (0);
+    // Best subset = 0011100.
+
+    X.add_element (0);  // X = 1101011
     X.add_element (1);
     X.add_element (3);
     X.add_element (5);

@@ -22,7 +22,7 @@
 
 Element::Element (unsigned int number, string element_name)
 {
-  max_number_of_values = number_of_values = 0;
+  max_number_of_values = max_value = number_of_values = 0;
   if (element_name.length () > 0)
     name = element_name;
   else
@@ -63,6 +63,8 @@ bool Element::add_element_value (int current_value)
   {
     value [number_of_values] = current_value;
     number_of_values++;
+    if (current_value > (int) max_value)
+      max_value = current_value;
     return true;
   }
   else
@@ -101,7 +103,7 @@ int Element::get_element_value (unsigned int index)
   else
   {
     cout << "Error in Element::get_element_value: index " <<
-    index << " is out of range!" << endl;
+            index << " is out of range!" << endl;
     return -1;
   }
 }
@@ -110,6 +112,12 @@ int Element::get_element_value (unsigned int index)
 unsigned int Element::get_number_of_values ()
 {
   return number_of_values;
+}
+
+
+unsigned int Element::get_max_value ()
+{
+  return max_value;
 }
 
 

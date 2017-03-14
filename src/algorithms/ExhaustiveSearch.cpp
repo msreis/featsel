@@ -61,7 +61,7 @@ void ExhaustiveSearch::get_minima_list (unsigned int max_size_of_minima_list)
       X.add_element (i);
 
     if (store_visited_subsets)
-      list_of_visited_subsets->add_subset (&X);
+     list_of_visited_subsets->add_subset (&X);
 
     X.cost = cost_function->cost (&X);  // O(f(n))
     Y = new ElementSubset ("", set);

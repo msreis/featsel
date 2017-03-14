@@ -128,14 +128,16 @@ void ElementSet::load_dat_file (string file_name, unsigned int n)
     list_of_elements = new Element * [number_of_elements + number_of_labels];
 
     for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
-    {
-      unsigned int max =
-        driver->list_of_elements[i]->get_number_of_values ();
       list_of_elements[i] = new Element (driver->max_number_of_values, "");
-      for (unsigned int j = 0; j < max; j++)
+
+    unsigned int max = driver->list_of_elements[0]->get_number_of_values ();
+
+    for (unsigned int k = 0; k < max; k++)
+    {
+      for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
       {
         list_of_elements[i]->add_element_value
-        (driver->list_of_elements[i]->get_element_value (j));
+        (driver->list_of_elements[i]->get_element_value (k));
       }
     }
   }

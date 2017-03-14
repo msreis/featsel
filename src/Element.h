@@ -29,6 +29,10 @@ class Element
 
 private:
 
+  // The maximum value of this element.
+  //
+  unsigned int max_value;
+
   // The maximum number of values that can be added into this element.
   //
   unsigned int max_number_of_values;
@@ -77,7 +81,11 @@ public:
   //
   unsigned int get_max_number_of_values ();
 
-  // Return the number of elements added already.
+  // Return the maximum value.
+  //
+  unsigned int get_max_value ();
+
+  // Return the number of values added already.
   //
   unsigned int get_number_of_values ();
 

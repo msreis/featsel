@@ -37,22 +37,21 @@ MeanConditionalEntropyMock::~MeanConditionalEntropyMock ()
 
 string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
 {
-  map <string, ElementSubset *>::iterator it;
+  map <string, unsigned int *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
-  ElementSet S ("", X->get_subset_cardinality (), 1);
 
-  calculate_distributions_from_the_samples (& S, X);
+  calculate_distributions_from_the_samples (X);
 
   for (it = samples.begin (); it != samples.end (); it++)
   {
-    printed_samples.append (it->second->print_subset ());
+    printed_samples.append (it->first);
     printed_samples.append (": ");
-    value <<  (int) it->second->Y [0];
+    value <<  (int) it->second[0];
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append (" ");
-    value <<  (int) it->second->Y [1];
+    value <<  (int) it->second[1];
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
@@ -67,18 +66,17 @@ string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
 string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
 (ElementSubset * X)
 {
-  map <string, ElementSubset *>::iterator it;
+  map <string, unsigned int *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
-  ElementSet S ("", X->get_subset_cardinality (), 1);
 
-  calculate_distributions_from_the_samples (& S, X);
+  calculate_distributions_from_the_samples (X);
 
   for (it = samples.begin (); it != samples.end (); it++)
   {
-    printed_samples.append (it->second->print_subset ());
+    printed_samples.append (it->first);
     printed_samples.append (": ");
-    value <<  (int) it->second->Y[0] + it->second->Y[1];
+    value <<  (int) it->second[0] + it->second[1];
     delete it->second;
     printed_samples.append (value.str ());
     value.str ("");
@@ -93,18 +91,21 @@ string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
 
 string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
 {
-  map <string, ElementSubset *>::iterator it;
+  map <string, unsigned int *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
-  ElementSet S ("", X->get_subset_cardinality (), 1);
 
-  calculate_distributions_from_the_samples (& S, X);
+  calculate_distributions_from_the_samples (X);
 
   for (it = samples.begin (); it != samples.end (); it++)
   {
-    printed_samples.append (it->second->print_subset ());
+    float Pr_X_is_x = 0;
+    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
+      Pr_X_is_x += (float) it->second[i] / (float) m;
+
+    printed_samples.append (it->first);
     printed_samples.append (": ");
-    value <<  calculate_conditional_entropy (it->second);
+    value <<  calculate_conditional_entropy (it->second, Pr_X_is_x);
     delete it->second;
     printed_samples.append (value.str ());
     value.str ("");

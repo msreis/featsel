@@ -37,12 +37,14 @@ float %template%::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  usleep (SLEEP_TIME);
 
   float cost = -1; // This value will make it fail in the empty set
                    // unit test, which should return zero.
 
   number_of_calls_of_cost_function++;
+
+  if (set->get_set_cardinality () == 0)
+    return 0;
 
   //
 

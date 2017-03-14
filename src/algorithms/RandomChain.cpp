@@ -42,14 +42,22 @@ void RandomChain::get_minima_list (unsigned int max_size_of_minima_list)
 
   ElementSubset X ("", set), * Y;
 
-  X.set_complete_subset ();
+  // We start with the complete subset in order to
+  //randomize the chosen elements.
+  X.set_complete_subset (); 
 
   do
   {
     Y = new ElementSubset ("", set);
     Y->copy (&X);
+    Y->set_complement_subset ();
     Y->cost = cost_function->cost(Y);
     list_of_minima.push_back (Y);
+
+    if (VERBOSE)
+      cout << Y->print_subset () << ": " << Y->cost << endl;
+
+    cout.flush ();
 
     if (store_visited_subsets)
       list_of_visited_subsets->add_subset (Y);
@@ -61,10 +69,13 @@ void RandomChain::get_minima_list (unsigned int max_size_of_minima_list)
 
   Y = new ElementSubset ("", set);
   Y->copy (&X);
+  Y->set_complement_subset ();
   Y->cost = cost_function->cost(Y);
   list_of_minima.push_back (Y);
   if (store_visited_subsets)
     list_of_visited_subsets->add_subset (Y);
+
+  clean_list_of_minima (max_size_of_minima_list);
 
   number_of_visited_subsets =
     cost_function->get_number_of_calls_of_cost_function ();

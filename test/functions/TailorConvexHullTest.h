@@ -35,6 +35,9 @@ namespace TailorConvexHullTest
   bool an_empty_set_should_have_cost_zero ();
 
   bool it_should_add_and_retrieve_the_elapsed_time ();
+
+  bool it_should_fit_pieces_into_the_cloth ();
 }
 
 #endif /* TAILORCONVEXHULLTEST_TEST_H_ */
+

@@ -29,7 +29,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/octave-4.0.0/octave
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \

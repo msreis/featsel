@@ -4,5 +4,4 @@
                 sffs SFFS
                 pucs PUCS
                  ucs UCurveSearch
-            spec_cmi SpecCMI
                   rc RandomChain

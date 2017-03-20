@@ -104,7 +104,7 @@ void CFS::compute_entropies
           *H_X1_X2 -= (Pr_X1_X2[ii][jj]/m) *
                       (log (Pr_X1_X2[ii][jj]/m) / log (2));
 
-      delete Pr_X1_X2 [ii];
+      delete[] Pr_X1_X2 [ii];
     }
   }
 
@@ -146,13 +146,13 @@ void CFS::compute_entropies
           *H_X1_X2 -= (Pr_X1_X2[ii][jj]/m) *
                       (log (Pr_X1_X2[ii][jj]/m) / log (2));
 
-      delete Pr_X1_X2 [ii];
+      delete[] Pr_X1_X2 [ii];
     }
   }
 
-  delete Pr_X1;
-  delete Pr_X2;
-  delete [] Pr_X1_X2;
+  delete[] Pr_X1;
+  delete[] Pr_X2;
+  delete[] Pr_X1_X2;
 }  
 
 

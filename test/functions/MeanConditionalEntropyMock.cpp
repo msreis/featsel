@@ -55,7 +55,7 @@ string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
-    delete it->second;
+    delete[] it->second;
   }
   samples.clear ();
 
@@ -77,7 +77,8 @@ string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
     printed_samples.append (it->first);
     printed_samples.append (": ");
     value <<  (int) it->second[0] + it->second[1];
-    delete it->second;
+    delete[] it->second;
+    it->second = NULL;
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
@@ -106,7 +107,7 @@ string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
     printed_samples.append (it->first);
     printed_samples.append (": ");
     value <<  calculate_conditional_entropy (it->second, Pr_X_is_x);
-    delete it->second;
+    delete[] it->second;
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");

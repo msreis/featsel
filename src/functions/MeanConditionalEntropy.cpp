@@ -113,7 +113,7 @@ float MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
       //
       cost += (float) 1 / t;
 
-    delete it->second;
+    delete[] it->second;
   }
 
   samples.clear ();

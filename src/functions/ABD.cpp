@@ -57,7 +57,7 @@ ABD::~ABD ()
   {
     delete F0;
     for (unsigned int i = 0; i < n; i++)
-      delete W[i];
+      delete[] W[i];
     delete [] W;
   }
 }

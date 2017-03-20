@@ -219,7 +219,7 @@ double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
       for (unsigned int i = 0; i < n; i++)
         x[i] = y[i] / norm_y;
 
-      delete y;
+      delete[] y;
 
       // Compute err = ||(A - sigma * I) * x||.
       //
@@ -244,9 +244,9 @@ double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
     cout << "Warning: Rayleigh algorithm did not converge!" << endl;
 
   for (unsigned int i = 0; i < n; i++)
-    delete A[i];
+    delete[] A[i];
 
-  delete [] A;
+  delete[] A;
 
   return x;
 }

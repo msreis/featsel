@@ -13,6 +13,8 @@ my $OUTPUT_DIR = "output";
 my $FEATSEL_BIN = "./bin/featsel";
 # Name of the log file used when the featsel binary is executed.
 my $LOG_FILE = $OUTPUT_DIR . "/result.log";
+# My core saturation epsilon
+my $SATURATION_EPS = 0.1;
 
 # Number of instances to be processed for each combination of 
 # parameters p and l
@@ -75,8 +77,7 @@ foreach my $file (sort @instance_file)
 }
 
 
-my @avg_time;
-my @avg_err;
+my @saturation_core;
 foreach my $i (1..$p_values)
 {
   foreach my $j (1..$l_values)
@@ -84,33 +85,28 @@ foreach my $i (1..$p_values)
     my $p = $i * $p_step;
     my $l = $j * $l_step;
     print "Runnig with p = $p and l = $l ...";
-    $avg_time[$i][$j] = 0;
-    $avg_err[$i][$j] = 0;
-    foreach my $k (0..$number_of_instances - 1)
-    {
-      my ($t0, $t1);
-      $t0 = [gettimeofday];
-      system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
-              "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
-              " > $LOG_FILE");
-      $t1 = [gettimeofday];
-      $avg_time[$i][$j] += tv_interval ($t0, $t1);
+    my $rel_improvement;
+    my $avg_time;
+    my $last_avg_time;
+    my $cores = 1;
+    
+    # first iteration is different
+    $avg_time = get_avg_time ($number_of_instances, \@experiment,
+     $p, $l, $cores, $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
+    $last_avg_time = $avg_time;
+    $rel_improvement = 1;
 
-      open (LOG, $LOG_FILE);
-      while (<LOG>)
-      {
-        if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
-        {
-          my $minimum_found = $2;
-          # print "subset = $1 | ";
-          $avg_err[$i][$j] += $minimum_found;
-          # print "minimum_found = $minimum_found\n";
-        }
-      }
-      close(LOG);
+    while ($rel_improvement > $SATURATION_EPS && $last_avg_time > 1e-8
+      && $cores < 10)
+    {
+      $cores++;
+      $avg_time = get_avg_time ($number_of_instances, \@experiment,
+       $p, $l, $cores, $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
+      $rel_improvement = ($last_avg_time - $avg_time) / $last_avg_time;
+      $last_avg_time = $avg_time;
     }
-    $avg_err[$i][$j] /= $number_of_instances * 1.0;
-    $avg_time[$i][$j] /= $number_of_instances;
+    $saturation_core[$i][$j] = $cores - 1;
+    # print " ($saturation_core[$i][$j]!)";
     print "[done].\n";
   }
 }
@@ -127,44 +123,23 @@ for (my $i = 1; $i <= $p_values; $i++)
   { 
     my $p = $i * $p_step;
     my $l = $j * $l_step;
-    printf DATA "$p $l %.4f %.6f\n", $avg_err[$i][$j],
-                                     $avg_time[$i][$j];
+    printf DATA "$p $l $saturation_core[$i][$j]\n";
   }
 }
 close (DATA);
 
-# Creates time graph
 my $Xaxis = $max_p * 3;
 my $grid_points = $max_l * 3;
 open (PLOT, ">$GNUPLOT_PLOT_FILE");
 my $x = $max_l * 3;
 printf PLOT "set terminal svg enhanced size 700, 500\n";
-printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_time.svg'\n";
-printf PLOT "unset key\n";
-printf PLOT "set logscale z\n";
-printf PLOT "set xlabel \"p\" rotate parallel offset 0, -1\n";
-printf PLOT "set ytics 1\n";
-printf PLOT "set ylabel \"l\" rotate parallel\n";
-printf PLOT "set zlabel \"Average Total time (seconds)\" rotate parallel offset -2,0\n";
-printf PLOT "unset colorbox\n";
-printf PLOT "set dgrid3d $l_values, $p_values\n";
-printf PLOT "set hidden3d\n";  
-printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:4 with lines\n";
-# Execute Gnuplot.
-system ("gnuplot $GNUPLOT_PLOT_FILE");
-system ("rm $GNUPLOT_PLOT_FILE");
-
-my $Xaxis = $max_p * 3;
-my $grid_points = $max_l * 3;
-open (PLOT, ">$GNUPLOT_PLOT_FILE");
-my $x = $max_l * 3;
-printf PLOT "set terminal svg enhanced size 700, 500\n";
-printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_error.svg'\n";
+printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_core_saturation.svg'\n";
 printf PLOT "unset key\n";
 printf PLOT "set xlabel \"p\" rotate parallel offset 0, -1\n";
 printf PLOT "set ytics 1\n";
+printf PLOT "set ztics 1\n";
 printf PLOT "set ylabel \"l\" rotate parallel\n";
-printf PLOT "set zlabel \"Average Absolute Error from Optimal Solution\" rotate parallel offset -2,0\n";
+printf PLOT "set zlabel \"Number of cores of time improvement saturation\" rotate parallel offset -2,0\n";
 printf PLOT "unset colorbox\n";
 printf PLOT "set dgrid3d $l_values, $p_values\n";
 printf PLOT "set hidden3d\n";  
@@ -172,8 +147,8 @@ printf PLOT "splot \"$GNUPLOT_DATA_FILE\" using 1:2:3 with lines\n";
 # Execute Gnuplot.
 system ("gnuplot $GNUPLOT_PLOT_FILE");
 # Remove temporary files.
-system ("rm $GNUPLOT_PLOT_FILE");
-system ("rm $GNUPLOT_DATA_FILE");
+# system ("rm $GNUPLOT_PLOT_FILE");
+# system ("rm $GNUPLOT_DATA_FILE");
 system ("rm $INPUT_DIR/*.xml");
 print "[done]\n";
 
@@ -196,7 +171,6 @@ sub random_subset_sum_instance
     }
   }
 
-
   my $file_name = sprintf "$INPUT_DIR/Test_%03d_%04d.xml", $size, $id;
   open (XML, ">$file_name")
     or die "Cannot create '$file_name' file!\n";
@@ -212,8 +186,29 @@ sub random_subset_sum_instance
     printf XML "  <Element>\n    <name>e$_</name>\n";
     printf XML "    <value> %d  </value>\n  </Element>", $S[$_];
   }
-
   printf XML "\n</ElementSet>\n";
-
   close (XML);
+}
+
+
+sub get_avg_time
+{
+  my ($number_of_instances, $experiment_ref, $p, $l, $core, $LOG_FILE,
+    $INPUT_DIR, $FEATSEL_BIN) = @_;
+  my @experiment = @{$experiment_ref};
+  my $avg_time = 0;
+  foreach my $k (0..$number_of_instances - 1)
+  {
+    my ($t0, $t1);
+    $t0 = [gettimeofday];
+    $ENV{'OMP_NUM_THREADS'} = $core;
+    system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
+            "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
+            " > $LOG_FILE");
+    $t1 = [gettimeofday];
+    $avg_time += tv_interval ($t0, $t1);
+  }
+  $avg_time /= $number_of_instances;
+  # print "\n[$core] ---> avg_err = $avg_time ";
+  $avg_time;
 }

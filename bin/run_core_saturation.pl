@@ -84,29 +84,15 @@ foreach my $i (1..$p_values)
   {
     my $p = $i * $p_step;
     my $l = $j * $l_step;
+    my $avg_core_sat = 0;
     print "Runnig with p = $p and l = $l ...";
-    my $rel_improvement;
-    my $avg_time;
-    my $last_avg_time;
-    my $cores = 1;
-    
-    # first iteration is different
-    $avg_time = get_avg_time ($number_of_instances, \@experiment,
-     $p, $l, $cores, $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
-    $last_avg_time = $avg_time;
-    $rel_improvement = 1;
-
-    while ($rel_improvement > $SATURATION_EPS && $last_avg_time > 1e-8
-      && $cores < 10)
+    foreach my $k (0..$number_of_instances - 1)
     {
-      $cores++;
-      $avg_time = get_avg_time ($number_of_instances, \@experiment,
-       $p, $l, $cores, $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
-      $rel_improvement = ($last_avg_time - $avg_time) / $last_avg_time;
-      $last_avg_time = $avg_time;
+      $avg_core_sat += get_core_saturation ($experiment[$k], 
+        $instance_size, $p, $l, $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN) 
     }
-    $saturation_core[$i][$j] = $cores - 1;
-    # print " ($saturation_core[$i][$j]!)";
+    $avg_core_sat /= ($number_of_instances * 1.0);
+    $saturation_core[$i][$j] = $avg_core_sat;
     print "[done].\n";
   }
 }
@@ -123,7 +109,7 @@ for (my $i = 1; $i <= $p_values; $i++)
   { 
     my $p = $i * $p_step;
     my $l = $j * $l_step;
-    printf DATA "$p $l $saturation_core[$i][$j]\n";
+    printf DATA "$p $l %3.2f\n", $saturation_core[$i][$j];
   }
 }
 close (DATA);
@@ -137,7 +123,6 @@ printf PLOT "set output '$OUTPUT_DIR/$output_file_prefix\_core_saturation.svg'\n
 printf PLOT "unset key\n";
 printf PLOT "set xlabel \"p\" rotate parallel offset 0, -1\n";
 printf PLOT "set ytics 1\n";
-printf PLOT "set ztics 1\n";
 printf PLOT "set ylabel \"l\" rotate parallel\n";
 printf PLOT "set zlabel \"Number of cores of time improvement saturation\" rotate parallel offset -2,0\n";
 printf PLOT "unset colorbox\n";
@@ -191,24 +176,46 @@ sub random_subset_sum_instance
 }
 
 
-sub get_avg_time
+sub get_core_saturation
 {
-  my ($number_of_instances, $experiment_ref, $p, $l, $core, $LOG_FILE,
+  my ($experiment, $instance_size, $p, $l, $LOG_FILE, 
     $INPUT_DIR, $FEATSEL_BIN) = @_;
-  my @experiment = @{$experiment_ref};
-  my $avg_time = 0;
-  foreach my $k (0..$number_of_instances - 1)
+  my $time = 0;
+  my $last_time = 0;
+  my $rel_improvement = 1;
+  my $avg_core_sat = 0;
+  my $cores = 1;
+  my $saturation_core;
+  my ($t0, $t1);
+  $time = get_run_time ($experiment, $instance_size, $p, $l, $cores,
+    $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
+  $last_time = $time;
+  while ($rel_improvement > $SATURATION_EPS && $last_time > 1e-8
+      && $cores < 10)
   {
-    my ($t0, $t1);
-    $t0 = [gettimeofday];
-    $ENV{'OMP_NUM_THREADS'} = $core;
-    system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
-            "-c subset_sum -f $INPUT_DIR/" . $experiment[$k] . 
-            " > $LOG_FILE");
-    $t1 = [gettimeofday];
-    $avg_time += tv_interval ($t0, $t1);
+    $last_time = $time;
+    $cores++;
+    $time = get_run_time ($experiment, $instance_size, $p, $l, $cores,
+    $LOG_FILE, $INPUT_DIR, $FEATSEL_BIN);
+    $rel_improvement = ($last_time - $time) / $last_time;
   }
-  $avg_time /= $number_of_instances;
-  # print "\n[$core] ---> avg_err = $avg_time ";
-  $avg_time;
+  $saturation_core = $cores - 1;
+  $saturation_core;
+}
+
+
+sub get_run_time
+{
+  my ($experiment, $instance_size, $p, $l, $cores, $LOG_FILE, 
+    $INPUT_DIR, $FEATSEL_BIN) = @_;
+  my ($t0, $t1);
+  my $time = 0;
+  $t0 = [gettimeofday];
+  $ENV{'OMP_NUM_THREADS'} = $cores;
+  system ("$FEATSEL_BIN -n $instance_size -a pucs $p $l " . 
+          "-c subset_sum -f $INPUT_DIR/" . $experiment . 
+          " > $LOG_FILE");
+  $t1 = [gettimeofday];
+  $time = tv_interval ($t0, $t1);
+  $time;
 }

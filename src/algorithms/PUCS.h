@@ -77,13 +77,12 @@ private:
   //     Otherwise, P = Q
   // } while (P has unvisited neighbours);
   //
-  void random_walk (PartitionNode *, list<PartitionNode *> *);
+  void random_walk (PartitionNode *, list<ElementSubset *> *);
 
   // Receives a list of parts to be solved. Solves all parts and 
   // pushes the elements of lowest cost to the minima list
   //
-  void solve_parts (list<PartitionNode *> *, list<ElementSubset *> *,
-      unsigned int);
+  void solve_part (PartitionNode *, list<ElementSubset *> *);
 
   // Adds the elements from a list of elementsubset to a collection. 
   // This function is used to transfer the list of minima of a 
@@ -136,6 +135,11 @@ private:
   //
   void update_visited_subsets (Collection *, PartitionNode *);
 
+
+  // The maximum size of the list of minima
+  //
+  unsigned int max_size_of_minima_list;
+ 
 public:
 
   // Default Constructor

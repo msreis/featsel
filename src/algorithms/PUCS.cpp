@@ -85,35 +85,38 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     p = 15.0 / set->get_set_cardinality ();
   if (p > .7)
     p = .7;
+  this->max_size_of_minima_list = max_size_of_minima_list;
+  list<ElementSubset *> * min_list = &list_of_minima;
 
-  list<PartitionNode *> parts_to_solve;
-  ElementSubset * p_subset;
-  set_partition_model ();
-  cand_part = new ROBDD (partition->get_fixed_elm_set ());
-  p_subset = cand_part->get_random_zero_evaluated_element ();
-  while (p_subset != NULL)
+  #pragma omp parallel shared (min_list)
+  #pragma omp single nowait
   {
-    PartitionNode * P = new PartitionNode (partition, p_subset);
-    random_walk (P, &parts_to_solve);
-    delete p_subset;
+    ElementSubset * p_subset;
+    set_partition_model ();
+
+    cand_part = new ROBDD (partition->get_fixed_elm_set ());
     p_subset = cand_part->get_random_zero_evaluated_element ();
+    while (p_subset != NULL)
+    {
+      PartitionNode * P = new PartitionNode (partition, p_subset);
+      random_walk (P, min_list);
+      delete p_subset;
+      p_subset = cand_part->get_random_zero_evaluated_element ();
+    }
+    #pragma omp taskwait
+    clean_list_of_minima (max_size_of_minima_list);
   }
   gettimeofday (&end_walk, NULL);
 
-
-  list<ElementSubset *> * min_list = &list_of_minima;
-  #pragma omp parallel shared (min_list, parts_to_solve)
-  #pragma omp single nowait
-  solve_parts (&parts_to_solve, min_list, max_size_of_minima_list);
   number_of_visited_subsets = 
     cost_function->get_number_of_calls_of_cost_function ();
-
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
 }
 
 
-void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
+void PUCS::random_walk (PartitionNode * P, list<ElementSubset *> *
+  min_list)
 {
   unsigned int i = 0;
   unsigned int n = P->get_number_of_fixed_elms ();
@@ -137,7 +140,7 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
       i = 0;
       if (!is_restricted (P))
       {
-        TQ->push_back (new PartitionNode (P));
+        solve_part (new PartitionNode (P), min_list);
         restrict_part (P);
       }
       delete P;
@@ -145,49 +148,34 @@ void PUCS::random_walk (PartitionNode * P, list<PartitionNode *> * TQ)
     }
     else
     {
-      TQ->push_back (new PartitionNode (P));
       delete P;
       delete Q;
       return;
     }
   }
+  solve_part (new PartitionNode (P), min_list);
   restrict_part (P);
-  TQ->push_back (new PartitionNode (P));
   delete P;
 }
 
 
-void PUCS::solve_parts (list<PartitionNode *> * parts, 
-  list<ElementSubset *> * min_list, 
-  unsigned int max_size_of_minima_list)
+void PUCS::solve_part (PartitionNode * P, list<ElementSubset *> *
+  min_list)
 {
-  PartitionNode * P = NULL;
-  Collection * L = NULL;
-  while (parts->size () > 0) 
+  #pragma omp task
   {
-    // #pragma omp critical
-    // {
-      P = parts->back ();
-      parts->pop_back ();
-    // }
-    #pragma omp task shared (min_list)
+    Collection * L;
+    L = part_minimum (P, max_size_of_minima_list);
+    // TODO: insert minimum elements directly to the minima list
+    while (L->size () > 0) 
     {
-      // #pragma omp single nowait
-      L = part_minimum (P, max_size_of_minima_list);
-      // #pragma omp taskwait
-      while (L->size () > 0) 
-      {
-        ElementSubset * X = L->remove_last_subset ();
-        #pragma omp critical
-        min_list->push_back (X);
-      }
+      ElementSubset * X = L->remove_last_subset ();
       #pragma omp critical
-      clean_list_of_minima (max_size_of_minima_list);
-      delete L;
-      delete P;
+      min_list->push_back (X);
     }
+    delete L;
+    delete P;
   }
-  #pragma omp taskwait
 }
 
 
@@ -232,7 +220,6 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     PartCost * P_cost = new PartCost (cost_function, P);
     sub_solver->set_parameters (P_cost, p_elm_set, store_visited_subsets);
     
-    // TODO: is this better?
     #pragma omp task
     sub_solver->get_minima_list (max_size_of_minima_list);
     #pragma omp taskwait

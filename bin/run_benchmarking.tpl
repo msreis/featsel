@@ -32,6 +32,12 @@ use lib './lib';
 # %template_use%
 
 
+
+#------------------------------------------------------------------------------#
+#
+# Global variables that may be changed by the user before a benchmarking assay.
+#
+
 # List of valid algorithm codes (in upper case) that should be used for the
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
@@ -74,9 +80,17 @@ my $LOG_FILE = $OUTPUT_DIR . "/result.log";
 my $FEATSEL_BIN = "./bin/featsel";
 
 
+# Number of labels (classes) for cost functions that are directed for classifier
+# design (e.g. mean conditional entropy).
+#
+my $NUMBER_OF_LABELS = 7;
+
+
 # LaTeX font size for the .tex table.
 #
 my $LATEX_FONT_SIZE = "\\footnotesize";
+
+
 
 
 #------------------------------------------------------------------------------#
@@ -552,6 +566,7 @@ foreach my $i (1..$maximum_instance_size)
 
       $t0 = [gettimeofday];
       system ("$FEATSEL_BIN -n $i -a $current_algorithm " . 
+              "-l $NUMBER_OF_LABELS " .
               "-c $cost_function -f $INPUT_DIR/" . $experiment{$i}->[$k-1]  . 
               $max_number_of_calls . " > $LOG_FILE");
       $t1 = [gettimeofday];

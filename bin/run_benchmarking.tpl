@@ -42,7 +42,7 @@ use lib './lib';
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('SFFS', 'UBB');
+my @LIST_OF_ALGORITHMS = ('SFS', 'UCS');
 
 
 # Constant that works as an upper bound limit for cost function values.

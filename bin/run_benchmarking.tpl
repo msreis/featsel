@@ -36,7 +36,7 @@ use lib './lib';
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('SFFS', 'SFS', 'UBB');
+my @LIST_OF_ALGORITHMS = ('SFFS', 'UBB');
 
 
 # Constant that works as an upper bound limit for cost function values.
@@ -72,6 +72,11 @@ my $LOG_FILE = $OUTPUT_DIR . "/result.log";
 # featsel binary file.
 #
 my $FEATSEL_BIN = "./bin/featsel";
+
+
+# LaTeX font size for the .tex table.
+#
+my $LATEX_FONT_SIZE = "\\footnotesize";
 
 
 #------------------------------------------------------------------------------#
@@ -259,7 +264,7 @@ print " [done]\n";
 #------------------------------------------------------------------------------#
 #
 # At this point the user can choose a subset of algorithms, through definition
-# of valid codes in the @LIST_OF_ALGORITHMS array; default is (SFFS, SFS, UBB).
+# of valid codes in the @LIST_OF_ALGORITHMS array; default is (SFFS, UBB).
 # Otherwise, the benchmarking will include all valid algorithms.
 #
 my @algorithms;
@@ -282,10 +287,38 @@ my $number_of_algorithms = @algorithms;
 open (OUT, ">output/" . $output_file_prefix . "_table.html") 
   or die "Error: could not open HTML output file!\n";
 
+open (TEX, ">output/" . $output_file_prefix . "_table.tex") 
+  or die "Error: could not open LaTeX output file!\n";
+
 #------------------------------------------------------------------------------#
 #
-# Printing HTML output file header
+# Printing HTML and LaTeX output files headers
 #
+print TEX "\\documentclass[11pt]{article}\n";
+print TEX "\\usepackage{booktabs}\n\\usepackage{lscape}\n";
+print TEX "\\begin{document}\n";
+print TEX "\\begin{landscape}\n";
+print TEX "\\begin{table}\n\\centering\n$LATEX_FONT_SIZE\n";
+print TEX "\\begin{tabular}{cc";
+print TEX "c" for (1..(4 * ($number_of_algorithms + 1)));
+print TEX "}\n\\toprule\n";
+
+print TEX "\\multicolumn{2}{c}{Instance} & \\phantom{} & ";
+printf TEX "\\multicolumn{%d}{c}{Total time (sec)} ", $number_of_algorithms;
+printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
+print TEX "{Cost function time (sec)} ";
+printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
+print TEX "{\\\# Calls of cost function} ";
+printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
+print TEX "{\\\# Best solution}\\\\\n";
+
+printf TEX "\\cline{1-2}\\cline{%d-%d}\\cline{%d-%d}\\cline{%d-%d}" . 
+  "\\cline{%d-%d}\\\\\n",
+  4, 4 + $number_of_algorithms - 1, 
+  4 + $number_of_algorithms + 1, 4 + 2 * $number_of_algorithms,
+  4 + 2 * $number_of_algorithms + 2, 4 + 3 * $number_of_algorithms + 1,
+  4 + 3 * $number_of_algorithms + 3, 4 + 4 * $number_of_algorithms + 2;
+
 print OUT "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
 
 print OUT "<HTML><HEAD>" .
@@ -339,6 +372,7 @@ print OUT "<TR bgcolor='yellow'>\n";
 #
 print OUT "<TD><CENTER>&nbsp;|S|&nbsp;</CENTER></TD><TD><CENTER>&nbsp;2^|S|" . 
   "&nbsp;</CENTER></TD>";
+print TEX "\$|S|\$ & \$2^{|S|}\$ &";
 
 # Total time
 #
@@ -346,33 +380,40 @@ print OUT  "<TD><CENTER>&nbsp;</CENTER></TD>";
 for (my $i = 0; $i < $number_of_algorithms; $i++)
   {
     printf OUT "<TD><CENTER>&nbsp; %s &nbsp;</CENTER></TD>", $algorithms[$i];
+    printf TEX "& %s ", $algorithms[$i];
   }
 
 # Cost function time
 #
 print OUT  "<TD><CENTER>&nbsp;</CENTER></TD>";
+print TEX "&";
 for (my $i = 0; $i < $number_of_algorithms; $i++)
   {
     printf OUT "<TD><CENTER>&nbsp; %s &nbsp;</CENTER></TD>", $algorithms[$i];
+    printf TEX "& %s ", $algorithms[$i];
   }
 
 # Number of computed nodes
 #
 print OUT  "<TD><CENTER>&nbsp;</CENTER></TD>";
+print TEX "&";
 for (my $i = 0; $i < $number_of_algorithms; $i++)
   {
     printf OUT "<TD><CENTER>&nbsp; %s &nbsp;</CENTER></TD>", $algorithms[$i];
+    printf TEX "& %s ", $algorithms[$i];
   }
 
 # Number of best solutions found
 #
 print OUT  "<TD><CENTER>&nbsp;</CENTER></TD>";
+print TEX "&";
 for (my $i = 0; $i < $number_of_algorithms; $i++)
   {
     printf OUT "<TD><CENTER>&nbsp; %s &nbsp;</CENTER></TD>", $algorithms[$i];
+    printf TEX "& %s ", $algorithms[$i];
   }
 printf OUT "</TR>\n";
-
+print TEX "\\\\\n";
 
 #------------------------------------------------------------------------------#
 
@@ -458,6 +499,8 @@ foreach my $i (1..$maximum_instance_size)
   #
   printf OUT "<TR><TD><CENTER>&nbsp;%2d&nbsp;</CENTER></TD>", $i;
   printf OUT  "<TD><CENTER>&nbsp;%7d&nbsp;</CENTER></TD>", 2 ** $i;
+
+  printf TEX "%2d & %7d &", $i, 2 ** $i;
 
   # This informaton is extracted from all algorithms
   #
@@ -607,10 +650,15 @@ foreach my $i (1..$maximum_instance_size)
   # Total time output
   #
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
+  print TEX "& ";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;&#8723;&nbsp;%4.2f&nbsp;" . 
+    printf OUT "<TD><CENTER>&nbsp;%4.3f&nbsp;&#8723;&nbsp;%4.3f&nbsp;" . 
                "</CENTER></TD>",
+      $average_time_of_algorithm[$j],
+      $deviation_time_of_algorithm[$j];
+
+    printf TEX " %4.3f \$\\pm\$ %4.3f &",
       $average_time_of_algorithm[$j],
       $deviation_time_of_algorithm[$j];
   }
@@ -618,10 +666,15 @@ foreach my $i (1..$maximum_instance_size)
   # Cost function time output
   #
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
+  print TEX "& ";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
-    printf OUT "<TD><CENTER>&nbsp;%4.2f&nbsp;&#8723;&nbsp;%4.2f&nbsp;" .
+    printf OUT "<TD><CENTER>&nbsp;%4.3f&nbsp;&#8723;&nbsp;%4.3f&nbsp;" .
                "</CENTER></TD>",
+      $average_time_of_cost_function[$j],
+      $deviation_time_of_cost_function[$j];
+
+    printf TEX " %4.3f \$\\pm\$ %4.3f &",
       $average_time_of_cost_function[$j],
       $deviation_time_of_cost_function[$j];
   }
@@ -629,12 +682,17 @@ foreach my $i (1..$maximum_instance_size)
   # Number of computed nodes output
   #
   printf OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n";
+  print TEX "& ";
   for (my $j = 0; $j < $number_of_algorithms; $j++)
   {
     printf OUT "<TD><CENTER>&nbsp;%5.1f&nbsp;&#8723;&nbsp;%5.1f&nbsp;" .
                "</CENTER></TD>",
       $average_calls_of_cost_function[$j],
-      $deviation_calls_of_cost_function[$j],
+      $deviation_calls_of_cost_function[$j];
+
+    printf TEX " %4.1f \$\\pm\$ %4.1f &",
+      $average_calls_of_cost_function[$j],
+      $deviation_calls_of_cost_function[$j];
   }
 
   # Number of best solutions found output
@@ -644,15 +702,18 @@ foreach my $i (1..$maximum_instance_size)
   {
     printf OUT "<TD><CENTER>&nbsp;%d&nbsp;</CENTER></TD>",
       $number_of_times_that_has_a_best_solution[$j];
+
+    printf TEX "& %d", $number_of_times_that_has_a_best_solution[$j];
   }
   print OUT "</TR>\n";
+  print TEX "\\\\\n";
 
   print "[done]\n";
 
 } # foreach my $i (1..$maximum_instance_size)
 
 
-# Create the table and HTML footers.
+# Create HTML and LaTeX footers.
 #
 
 print OUT "</TABLE><BR><HR>\n";
@@ -665,6 +726,14 @@ print OUT "
 print OUT "</BODY></HTML>\n";
 
 close (OUT);
+
+print TEX "\\bottomrule \\end{tabular}\n";
+print TEX "\\caption{featsel benchmarking experiment.} \\label{tab:featsel}\n";
+print TEX "\\end{table}\n";
+print TEX "\\end{landscape}\n";
+print TEX "\\end{document}\n";
+
+close (TEX);
 
 
 # Print the output graphs.
@@ -731,7 +800,8 @@ sub print_time_graphs
     printf PLOT "unset key\n";
     printf PLOT "set xlabel \"|S|\" rotate parallel\n";
     printf PLOT "set ylabel \"Number of computed nodes\" rotate parallel\n";
-    printf PLOT "set zlabel \"Total time (seconds)\" rotate parallel\n";
+    printf PLOT "set zlabel \"Total time (seconds)\" rotate parallel " .
+                "offset -3,0,0\n";
     printf PLOT "unset colorbox\n";
     printf PLOT "set dgrid3d $grid_points, $maximum_instance_size\n";
     printf PLOT "set hidden3d\n";  

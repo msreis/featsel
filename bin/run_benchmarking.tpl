@@ -32,6 +32,13 @@ use lib './lib';
 # %template_use%
 
 
+# List of valid algorithm codes (in upper case) that should be used for the
+# benchmarking experiment. If you want to use all valid algorithm codes, leave
+# this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
+#
+my @LIST_OF_ALGORITHMS = ('SFFS', 'SFS', 'UBB');
+
+
 # Constant that works as an upper bound limit for cost function values.
 #
 my $INFINITY = 1000000;
@@ -251,10 +258,21 @@ print " [done]\n";
 
 #------------------------------------------------------------------------------#
 #
-# At this point the user can choose a subset of algorithms, through removal 
-# of codes from the @algorithms array.
+# At this point the user can choose a subset of algorithms, through definition
+# of valid codes in the @LIST_OF_ALGORITHMS array; default is (SFFS, SFS, UBB).
+# Otherwise, the benchmarking will include all valid algorithms.
 #
-my @algorithms = @list_of_algorithm_codes;
+my @algorithms;
+
+if (scalar (@LIST_OF_ALGORITHMS) > 0)
+{
+  @algorithms = @LIST_OF_ALGORITHMS;
+}
+else
+{
+  @algorithms = @list_of_algorithm_codes;
+}
+
 
 # Number of algorithms.
 #
@@ -378,12 +396,6 @@ if ($instance_mode == 0)
         # NOP.
       }
 # %template_if%
-
-      elsif ($cost_function eq "mce")
-      {
-        MeanConditionalEntropy::random_mce_instance
-        ($i, $MAX_ELEM_VALUE, $INPUT_DIR, $_);
-      }
 
       else
       {

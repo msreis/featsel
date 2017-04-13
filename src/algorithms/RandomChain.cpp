@@ -44,14 +44,14 @@ void RandomChain::get_minima_list (unsigned int max_size_of_minima_list)
 
   // We start with the complete subset in order to
   //randomize the chosen elements.
-  X.set_complete_subset (); 
+  X.set_complete_subset ();
 
   do
   {
     Y = new ElementSubset ("", set);
     Y->copy (&X);
     Y->set_complement_subset ();
-    Y->cost = cost_function->cost(Y);
+    Y->cost = cost_function->cost (Y);
     list_of_minima.push_back (Y);
 
     if (VERBOSE)

@@ -142,4 +142,3 @@ clean:
 	rm -f $(TOBJS) $(TEST)
 	find . -type f -name '*.o' -exec rm {} +
 	rm -f input/tmp/*
-	#rm -f output/*

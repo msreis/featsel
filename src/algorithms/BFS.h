@@ -38,7 +38,7 @@
 
 #define MAXIMUM_NUMBER_OF_EXPANSIONS 5   // Same default value in Weka.
 
-#define ACCURACY 0.00001                 // Same default value in Weka. 
+#define ACCURACY 0.00001                 // Same default value in Weka.
 
 class BFS : public Solver
 {

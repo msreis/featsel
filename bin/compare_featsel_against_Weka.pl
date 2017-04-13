@@ -1,9 +1,25 @@
 #!/usr/bin/perl -w
 
-# Perl program to carry out the comparisons of the featsel framework against
-# the Weka workbench, in order to test the performance of the former.
 #
-# M.S.Reis, April 12, 2017.
+# compare_featsel_against_Weka.pl : program to carry out the comparisons of the
+# featsel framework against the Weka workbench, in order to test the performance
+# of the former.
+#
+#    This file is part of the featsel program
+#    Copyright (C) 2017  Marcelo S. Reis
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # This program requires to be within the "/bin" directory in the featsel 
@@ -59,13 +75,20 @@ my %algorithm = ("Zoo" => "es",
                  "Arrhythmia" => "bfs", 
                  "Gisette" => "bfs");
 
+
 # Number of repetitions per data set.
 #
-my $k = 10;
+my $k = 5;
 
 # Weka's ARFF file.
 #
 my $arff_file = "input/tmp/Test_01_A.arff";
+
+
+# Upper bound for cost function calls (a time stop criterion, specially for
+# the execution of the featsel framework on the Gisette data set).
+#
+my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 100000;
 
 
 # Compiling Weka's wrappers.
@@ -87,7 +110,8 @@ foreach my $data_set (@DATA_SETS)
             " -n " . $features{$data_set} . 
             " -a " . $algorithm{$data_set} . 
             " -l " . $labels{$data_set} .
-            " -c cfs " .
+            " -c " . "cfs" .
+            " -t " . $MAX_NUMBER_OF_COST_FUNCTION_CALLS .
             " -f " . $dat_file{$data_set} . 
             " > $LOG");
     my $t1 = [gettimeofday];

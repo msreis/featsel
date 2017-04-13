@@ -2,7 +2,7 @@
 // BFS.cpp -- implementation of the class "BFS".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -117,6 +117,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
     {
       BEST = v.cost;
       BEST_SUBSET->copy (&v);
+      BEST_SUBSET->cost = BEST;
       current_number_of_expansions = 1;
     }
     else
@@ -124,10 +125,13 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
 
     for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
     {
+      if (cost_function->has_reached_threshold ())
+        break;
+
       if (! v.has_element (i))
       {
         v.add_element (i);
- 
+
         if (CLOSED.find (v.print_subset ()) == CLOSED.end ())
         {
           v.cost = cost_function->cost (&v);
@@ -144,7 +148,9 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
       }
     }
   }
-  while ((current_number_of_expansions < k) && (OPEN.current_size > 0));
+  while ((current_number_of_expansions < k) && 
+         (OPEN.current_size > 0) &&
+         (!cost_function->has_reached_threshold ()));
 
   for (unsigned int i = 0; i < k; i++)
     delete OPEN.queue[i];
@@ -152,7 +158,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
 
   list_of_minima.push_back (BEST_SUBSET);
 
-  number_of_visited_subsets = 
+  number_of_visited_subsets =
                          cost_function->get_number_of_calls_of_cost_function ();
 
   clean_list_of_minima (max_size_of_minima_list);

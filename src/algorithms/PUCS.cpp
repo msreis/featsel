@@ -79,6 +79,7 @@ void PUCS::set_partition_model ()
 void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 {
   timeval begin_program, end_program, end_walk;
+  int time_walking;
   gettimeofday (& begin_program, NULL);
 
   if (p == 0)
@@ -103,15 +104,20 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
       delete p_subset;
       p_subset = cand_part->get_random_zero_evaluated_element ();
     }
+    gettimeofday (& end_walk, NULL);
+    time_walking = diff_us (end_walk, begin_program);
+    #pragma omp critical
+    cout << "Time spent walking on level <" << l << ">: " << time_walking << endl;
     #pragma omp taskwait
     clean_list_of_minima (max_size_of_minima_list);
   }
-  gettimeofday (&end_walk, NULL);
 
   number_of_visited_subsets = 
     cost_function->get_number_of_calls_of_cost_function ();
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
+  #pragma omp critical
+  cout << "Total program time of level <" << l << ">: " << elapsed_time_of_the_algorithm << endl;
 }
 
 

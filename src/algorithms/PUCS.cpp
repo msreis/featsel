@@ -107,7 +107,8 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     gettimeofday (& end_walk, NULL);
     time_walking = diff_us (end_walk, begin_program);
     #pragma omp critical
-    cout << "Time spent walking on level <" << l << ">: " << time_walking << endl;
+    cout << "[" << this << "] Time spent walking on level <" << l <<
+      ">: " << time_walking << endl;
     #pragma omp taskwait
     clean_list_of_minima (max_size_of_minima_list);
   }
@@ -117,7 +118,8 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
   #pragma omp critical
-  cout << "Total program time of level <" << l << ">: " << elapsed_time_of_the_algorithm << endl;
+  cout << "[" << this << "] Total program time of level <" << l << 
+    ">: " << elapsed_time_of_the_algorithm << endl;
 }
 
 

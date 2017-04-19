@@ -99,12 +99,13 @@ foreach my $i (0..$number_of_instances - 1)
       $avg_time_waiting[$level] += $3;
       $avg_time_cleaning[$level] += $4;
       $parts_of_level[$level]++;
-      print "Captured [$part] -> $time_walking, $time_waiting, $time_cleaning, $level\n";
+      # print "Captured [$part] -> $time_walking, $time_waiting, $time_cleaning, $level\n";
     }
   }
   close(LOG);
 }
 my $levels = $#parts_of_level + 1;
+my @avg_parts_of_level;
 for my $l (0..$levels - 1)
 {
   #print "Level $l ---------------\n";
@@ -115,6 +116,7 @@ for my $l (0..$levels - 1)
   $avg_time_waiting[$l] /= 1e6;
   $avg_time_cleaning[$l] /= $parts_of_level[$l];
   $avg_time_cleaning[$l] /= 1e6;
+  $avg_parts_of_level[$l] = $parts_of_level[$l] / $number_of_instances;
   #print "cleaning $avg_time_cleaning[$l]\n";
   #print "waiting $avg_time_waiting[$l]\n";
   #print "walking $avg_time_walking[$l]\n";
@@ -127,7 +129,7 @@ my $GNUPLOT_PLOT_FILE = $OUTPUT_DIR . "/gnuplot.temp";
 open (DATA, ">$GNUPLOT_DATA_FILE");
 for my $l (0..$levels - 1)
 {
-  printf DATA "%d %.4f %.4f %.4f\n", $parts_of_level[$l], $avg_time_walking[$l], 
+  printf DATA "%d %.4f %.4f %.4f\n", $avg_parts_of_level[$l], $avg_time_walking[$l], 
     $avg_time_waiting[$l], $avg_time_cleaning[$l];
 }
 close (DATA);
@@ -153,15 +155,15 @@ printf PLOT "set ytics nomirror\n";
 printf PLOT "set xlabel 'Recursion level'\n";
 printf PLOT "set ylabel 'Time (s)'\n";
 printf PLOT "set y2label 'Number of parts'\n";
-print  PLOT "set y2tics 1\n";
+print  PLOT "set y2tics\n";
 printf PLOT "plot " . 
-"'$GNUPLOT_DATA_FILE' using (\$0 + 1):2 title 'Walking' with linespoints ls 1" .
+"'$GNUPLOT_DATA_FILE' using ($levels - \$0):2 title 'Walking' with linespoints ls 1" .
 ",\\\n ".
-"'$GNUPLOT_DATA_FILE' using (\$0 + 1):3 title 'Waiting' with linespoints ls 2" .
+"'$GNUPLOT_DATA_FILE' using ($levels - \$0):3 title 'Waiting' with linespoints ls 2" .
 ",\\\n ".
-"'$GNUPLOT_DATA_FILE' using (\$0 + 1):4 title 'Cleaning' with" . 
+"'$GNUPLOT_DATA_FILE' using ($levels - \$0):4 title 'Cleaning' with" . 
 " linespoints ls 3,\\\n".
-"'$GNUPLOT_DATA_FILE' using (\$0 + 1):1 title 'Number of parts' with " .
+"'$GNUPLOT_DATA_FILE' using ($levels - \$0):1 title 'Number of parts' with " .
 "linespoints ls 4 axes x1y2\n";
 
 close (PLOT);

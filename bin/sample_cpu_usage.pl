@@ -6,10 +6,11 @@
 
 use strict;
 
-my $OUTPUT_DIR = "output";
+my $OUTPUT_DIR = "./output";
 my $LOG_FILE = $OUTPUT_DIR . "/cpu_usage.log";
 my $OUTPUT_PREFIX = join ("", @ARGV);
 $OUTPUT_PREFIX =~ s/\///g;
+print $OUTPUT_PREFIX;
 
 # Runs program and creates log
 #
@@ -41,27 +42,37 @@ while (<LOG>)
   #04:09:51 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
   #04:09:52 PM  all    2.50    0.00    1.25    0.75    0.00    0.00    0.00    0.00    0.00   95.50
   #04:09:52 PM    0    2.00    0.00    2.00    2.00    0.00    0.00    0.00    0.00    0.00   94.00
-  if ($_ =~ /.*PM\s+(\d+)\s+[\d+\.\d+\s+]+ (\d+\.\d+)/)
+  if ($_ =~ /\d+:\d+:\d+\s+[PM]*\s+(\d+)\s+(\d+[\.|\,]\d+\s+)+\s+(\d+[\.|\,]\d+\s+)\s*/)
   {
-    #print "Core: " . $1 . " idle for " . $2 . "\n";
     my $core = $1 + 1;
-    my $idle = $2 / 100;
+    my $idle = $3;
+    $idle =~ s/,/\./;
+    $idle = $idle / 100;
+    #print "Core: " . $core . " idle for " . $idle . "\n";
     $core_load[$sec_tick][$core] = 1.0 - $idle;
   }
-  elsif ($_ =~ /[\d+:]+\d+\sPM\s+CPU.+/)
+  elsif ($_ =~ /[\d+:]+\d+\s[PM]*\s+CPU.+/)
   {
     #print "new sample\n";
     $sec_tick++;
   }
-  elsif (/.*PM\s+(all)\s+[\d+\.\d+\s+]+ (\d+\.\d+)/)
+  elsif (/\d+:\d+:\d+\s+[PM]*\s+(all)\s+(\d+[\.|\,]\d+\s+)+\s+(\d+[\.|\,]\d+\s+)\s*/)
   {
-    my $idle = $2 / 100;
+    my $idle = $3;
+    $idle =~ s/,/\./;
+    $idle = $idle / 100;
     $core_load[$sec_tick][0] = 1.0 - $idle;
   } 
 }
 close (LOG);
-system ("rm $LOG_FILE");
+#system ("rm $LOG_FILE");
 
+if ($sec_tick <= 0)
+{
+  print "Sample was too short... try again with a \
+    command that takes more time to be executed.\n";
+  exit 0;
+}
 
 # Prints graph
 #
@@ -84,11 +95,13 @@ close (DATA);
 my $xrange = max ($sec_tick * 20, 1000);
 my $yrange = max ($xrange / 2, 500);
 
+print "Printing graph...";
+
 open (PLOT, ">$GNUPLOT_FILE");
 printf PLOT "set terminal svg enhanced size $xrange, $yrange\n";
 printf PLOT "set output '$OUTPUT_DIR/$OUTPUT_PREFIX.svg'\n";
-printf PLOT "# color definitions\n";
 printf PLOT "set border linewidth .5\n";
+printf PLOT "# color definitions\n";
 for my $i (1..$cpu_number + 1)
 {
   my $c = color_combination ($i / ($cpu_number + 1.0));
@@ -107,23 +120,27 @@ for my $i (2..$cpu_number + 1)
 }
 close (PLOT);
 system ("gnuplot $GNUPLOT_FILE");
-system ("rm $GNUPLOT_FILE");
-system ("rm $DATA_FILE");
+#system ("rm $GNUPLOT_FILE");
+#system ("rm $DATA_FILE");
+print "[done].\n";
 
 # Returns a hex code (string) of a color to be used in the plot. 
 # Argument should be between 0 and 1.
 sub color_combination
 {
   my $alpha = $_[0] * 255;
-  my $R_mod = 230;
-  my $G_mod = 100;
-  my $B_mod = 30;
-  my $c_r = int (($alpha % $R_mod) * .85);
-  my $c_g = int (($alpha % $G_mod) * .85);
-  my $c_b = int (($alpha % $B_mod) * .85);
-  my $hex_r = sprintf ("%0X", $c_r);
-  my $hex_g = sprintf ("%0X", $c_g);
-  my $hex_b = sprintf ("%0X", $c_b);
+  my $R_mod = 256;
+  my $G_mod = 128;
+  my $B_mod = 64;
+  my $c_r = int ($alpha % $R_mod);
+  my $c_g = int ($alpha % $G_mod);
+  my $c_b = int ($alpha % $B_mod);
+  my $hex_r = sprintf ("%X", $c_r);
+  my $hex_g = sprintf ("%X", $c_g);
+  my $hex_b = sprintf ("%X", $c_b);
+  $hex_r = fix_hex ($hex_r);
+  $hex_g = fix_hex ($hex_g);
+  $hex_b = fix_hex ($hex_b);
   my $hex = "#" . "$hex_r" . "$hex_g" . "$hex_b";
   $hex;
 } 
@@ -142,3 +159,13 @@ sub max
     $answ = $b;
   }
 }
+
+sub fix_hex
+{
+  $a = $_[0];
+  if (length ($a) == 1)
+  { 
+    $a = "0" . $a;
+  }
+  $a;
+} 

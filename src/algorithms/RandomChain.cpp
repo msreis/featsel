@@ -44,6 +44,7 @@ void RandomChain::get_minima_list (unsigned int max_size_of_minima_list)
 
   // We start with the complete subset in order to
   //randomize the chosen elements.
+
   X.set_complete_subset ();
 
   do

@@ -56,11 +56,13 @@ public class RunBestFirstSearch
     algorithm.setLookupCacheSize (n);
 
     // BFS with forward direction and terminating search after five
-    // non-improving nodes. 
+    // non-improving nodes.
     //
     String [] parameters = {"-D 1", "-N 5"};
 
     algorithm.setOptions (parameters);
+
+    cost_function.setLocallyPredictive (false);
 
     attsel.setEvaluator (cost_function);
     attsel.setSearch (algorithm);
@@ -82,7 +84,7 @@ public class RunBestFirstSearch
 
     if (data.classIndex () == -1)
       data.setClassIndex (data.numAttributes () - 1);
-  
+
     int n = Integer.parseInt (arg[1]);
 
     System.out.println ("Instance with " + n + " features!");

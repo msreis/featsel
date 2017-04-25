@@ -118,10 +118,10 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     
     gettimeofday (& end_clean, NULL);
     time_cleaning = diff_us (end_clean, end_wait);
-    #pragma omp critical
-    cout << "[" << this << "] ti = " << time_walking << "; td = " <<
-        time_waiting << "; tf = " << time_cleaning << "; l = "<< l 
-        << endl;
+    //#pragma omp critical
+    //cout << "[" << this << "] ti = " << time_walking << "; td = " <<
+        //time_waiting << "; tf = " << time_cleaning << "; l = "<< l 
+        //<< endl;
 
   }
 

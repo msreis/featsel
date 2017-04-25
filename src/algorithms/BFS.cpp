@@ -38,13 +38,7 @@ BFS::~BFS ()
 
 unsigned int BFS::get_top (Queue * OPEN)
 {
-  unsigned int best_index = 0;
-
-  for (unsigned int i = 1; i < OPEN->maximum_size; i++)
-    if (OPEN->queue[i]->cost < OPEN->queue[best_index]->cost)
-      best_index = i;
-
-  return best_index;
+  return OPEN->best_index;
 }
 
 
@@ -59,7 +53,16 @@ void BFS::insert_subset (Queue * OPEN, ElementSubset *X)
   if (OPEN->maximum_size > OPEN->current_size)
     OPEN->current_size++;
 
-  OPEN->queue[worst_index]->copy (X);
+  // As in Weka, we will just update the Queue if X->cost is better than
+  // the cost of the worst element! 
+  //
+  if (X->cost < OPEN->queue[worst_index]->cost)
+  {
+    OPEN->queue[worst_index]->copy (X);
+
+    if (OPEN->queue[OPEN->best_index]->cost > OPEN->queue[worst_index]->cost)
+      OPEN->best_index = worst_index;
+  }
 }
 
 
@@ -93,10 +96,14 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
     OPEN.queue[i]->cost = FLT_MAX;
   }
   OPEN.maximum_size = k;
-  OPEN.current_size = 0;
+  OPEN.current_size = 1;
+  OPEN.best_index = 0;
 
   std::set <string> CLOSED;
+  unsigned int insert_count = 0;
+
   CLOSED.insert (empty_set.print_subset ());
+  insert_count++;
 
   if (store_visited_subsets)
     list_of_visited_subsets->add_subset (&empty_set);
@@ -105,6 +112,8 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
 
   do
   {
+    bool added = false;
+  
     // Get the subset from OPEN with maximal c(X).
     //
     unsigned int top = get_top (&OPEN);
@@ -112,16 +121,6 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
     v.copy (OPEN.queue[top]);
 
     remove_subset (&OPEN, top);
-
-    if (v.cost <= (BEST - epsilon))
-    {
-      BEST = v.cost;
-      BEST_SUBSET->copy (&v);
-      BEST_SUBSET->cost = BEST;
-      current_number_of_expansions = 1;
-    }
-    else
-      current_number_of_expansions++;
 
     for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
     {
@@ -136,7 +135,16 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
         {
           v.cost = cost_function->cost (&v);
 
+          // Equivalent to "m_cacheSize * m_numAttribs" in Weka.
+          //
+          if (insert_count == (HASH_CACHE_SIZE * set->get_set_cardinality ()))
+          {
+            CLOSED.clear ();
+            insert_count = 0;
+          }
+
           CLOSED.insert (v.print_subset ());
+          insert_count++;
 
           insert_subset (&OPEN, &v);
 
@@ -146,7 +154,19 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
 
         v.remove_element (i);
       }
+
+      if ((BEST - v.cost) > epsilon)
+      {
+        BEST = v.cost;
+        BEST_SUBSET->copy (&v);
+        BEST_SUBSET->cost = BEST;
+        current_number_of_expansions = 1;
+        added = true;
+      }
     }
+
+    if (! added)
+      current_number_of_expansions++;
   }
   while ((current_number_of_expansions < k) && 
          (OPEN.current_size > 0) &&

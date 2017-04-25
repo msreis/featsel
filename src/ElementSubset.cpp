@@ -229,9 +229,7 @@ bool ElementSubset::has_element (unsigned int index)
 {
   if (index >= set->get_set_cardinality ())
   {
-    cout << "Error in ElementSubset::has_element:" <<
-    " index out of range!" << endl;
-    while (1);
+    // cout << "Error in ElementSubset::has_element: index out of range!\n";
     return false;
   }
   else return list_of_elements[index];
@@ -292,9 +290,9 @@ string ElementSubset::print_subset ()
   subset_string.reserve (2 + set->get_set_cardinality () + 2);
   for (i = 0; i < set->get_set_cardinality (); i++)
     if (has_element (i))
-      subset_string.append("1");  // append method performs better than +=.
+      subset_string.append ("1");  // append method performs better than +=.
     else
-      subset_string.append("0");
+      subset_string.append ("0");
   subset_string += "> ";
   return subset_string;
 }
@@ -302,29 +300,97 @@ string ElementSubset::print_subset ()
 
 string ElementSubset::print_subset_in_hex ()
 {
-  unsigned int i, l = 0x0, count = 0;
+  unsigned int i;
   string subset_string ("");
-  char hex_string [4 * sizeof (int) + 1];
 
-  for (i = 0; i < set->get_set_cardinality (); i++)
+  for (i = 0; i < set->get_set_cardinality (); i += 4)
   {
-    if (has_element (i))
-      l += pow (2, (count % 4));
-    
-    count++;    
+    if      ( (! has_element   (i)) && (! has_element (i+1)) &&
+              (! has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("0");
 
-    if (count % 4 == 0)
-    {
-      sprintf (hex_string,"%i", l);
-      subset_string.append (hex_string);
-      l = 0;
-    }
-  }
-  if (count % 4 != 0)
-  {
-    sprintf (hex_string,"%i", l);
-    subset_string.append (hex_string);
+    else if ( (! has_element   (i)) && (! has_element (i+1)) &&
+              (! has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("1");
+
+    else if ( (! has_element   (i)) && (! has_element (i+1)) &&
+              (  has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("2");
+
+    else if ( (! has_element   (i)) && (! has_element (i+1)) &&
+              (  has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("3");
+
+    else if ( (! has_element   (i)) && (  has_element (i+1)) &&
+              (! has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("4");
+
+    else if ( (! has_element   (i)) && (  has_element (i+1)) &&
+              (! has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("5");
+
+    else if ( (! has_element   (i)) && (  has_element (i+1)) &&
+              (  has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("6");
+
+    else if ( (! has_element   (i)) && (  has_element (i+1)) &&
+              (  has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("7");
+
+    else if ( (  has_element   (i)) && (! has_element (i+1)) &&
+              (! has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("8");
+
+    else if ( (  has_element   (i)) && (! has_element (i+1)) &&
+              (! has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("9");
+
+    else if ( (  has_element   (i)) && (! has_element (i+1)) &&
+              (  has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("A");
+
+    else if ( (  has_element   (i)) && (! has_element (i+1)) &&
+              (  has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("B");
+
+    else if ( (  has_element   (i)) && (  has_element (i+1)) &&
+              (! has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("C");
+
+    else if ( (  has_element   (i)) && (  has_element (i+1)) &&
+              (! has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("D");
+
+    else if ( (  has_element   (i)) && (  has_element (i+1)) &&
+              (  has_element (i+2)) && (! has_element (i+3)) )
+      subset_string.append ("E");
+
+    else if ( (  has_element   (i)) && (  has_element (i+1)) &&
+              (  has_element (i+2)) && (  has_element (i+3)) )
+      subset_string.append ("F");
   }
 
   return subset_string;
 }
+
+
+
+void ElementSubset::set_subset_from_string (string subset)
+{
+  if (set->get_set_cardinality () != (subset.size () - 4))
+    cout << "Error: string has not the same cardinality of the set!" << endl;
+
+  for (unsigned int index = 2; index < (subset.size () - 2); index++)
+  {
+    if (subset[index] == '1')
+      list_of_elements[index - 2] = true;
+    else if (subset[index] == '0')
+      list_of_elements[index - 2] = false;
+    else
+      cout << "Error: '" << subset[index] << "' is not in {0, 1}!" << endl; 
+
+    index++;
+  }
+}
+
+

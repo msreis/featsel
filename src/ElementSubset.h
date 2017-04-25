@@ -154,6 +154,13 @@ public:
   //
   void set_empty_subset ();       // list_of_elements = [0,0,...,0]
 
+  // Set the subset with the string "subset".
+  // "subset" must be of the same size of this set, and also must contain
+  // only the "0" and "1" chars, where the first char is the element index 0,
+  // the second char is the element index 1, and so forth.
+  //
+  void set_subset_from_string (string subset);
+
   // Set this subset as the union of it and the parameter subset.
   //
   void subset_union (ElementSubset *);

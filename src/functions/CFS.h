@@ -100,7 +100,7 @@ public:
   //
   // CFS(X) = 2 * ((H(X) + H(Y) - H(X,Y)) / (H(X) + H(Y))).
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

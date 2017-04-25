@@ -118,7 +118,7 @@ struct struct_piece_node
 typedef struct_piece_node piece_node;
 
 
-float TailorConvexHull::branch_and_bound (ElementSubset * X)
+double TailorConvexHull::branch_and_bound (ElementSubset * X)
 {
   unsigned int i, j, * cloth, * pieces,
                number_of_visited_nodes_during_branch_and_bound = 0;
@@ -126,7 +126,7 @@ float TailorConvexHull::branch_and_bound (ElementSubset * X)
   piece_node * current_piece, * next_piece;
   bool fit;
 
-  float current_cost, best_cost;   // By definition of the cost function,
+  double current_cost, best_cost;   // By definition of the cost function,
 	                           // the cost of the cloth with no pieces is 1.
   if (X->is_empty ())
     return 1;
@@ -199,9 +199,9 @@ float TailorConvexHull::branch_and_bound (ElementSubset * X)
 
       if (current_piece->piece_number == (X->get_subset_cardinality () - 1))
       {
-        current_cost = ((float) current_piece->piece_number + 1) +
-                       ((float) search_greatest_maximal_convex_hull (cloth) /
-                        (float) cloth_size);
+        current_cost = ((double) current_piece->piece_number + 1) +
+                       ((double) search_greatest_maximal_convex_hull (cloth) /
+                        (double) cloth_size);
         if (current_cost > best_cost)
           best_cost = current_cost;
       }
@@ -224,12 +224,12 @@ float TailorConvexHull::branch_and_bound (ElementSubset * X)
 }
 
 
-float TailorConvexHull::cost (ElementSubset * X)
+double TailorConvexHull::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost;
+  double cost;
 
   number_of_calls_of_cost_function++;
 
@@ -249,7 +249,7 @@ float TailorConvexHull::cost (ElementSubset * X)
     reached_threshold = true;
 
   if (cost < 0)
-    return FLT_MAX;   // Infinity.
+    return INFTY;   // Infinity.
   else
     return (0 - cost);
 }

@@ -46,11 +46,11 @@ protected:
 
   // Calculates H (Y | X = x)
   //
-  float calculate_conditional_entropy (unsigned int *, float);
+  double calculate_conditional_entropy (unsigned int *, double);
 
   // Calculates the Mutual Information of X
   //
-  float calculate_MI (ElementSubset *);
+  double calculate_MI (ElementSubset *);
 
   // Compute the distribution of a subset X from samples,
   // storing them into as subsets of a set S, where |S| = |X|.
@@ -72,7 +72,7 @@ public:
 
   // Returns the value of c(X), where X is a subset.
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

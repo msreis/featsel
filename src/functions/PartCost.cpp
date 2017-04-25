@@ -2,7 +2,7 @@
 // PartCost.cpp -- implementation of the class "PartCost".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis, Gustavo Estrela
+//    Copyright (C) 2017 Gustavo Estrela
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ PartCost::~PartCost ()
 }
 
 
-float PartCost::cost (ElementSubset * X)
+double PartCost::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
@@ -43,7 +43,7 @@ float PartCost::cost (ElementSubset * X)
 
   ElementSubset * original_subset;
   original_subset = partition->get_original_subset (X);
-  float cost = orig_cost_f->cost (original_subset);
+  double cost = orig_cost_f->cost (original_subset);
   delete original_subset;
 
   gettimeofday (& end, NULL);

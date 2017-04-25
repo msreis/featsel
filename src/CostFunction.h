@@ -2,7 +2,7 @@
 // CostFunction.h -- definition of the class "CostFunction".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ protected:
   // Threshold value, used in heuristic mode 1
   // (pre-processing).
   //
-  float threshold;
+  double threshold;
 
 public:
 
@@ -101,7 +101,7 @@ public:
 
   // Return the value of c(X), where X is a subset.
   //
-  virtual float cost (ElementSubset *) = 0;
+  virtual double cost (ElementSubset *) = 0;
 
 
   // Return the number of times the "cost" method was called.
@@ -121,7 +121,7 @@ public:
 
   // Return the threshold value
   //
-  float get_threshold ();
+  double get_threshold ();
 
 
   // Return true if this cost function is limited either by a 'threshold'
@@ -143,7 +143,7 @@ public:
 
   // Set the threshold value
   //
-  void set_threshold (float);
+  void set_threshold (double);
 
 };
 

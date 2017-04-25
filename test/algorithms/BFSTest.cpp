@@ -36,7 +36,13 @@ namespace BFSTest
     t.set_parameters (&c, &arrhythmia, true);
     t.get_minima_list (1);
 
-    if (t.get_list_of_visited_subsets ()->size () == 15192)
+    // Same number of visited subsets as Weka's BFS/CFS with:
+    // * CFS's locally predictive == false;
+    // * argument -N 5;
+    // * argument -D 1 (direction == forward); 
+    // * lookupCacheSize == 80.
+    //
+    if (t.get_list_of_visited_subsets ()->size () == 14971)
       return true;
     else
       return false;
@@ -56,7 +62,13 @@ namespace BFSTest
     t.set_parameters (&c, &arrhythmia, false);
     t.get_minima_list (1);
 
-    if (t.print_number_of_visited_subsets () == 15192)
+    // Same number of visited subsets as Weka's BFS/CFS with:
+    // * CFS's locally predictive == false;
+    // * argument -N 5;
+    // * argument -D 1 (direction == forward);
+    // * lookupCacheSize == 80.
+    //
+    if (t.print_number_of_visited_subsets () == 14971)
       return true;
     else
       return false;

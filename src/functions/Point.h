@@ -51,7 +51,7 @@ public:
 
   // Returns the value of c(X), where X is a subset.
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

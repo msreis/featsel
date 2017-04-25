@@ -43,13 +43,13 @@ void UcurveBranchandBound::get_minima_list
 
   ElementSubset * A, * B;
   unsigned int i, n;
-  float bound, current_cost, last_cost;
+  double bound, current_cost, last_cost;
   list <ElementSubset *> Stack;
   list <unsigned int> Leftmost_free_elem;
-  list <float> Last_cost_stack;
+  list <double> Last_cost_stack;
 
   A = new ElementSubset ("A", set);
-  bound = INFINITY_COST;
+  bound = INFTY;
   Stack.push_back (A);
   Leftmost_free_elem.push_back (0);
   Last_cost_stack.push_back (bound);

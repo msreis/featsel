@@ -229,12 +229,12 @@ double CFS::evaluateSubset (ElementSubset * X)
 }
 
 
-float CFS::cost (ElementSubset * X)
+double CFS::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost = 0;
+  double cost = 0;
 
   number_of_calls_of_cost_function++;
 
@@ -242,9 +242,9 @@ float CFS::cost (ElementSubset * X)
     return cost;
 
   else if (X->get_subset_cardinality () == 0)
-    return FLT_MAX;
+    return INFTY;
 
-  cost = (float) - evaluateSubset (X);
+  cost = - evaluateSubset (X);
 
   gettimeofday (& end, NULL);
   elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);

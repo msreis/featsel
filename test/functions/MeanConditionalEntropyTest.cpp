@@ -139,7 +139,7 @@ namespace MeanConditionalEntropyTest
     MeanConditionalEntropy cf_2 (& set_2);
     ElementSubset X ("X", & set_1);
     ElementSubset Y ("Y", & set_2);
-    float cost;
+    double cost;
 
     X.set_complete_subset ();
     cost = cf_1.cost (& X);
@@ -149,12 +149,14 @@ namespace MeanConditionalEntropyTest
 
     X.remove_element (2);
     cost = cf_1.cost (& X);
+
     if (!((cost >= 0.8463) && (cost <= 0.8465)))
       return false;
 
     Y.set_complete_subset ();  // Testing the penalty for one occurrence.
     cost = cf_2.cost (& Y);
-    if (!((cost >= 0.6666) && (cost <= 0.6667)))
+
+    if (!((cost >= 0.6666) && (cost <= 0.6668)))
       return false;
 
     return true;

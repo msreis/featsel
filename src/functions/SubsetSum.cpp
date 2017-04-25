@@ -2,7 +2,7 @@
 // SubsetSum.cpp -- implementation of the class "SubsetSum".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -34,11 +34,11 @@ SubsetSum::~SubsetSum ()
 }
 
 
-float SubsetSum::cost (ElementSubset * X)
+double SubsetSum::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  float cost = 0;
+  double cost = 0;
   number_of_calls_of_cost_function++;
 
   //

@@ -50,12 +50,12 @@ private:
 
   // Compute I(x; Y) = \sum_{x,Y} P(x, Y) log P(x, Y) / (P(x) P(Y)).
   //
-  float mutual_information (unsigned int x1);
+  double mutual_information (unsigned int x1);
 
   // Compute I(x1; Y | x2) = 
   //    \sum_{x1,Y,x2} P(x1, Y, x2) log (P(x2) P(x1, Y, x2))/(P(x1,x2) P(Y,x2)).
   //
-  float conditional_mutual_information (unsigned int x1, unsigned int x2);
+  double conditional_mutual_information (unsigned int x1, unsigned int x2);
 
 
 public:
@@ -72,7 +72,7 @@ public:
 
   // Returns the value of c(X), where X is a subset.
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

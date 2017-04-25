@@ -1,7 +1,7 @@
 //============================================================================
 //
 //    featsel -- a flexible feature selection program.
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //
 //   If you use featsel in your publication, we kindly ask you to acknowledge us
@@ -46,7 +46,7 @@
 //
 int parse_parameters
   (int, char **, string *, unsigned int *, string *,
-   unsigned int *, unsigned int *, bool *, string *, unsigned int *, float * p,
+   unsigned int *, unsigned int *, bool *, string *, unsigned int *, double * p,
    unsigned int *, unsigned int *);
 
 
@@ -60,7 +60,7 @@ int main(int argc, char * argv[])
   unsigned int number_of_labels = 2;
   unsigned int l = 2;                                         // PUCS parameter.
   unsigned int max_number_of_calls_of_cost_function = 0;      // 0 for no limit.
-  float p = .5;                                               // PUCS parameter.
+  double p = .5;                                              // PUCS parameter.
   int i;
   CostFunction * cost_function;
   Solver * solver;
@@ -182,7 +182,7 @@ int parse_parameters (int argc, char ** argv, string * file_name,
 	              unsigned int * m, string * c, unsigned int * n,
 	              unsigned int * range, bool * keep_subsets, string * a,
 	              unsigned int * max_number_of_calls_of_cost_function,
-                float * p, unsigned int * l, unsigned int * number_of_labels)
+                double * p, unsigned int * l, unsigned int * number_of_labels)
 {
   int i;
   bool error = false;

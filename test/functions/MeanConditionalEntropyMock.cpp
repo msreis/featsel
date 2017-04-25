@@ -3,7 +3,7 @@
 // "MeanConditionalEntropyMock".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -100,9 +100,9 @@ string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
 
   for (it = samples.begin (); it != samples.end (); it++)
   {
-    float Pr_X_is_x = 0;
+    double Pr_X_is_x = 0;
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (float) it->second[i] / (float) m;
+      Pr_X_is_x += (double) it->second[i] / (double) m;
 
     printed_samples.append (it->first);
     printed_samples.append (": ");

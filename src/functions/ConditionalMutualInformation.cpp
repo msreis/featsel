@@ -36,9 +36,9 @@ ConditionalMutualInformation::~ConditionalMutualInformation ()
 
 // Compute I(x; Y) = \sum_{x,Y} P(x, Y) log P(x, Y) / (P(x) P(Y)).
 //
-float ConditionalMutualInformation::mutual_information (unsigned int x1)
+double ConditionalMutualInformation::mutual_information (unsigned int x1)
 {
-  float result = 0;
+  double result = 0;
 
   // Table of frequencies and its pointer.
   //
@@ -88,14 +88,14 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 
   // Compute P(Y = y) for all y in Y.
   //
-  float Pr_Y [set->get_number_of_labels ()];
+  double Pr_Y [set->get_number_of_labels ()];
   for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
     Pr_Y[i] = 0;
   for (it = table.begin (); it != table.end (); it++)
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
       Pr_Y[i] += it->second[i];
   for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-    Pr_Y[i] /= (float) m;
+    Pr_Y[i] /= (double) m;
 
   // sum_{y \in Y}, iterates over all labels.
   //
@@ -108,20 +108,20 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
     {
       // P(x1=x)
       //
-      float Pr_X = 0;
+      double Pr_X = 0;
       for (unsigned int k = 0; k < set->get_number_of_labels (); k++)
         Pr_X += it->second[k];
-      Pr_X /= (float) m;
+      Pr_X /= (double) m;
 
       // Pr(x1=x, Y=y)
       //
-      float Pr_X_and_Y = (float) it->second[i] / (float) m;
+      double Pr_X_and_Y = (double) it->second[i] / (double) m;
 
       // P(x1=x, Y=y) log P(x1=x, Y=y) / (P(x1=x) P(Y=y)).
       //
       if ((Pr_X_and_Y != 0) && (Pr_X != 0) && (Pr_Y[i] != 0))
         result += Pr_X_and_Y * (log (Pr_X_and_Y / (Pr_X * Pr_Y[i])) /
-                                log ((float) set->get_number_of_labels ()));
+                                log ((double) set->get_number_of_labels ()));
     }
   }
 
@@ -135,10 +135,10 @@ float ConditionalMutualInformation::mutual_information (unsigned int x1)
 // Compute I(x1; Y | x2) =
 //      \sum_{x1,Y,x2} P(x1, Y, x2) log (P(x1, Y, x2) P(x2))/(P(x1,x2) P(Y,x2)).
 //
-float ConditionalMutualInformation::conditional_mutual_information
+double ConditionalMutualInformation::conditional_mutual_information
   (unsigned int x1, unsigned int x2)
 {
-  float result = 0;
+  double result = 0;
   unsigned int m = 0; // number of samples.
 
   // Table of frequencies and its pointer.
@@ -246,33 +246,33 @@ float ConditionalMutualInformation::conditional_mutual_information
 
         // P(x1=x, Y=y, x2=x')
         //
-        float Pr_X1_Y_X2 = 0;
+        double Pr_X1_Y_X2 = 0;
         ostringstream oss;
         oss << it1->first << " " << it2->first;
         string x1_x2_value;
         x1_x2_value.append (oss.str ());
         it = table_x1_x2_Y.find (x1_x2_value);
         if (it != table_x1_x2_Y.end ())
-          Pr_X1_Y_X2 = it->second[i] / (float) m;
+          Pr_X1_Y_X2 = it->second[i] / (double) m;
 
         // P(x2=x')
         //
-        float Pr_X2 = 0;
+        double Pr_X2 = 0;
         for (unsigned int j = 0; j < set->get_number_of_labels (); j++)
           Pr_X2 += it2->second[j];
-        Pr_X2 /= (float) m;
+        Pr_X2 /= (double) m;
 
         // P(X1=x, X2=x')
         //
-        float Pr_X1_X2 = 0;
+        double Pr_X1_X2 = 0;
         if (it != table_x1_x2_Y.end ())
           for (unsigned int j = 0; j < set->get_number_of_labels (); j++)
             Pr_X1_X2 += it->second[j];
-        Pr_X1_X2 /= (float) m;
+        Pr_X1_X2 /= (double) m;
 
         // P(Y=y, X2=x')
         //
-        float Pr_Y_X2 = (float) it2->second[i] / (float) m;
+        double Pr_Y_X2 = (double) it2->second[i] / (double) m;
 
         // P(x1=x, Y=y, x2=x') log (P(x1=x, Y=y, x2=x') P(x2=x'))/
         //                          (P(x1=x,x2=x') P(Y=y,x2=x'))
@@ -280,7 +280,7 @@ float ConditionalMutualInformation::conditional_mutual_information
         if ((Pr_X1_Y_X2 != 0) && (Pr_X2 != 0) &&
             (Pr_X1_X2 != 0) && (Pr_Y_X2 != 0))
           result += Pr_X1_Y_X2 * (log ((Pr_X1_Y_X2 * Pr_X2)/
-            (Pr_X1_X2 * Pr_Y_X2)) / log ((float) set->get_number_of_labels ()));
+            (Pr_X1_X2 * Pr_Y_X2)) / log ((double) set->get_number_of_labels ()));
       }
     }
   }
@@ -296,14 +296,14 @@ float ConditionalMutualInformation::conditional_mutual_information
 }
 
 
-float ConditionalMutualInformation::cost (ElementSubset * X)
+double ConditionalMutualInformation::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
   number_of_calls_of_cost_function++;
 
-  float cost;
+  double cost;
 
   // c(X) = I(x; Y), X = { x }.
   //

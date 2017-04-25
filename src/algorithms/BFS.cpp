@@ -68,7 +68,7 @@ void BFS::insert_subset (Queue * OPEN, ElementSubset *X)
 
 void BFS::remove_subset (Queue * OPEN, unsigned int index)
 {
-  OPEN->queue[index]->cost = FLT_MAX;
+  OPEN->queue[index]->cost = INFTY;
   OPEN->current_size--;
 }
 
@@ -83,7 +83,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
   ElementSubset empty_set ("", set);
   ElementSubset * BEST_SUBSET = new ElementSubset ("", set);
 
-  float BEST = empty_set.cost = cost_function->cost (&empty_set);
+  double BEST = empty_set.cost = cost_function->cost (&empty_set);
 
   BEST_SUBSET->copy (&empty_set);
 
@@ -93,7 +93,7 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
   for (unsigned int i = 0; i < k; i++)
   {
     OPEN.queue[i] = new ElementSubset ("", set);
-    OPEN.queue[i]->cost = FLT_MAX;
+    OPEN.queue[i]->cost = INFTY;
   }
   OPEN.maximum_size = k;
   OPEN.current_size = 1;

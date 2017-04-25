@@ -35,12 +35,12 @@ Point::~Point ()
 
 
 
-float Point::cost (ElementSubset * X)
+double Point::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost = 0;
+  double cost = 0;
 
   unsigned int i;
   Element * elem = 0;

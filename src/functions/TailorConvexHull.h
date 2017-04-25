@@ -47,7 +47,7 @@ protected:
 
   // Performs a local branch-and-bound with the pieces of the subset X.
   //
-  float branch_and_bound (ElementSubset * X);
+  double branch_and_bound (ElementSubset * X);
 
   // Returns the greatest maximal convex hull of array [] cloth
   // (in R^1 it is the greatest sequence of zeroes).
@@ -85,7 +85,7 @@ public:
 
   // Returns the value of c(X), where X is a subset.
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

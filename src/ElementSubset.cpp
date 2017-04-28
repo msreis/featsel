@@ -229,7 +229,7 @@ bool ElementSubset::has_element (unsigned int index)
 {
   if (index >= set->get_set_cardinality ())
   {
-    // cout << "Error in ElementSubset::has_element: index out of range!\n";
+    //cout << "Error in ElementSubset::has_element: index out of range!\n";
     return false;
   }
   else return list_of_elements[index];
@@ -374,23 +374,9 @@ string ElementSubset::print_subset_in_hex ()
 }
 
 
-
-void ElementSubset::set_subset_from_string (string subset)
+list <unsigned int> * ElementSubset::get_list_pointer ()
 {
-  if (set->get_set_cardinality () != (subset.size () - 4))
-    cout << "Error: string has not the same cardinality of the set!" << endl;
-
-  for (unsigned int index = 2; index < (subset.size () - 2); index++)
-  {
-    if (subset[index] == '1')
-      list_of_elements[index - 2] = true;
-    else if (subset[index] == '0')
-      list_of_elements[index - 2] = false;
-    else
-      cout << "Error: '" << subset[index] << "' is not in {0, 1}!" << endl; 
-
-    index++;
-  }
+  return & L;
 }
 
 

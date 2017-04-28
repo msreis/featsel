@@ -47,6 +47,7 @@ namespace CFSTest
       return false;
 
     X.add_element (0);               // X = 100 
+
     if ((c.cost (&X) <= -0.463453) || (c.cost (&X) >= -0.463451))
       return false;
 
@@ -105,12 +106,12 @@ namespace CFSTest
     Y.add_element (276);
     Y.add_element (278); 
 
-    // c(Y) = -0.36845877172694702, which is close to the value obtained when
+    // c(Y) = -0.36845877 172694702, which is close to the value obtained when
     // this instance is evaluated with the "CfsSubsetEval" class in Weka:
     //
-    // -0.36845877766609192
+    // -0.36845877 37903233
     //
-    if (cf.cost (&Y) != -0.36845877172694702)
+    if ((cf.cost (&Y) > -0.36845877) || (cf.cost (&Y) < -0.36845878)) 
       return false;      
 
     unsigned int values[60] = {0, 1, 4, 5, 6, 7, 14, 17, 20, 29, 32, 39, 51, 52,
@@ -120,11 +121,11 @@ namespace CFSTest
                               229, 231, 232, 233, 236, 239, 242, 249, 255, 257,
                               261, 266, 269, 276};
         
-    // c(Y) = -0.41128125696689843
+    // c(Y) = -0.41128125 696689843
     //
-    // (it matches with Weka's result up to the seventh precision digit ("5")).
+    // (it matches with Weka's result up to the eighth precision digit ("5")).
     //
-    // Weka: 0.4112812589422674
+    // Weka: 0.41128125 89422674
     //
     Y.set_empty_subset ();
 

@@ -87,9 +87,9 @@ public:
   //
   void copy (ElementSubset *);
 
-  // Return a pointer for the list of the indices of this subset elements.
+  // Copy the current list of indices to the list pointed by * M.
   //
-  list <unsigned int> * get_list_pointer ();
+  void copy_list (list <unsigned int> * M);
 
   // Return the cardinality of the set that contains this subset.
   //

@@ -374,9 +374,11 @@ string ElementSubset::print_subset_in_hex ()
 }
 
 
-list <unsigned int> * ElementSubset::get_list_pointer ()
+void ElementSubset::copy_list (list <unsigned int> * M)
 {
-  return & L;
+  list <unsigned int>::iterator it;
+  for (it = L.begin (); it != L.end (); it++)
+    M->push_back (*it);
 }
 
 

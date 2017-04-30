@@ -222,9 +222,11 @@ double CFS::evaluateSubset (ElementSubset * X)
   //
   list <unsigned int>::iterator it_i, it_j, tmp;
 
-  list <unsigned int> * L = X->get_list_pointer ();
+  list <unsigned int> L; 
 
-  for (it_i = L->begin (); it_i != L->end (); it_i++)
+  X->copy_list (& L);
+
+  for (it_i = L.begin (); it_i != L.end (); it_i++)
   {
     unsigned int i = *it_i;
     if (correlation[i][i] == -1)
@@ -236,14 +238,14 @@ double CFS::evaluateSubset (ElementSubset * X)
   //
   // sqrt (k + k * (k - 1) * avg_f_f_corr)
   //
-  for (it_i = L->begin (); it_i != L->end (); it_i++)
+  for (it_i = L.begin (); it_i != L.end (); it_i++)
   {
     unsigned int i = *it_i;
    
     tmp = it_i;
     tmp++; 
    
-    for (it_j = tmp; it_j != L->end (); it_j++)
+    for (it_j = tmp; it_j != L.end (); it_j++)
     {
       unsigned int j = *it_j;
 

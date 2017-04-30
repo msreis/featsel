@@ -88,7 +88,7 @@ my $arff_file = "input/tmp/Test_01_A.arff";
 # Upper bound for cost function calls (a time stop criterion, specially for
 # the execution of the featsel framework on the Gisette data set).
 #
-my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 100000;
+my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 
 # Compiling Weka's wrappers.

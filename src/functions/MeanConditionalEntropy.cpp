@@ -24,14 +24,7 @@
 MeanConditionalEntropy::MeanConditionalEntropy (ElementSet * a_set)
 {
   set = a_set;
-
-  m = t = 0;
-
-  // Penalized Mean Conditional Entropy reads from a .DAT and
-  // is used for W-operator feature selection.
-  //
-  if (! (set->get_set_cardinality() == 0))
-    t = set->get_element (0)->get_number_of_values ();
+  m = 0;
 }
 
 
@@ -109,7 +102,7 @@ double MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
     else
       // if X=x has only one occurrence, it is penalized with 1 / t
       //
-      cost += (double) 1 / t;
+      cost += (double) 1 / m;
 
     delete[] it->second;
   }

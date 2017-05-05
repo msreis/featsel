@@ -126,7 +126,7 @@ namespace MeanConditionalEntropyTest
           (entropy.find ("010: 0") != string::npos) &&
           (entropy.find ("111: ") == string::npos)))
       return false;
-
+    else
       return true;
   }
 

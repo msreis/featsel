@@ -39,10 +39,6 @@ class MeanConditionalEntropy : public CostFunction
 
 protected:
 
-  // t is the average of all values
-  //
-  int t;
-
   // Total number of samples.
   //
   unsigned int m;

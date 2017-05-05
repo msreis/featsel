@@ -96,6 +96,8 @@ string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
   string printed_samples ("");
   std::ostringstream value;
 
+  m = 0;
+
   calculate_distributions_from_the_samples (X);
 
   for (it = samples.begin (); it != samples.end (); it++)

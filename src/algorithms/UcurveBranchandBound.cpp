@@ -49,10 +49,10 @@ void UcurveBranchandBound::get_minima_list
   list <double> Last_cost_stack;
 
   A = new ElementSubset ("A", set);
-  bound = INFTY;
   Stack.push_back (A);
   Leftmost_free_elem.push_back (0);
-  Last_cost_stack.push_back (bound);
+  Last_cost_stack.push_back (INFTY);
+  bound = INFTY;
 
   while ((! Stack.empty ()) && (! cost_function->has_reached_threshold ()))
   {
@@ -63,10 +63,10 @@ void UcurveBranchandBound::get_minima_list
     last_cost = Last_cost_stack.back ();
     Last_cost_stack.pop_back ();
 
-    current_cost = A->cost = cost_function->cost(A);
+    current_cost = A->cost = cost_function->cost (A);
 
-    if ((current_cost <= last_cost) &&
-        (A->get_subset_cardinality() <= MAX_SUBSET_SIZE) )
+    if (((A->get_subset_cardinality () == 0) || (current_cost <= last_cost)) &&
+        (A->get_subset_cardinality () <= MAX_SUBSET_SIZE) )
     {
       // The bound helps to keep the list of minimum small
       //

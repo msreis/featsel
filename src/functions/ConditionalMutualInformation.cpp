@@ -34,6 +34,11 @@ ConditionalMutualInformation::~ConditionalMutualInformation ()
 }
 
 
+ConditionalMutualInformation * ConditionalMutualInformation::get_copy ()
+{
+  return new ConditionalMutualInformation (this->set);
+}
+
 // Compute I(x; Y) = \sum_{x,Y} P(x, Y) log P(x, Y) / (P(x) P(Y)).
 //
 float ConditionalMutualInformation::mutual_information (unsigned int x1)

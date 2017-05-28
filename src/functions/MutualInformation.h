@@ -64,11 +64,13 @@ public:
   //
   MutualInformation (ElementSet *);
 
-
   // Default destructor.
   //
   virtual ~MutualInformation ();
 
+  // Creates a copy of this object
+  //
+  virtual MutualInformation * get_copy ();
 
   // Returns the value of c(X), where X is a subset.
   //

@@ -33,6 +33,12 @@ Explicit::~Explicit ()
 }
 
 
+Explicit * Explicit::get_copy () 
+{
+    return new Explicit (this->set);
+}
+
+
 float Explicit::cost (ElementSubset * X)
 {
   timeval begin, end;

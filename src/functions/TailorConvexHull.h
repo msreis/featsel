@@ -83,6 +83,11 @@ public:
   virtual ~TailorConvexHull ();
 
 
+  // Creates a copy of this object.
+  //
+  virtual TailorConvexHull * get_copy ();
+
+
   // Returns the value of c(X), where X is a subset.
   //
   float cost (ElementSubset *);

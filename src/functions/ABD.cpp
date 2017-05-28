@@ -63,6 +63,12 @@ ABD::~ABD ()
 }
 
 
+ABD * ABD::get_copy () 
+{
+  ABD * copy = new ABD(this->set);
+  return copy;
+}
+
 float ABD::compute_products (float * F_minus_F0)
 {
   // first_product = (F - F0)^T * W.

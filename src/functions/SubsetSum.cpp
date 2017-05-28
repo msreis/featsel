@@ -34,6 +34,12 @@ SubsetSum::~SubsetSum ()
 }
 
 
+SubsetSum * SubsetSum::get_copy ()
+{
+  return new SubsetSum (this->set);
+}
+
+
 float SubsetSum::cost (ElementSubset * X)
 {
   timeval begin, end;

@@ -52,6 +52,12 @@ CFS::~CFS ()
 }
 
 
+CFS * CFS::get_copy ()
+{
+  return new CFS (this->set);
+}
+
+
 void CFS::compute_entropies
 (unsigned int i, unsigned int j, double * H_X1, double * H_X2, double * H_X1_X2)
 {

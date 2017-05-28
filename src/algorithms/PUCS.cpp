@@ -183,6 +183,7 @@ void PUCS::solve_part (PartitionNode * P, list<ElementSubset *> *
   {
     Collection * L;
     L = part_minimum (P, max_size_of_minima_list);
+    #pragma omp taskwait
     // TODO: insert minimum elements directly to the minima list
     while (L->size () > 0) 
     {

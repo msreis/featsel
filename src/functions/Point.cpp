@@ -33,6 +33,10 @@ Point::~Point ()
 }
 
 
+Point * Point::get_copy ()
+{
+  return new Point (this->set);
+}
 
 
 float Point::cost (ElementSubset * X)

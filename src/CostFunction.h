@@ -93,6 +93,11 @@ public:
   virtual ~CostFunction ();
 
 
+  // Gets a copy of the cost function
+  // 
+  virtual CostFunction * get_copy ();
+
+
   // Store some elapsed time for all calls of the cost function. This
   // method is usesul to establish a basal time for unexpensive cost functions.
   //

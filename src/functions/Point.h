@@ -49,6 +49,11 @@ public:
   virtual ~Point ();
 
 
+  // Creates a copy of this object.
+  //
+  virtual Point * get_copy ();
+
+
   // Returns the value of c(X), where X is a subset.
   //
   float cost (ElementSubset *);

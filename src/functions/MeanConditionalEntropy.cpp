@@ -43,6 +43,12 @@ MeanConditionalEntropy::~MeanConditionalEntropy ()
 }
 
 
+MeanConditionalEntropy * MeanConditionalEntropy::get_copy () 
+{
+  return new MeanConditionalEntropy (this->set);
+}
+
+
 float MeanConditionalEntropy::cost (ElementSubset * X)
 {
   timeval begin, end;
@@ -113,7 +119,7 @@ float MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
       //
       cost += (float) 1 / t;
 
-    delete it->second;
+    delete[] it->second;
   }
 
   samples.clear ();

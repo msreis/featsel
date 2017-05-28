@@ -36,6 +36,12 @@ Collection::~Collection ()
 }
 
 
+CostFunction * CostFunction::get_copy ()
+{
+  return NULL;
+}
+
+
 bool Collection::lower_covers (ElementSubset * X)
 {
   map<string, ElementSubset *>::iterator it;

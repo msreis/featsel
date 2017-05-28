@@ -96,6 +96,11 @@ public:
   virtual ~CFS ();
 
 
+  // Creates a copy of this object.
+  //
+  virtual CFS * get_copy ();
+
+
   // The CFS cost of a subset X <= S, for a given label Y, is defined as:
   //
   // CFS(X) = 2 * ((H(X) + H(Y) - H(X,Y)) / (H(X) + H(Y))).

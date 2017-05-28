@@ -42,6 +42,11 @@ public:
   virtual ~Explicit ();
 
 
+  // Creates a copy of this object.
+  //
+  virtual Explicit * get_copy ();
+
+
   // Returns the value of c(X), where X is a subset.
   //
   float cost (ElementSubset *);

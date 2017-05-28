@@ -76,6 +76,11 @@ public:
   virtual ~ABD ();
 
 
+  // Creates a copy of this object.
+  // 
+  virtual ABD * get_copy ();
+
+
   // Returns the value of c(F), where F is a subset.
   //
   float cost (ElementSubset * F);

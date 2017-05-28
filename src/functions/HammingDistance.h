@@ -43,9 +43,16 @@ public:
   //
   HammingDistance (ElementSet *);
 
+
   // Default destructor.
   //
   virtual ~HammingDistance ();
+
+
+  // Creates a copy of this object
+  //
+  virtual HammingDistance * get_copy ();
+
 
   // Return the value of c(X), where X is a subset.
   //

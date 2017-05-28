@@ -37,6 +37,11 @@ MutualInformation::~MutualInformation ()
 }
 
 
+MutualInformation * MutualInformation::get_copy ()
+{
+  return new MutualInformation (this->set);
+}
+
 float MutualInformation::cost (ElementSubset * X)
 {
   timeval begin, end;

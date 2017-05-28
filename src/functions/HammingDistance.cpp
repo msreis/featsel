@@ -33,6 +33,12 @@ HammingDistance::~HammingDistance ()
 }
 
 
+HammingDistance * HammingDistance::get_copy () 
+{
+  return  new HammingDistance (this->set);
+}
+
+
 float HammingDistance::cost (ElementSubset * X)
 {
   timeval begin, end;

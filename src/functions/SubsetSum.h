@@ -51,9 +51,16 @@ public:
   //
   SubsetSum (ElementSet *);
 
+
   // Default destructor.
   //
   virtual ~SubsetSum ();
+
+
+  // Creates a copy of this object.
+  //
+  virtual SubsetSum * get_copy ();
+
 
   // Returns the value of c(X), where X is a subset.
   //

@@ -34,6 +34,12 @@ TailorConvexHull::~TailorConvexHull ()
 }
 
 
+TailorConvexHull * TailorConvexHull::get_copy ()
+{
+  return new TailorConvexHull (this->set);
+}
+
+
 unsigned int TailorConvexHull::search_greatest_maximal_convex_hull
   (unsigned int * cloth)
 {

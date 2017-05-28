@@ -316,10 +316,16 @@ https://github.com/msreis/featsel \n\n \
         a->append (argv[i]);
         if (strcmp (argv[i], "pucs") == 0) 
         {
-          if (argv[i + 1][0] != '-')
-            *p = atof (argv[++i]);
-          if (argv[i + 1][0] != '-')
-            *l = atoi (argv[++i]);
+          if (i + 2 < argc) {
+            if (argv[i + 1][0] != '-')
+              *p = atof (argv[++i]);
+            if (argv[i + 1][0] != '-')
+              *l = atoi (argv[++i]);
+          }
+          else {
+            *l = 1;
+            *p = 0;
+          }
         }
       }
       else

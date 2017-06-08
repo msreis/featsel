@@ -79,7 +79,6 @@ void PUCS::set_partition_model ()
 void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 {
   timeval begin_program, end_program, end_walk, end_wait, end_clean;
-  int time_walking, time_waiting, time_cleaning;
   // t.i.
   gettimeofday (& begin_program, NULL);
 
@@ -107,17 +106,17 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     
   // t.d.
     gettimeofday (& end_walk, NULL);
-    time_walking = diff_us (end_walk, begin_program);
+    //time_walking = diff_us (end_walk, begin_program);
     #pragma omp taskwait
      
   // t.f.
     gettimeofday (& end_wait, NULL);
-    time_waiting = diff_us (end_wait, end_walk);
+    //time_waiting = diff_us (end_wait, end_walk);
     
     clean_list_of_minima (max_size_of_minima_list);
     
     gettimeofday (& end_clean, NULL);
-    time_cleaning = diff_us (end_clean, end_wait);
+    //time_cleaning = diff_us (end_clean, end_wait);
     //#pragma omp critical
     //cout << "[" << this << "] ti = " << time_walking << "; td = " <<
         //time_waiting << "; tf = " << time_cleaning << "; l = "<< l 

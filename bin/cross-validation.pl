@@ -23,6 +23,8 @@
 #
 
 use strict;
+use List::MoreUtils 'pairwise';
+use Data::Dumper;
 
 use lib './lib';
 
@@ -70,7 +72,6 @@ else
 }
 
 
-
 # Runs featsel algorithm to get subset of features
 my $selected_features = "";
 print "Starting algorithm $algorithm to select features on the " . 
@@ -91,9 +92,10 @@ while (<LOG>)
   }
 }
 close (LOG);
-
 my @selected_features_arr = split ('', $selected_features);
-# Samples data file
+
+
+# Parses data file
 my @data_set = ();
 my $i = 0;
 open DATA, $data_set_file_name;
@@ -105,8 +107,136 @@ while (<DATA>)
   $data_set[$i] = {};
   $data_set[$i]->{FEATURES} = \@features;
   $data_set[$i]->{CLASS} = \@class;
-  print ("@{$data_set[$i]->{FEATURES}}  ");
-  print ("@{$data_set[$i]->{CLASS}}\n");
   $i++;
 }
 close (DATA);
+
+# Samples data and learns hypothesis
+my @training_set = @data_set;
+my @validation_set = @data_set;
+my %hypothesis = create_hypothesis (\@training_set, 
+  \@selected_features_arr);
+my $validation_error = validation_error (\@validation_set, 
+  \@selected_features_arr, \%hypothesis);
+print ($validation_error);
+
+
+
+# Given a training set, returns a hypothesis
+#
+# Training set should be a reference to an array of hashes containing 
+# two keys:
+#  - FEATURES
+#  - CLASS
+#
+#  Return value is a reference to a hash containing as key strings
+#  representing subsets of features. The value should be the class
+#  infered from that subset of features.
+#
+sub create_hypothesis
+{
+  my $training_set_ref = $_[0];
+  my @selected_features = @{$_[1]};
+  my %sample;
+
+  #Samples training data set 
+  for my $data (@$training_set_ref)
+  {
+    my @features = @{$data->{FEATURES}};
+    my @class = @{$data->{CLASS}};
+    my @considered_features = mask_on_selected_features (\@features,
+      \@selected_features);
+    my $features_key = join ("", @considered_features);
+    my $class_key = join ("", @class);
+
+    if (not exists $sample{$features_key})
+    {
+      my %labels;
+      $sample{$features_key} = \%labels;
+    }
+
+    ${$sample{$features_key}}{$class_key} += 1;
+  }
+
+  #print Dumper (\%sample);
+
+  # Creates hypothesis
+  my %hypothesis;
+  foreach my $feature (keys %sample) 
+  {
+    my %class_occurrences = %{$sample{$feature}};
+    my $max_occur = 0;
+    my $infered_class;
+    foreach my $class (keys %class_occurrences)
+    {
+      if ($class_occurrences{$class} > $max_occur)
+      {
+        $max_occur = $class_occurrences{$class};
+        $infered_class = $class; 
+      }
+    }
+    $hypothesis{$feature} = $infered_class;
+  }
+  return %hypothesis; 
+}
+
+
+
+# Given a validation set, hypothesis and selected_features, calculates
+# validation error
+#
+# Validation set should be a reference to an array of hashes containing 
+# two keys:
+#  - FEATURES
+#  - CLASS
+#
+sub validation_error
+{
+  my $validation_set_ref = $_[0];
+  my @selected_features = @{$_[1]};
+  my %hypothesis = %{$_[2]};
+  my $validation_error = .0;
+ 
+  for my $data (@$validation_set_ref)
+  {
+    my @features = @{$data->{FEATURES}};
+    my @class = @{$data->{CLASS}};
+    my @considered_features = mask_on_selected_features (\@features,
+      \@selected_features);
+    my $features_key = join ("", @considered_features);
+    my $class_key = join ("", @class);
+    # If the hypothesis has a don't care we will consider it as a
+    # classification error
+    my $classified_class = $hypothesis{$features_key};
+    $validation_error += not $classified_class eq $class_key;    
+  }
+
+  $validation_error /= scalar @$validation_set_ref;
+  return $validation_error;
+}
+
+
+
+sub mask_on_selected_features
+{
+  my @features = @{$_[0]};
+  my @selected_features = @{$_[1]};
+  my @masked_features;
+  @masked_features = pairwise {$a * $b} @features, @selected_features;
+  return @masked_features;
+}
+
+
+
+sub class_arr_to_int
+{
+  my @class_arr = @_;
+  my $class_number = 0;
+  my $multiplier = 1;
+  for my $digit (reverse (@class_arr))
+  {
+    $class_number += $digit * $multiplier;
+    $multiplier *= 2;    
+  }
+  return $class_number;
+}

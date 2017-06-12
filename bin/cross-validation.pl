@@ -24,6 +24,7 @@
 
 use strict;
 use List::MoreUtils 'pairwise';
+use List::Util qw/shuffle/;
 use Data::Dumper;
 
 use lib './lib';
@@ -43,7 +44,7 @@ my $pucs_p = "";
 my $pucs_l = "";
 my $number_of_features;
 my $number_of_classes;
-if ((@ARGV == 7) || (@ARGV == 9))
+if ((@ARGV == 5) || (@ARGV == 7))
 {
   $data_set_file_name = $ARGV[0];
   $number_of_features = $ARGV[1];
@@ -75,7 +76,7 @@ else
 # Runs featsel algorithm to get subset of features
 my $selected_features = "";
 print "Starting algorithm $algorithm to select features on the " . 
-  "data set $data_set_file_name\n";
+  "data set $data_set_file_name... ";
 my $featsel_call_string = "$FEATSEL_BIN " .
   "-n $number_of_features -l $number_of_classes " .
   "-a $algorithm $pucs_p $pucs_l " .
@@ -88,10 +89,11 @@ while (<LOG>)
   if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
   {
     $selected_features = $1;
-    #print "$1";
   }
 }
 close (LOG);
+print ("[Done!]\n");
+print ("Selected Features: $selected_features\n");
 my @selected_features_arr = split ('', $selected_features);
 
 
@@ -111,14 +113,34 @@ while (<DATA>)
 }
 close (DATA);
 
-# Samples data and learns hypothesis
-my @training_set = @data_set;
-my @validation_set = @data_set;
-my %hypothesis = create_hypothesis (\@training_set, 
-  \@selected_features_arr);
-my $validation_error = validation_error (\@validation_set, 
-  \@selected_features_arr, \%hypothesis);
-print ($validation_error);
+
+# 10-fold Cross Validation
+my @folds = fold_data (\@data_set);
+my $cv_error = 0;
+# For each fold we should calculate in sample error
+for (my $i = 0; $i < 10; $i++)
+{
+  # Samples with all folds except fold i
+  my @training_set = ();
+  for (my $j = 0; $j < 10; $j++)
+  {
+    if ($j != $i)
+    {
+      push @training_set, @{$folds[$j]};
+    }
+  }
+  my %hypothesis = create_hypothesis (\@training_set, 
+    \@selected_features_arr);
+
+  # Validates with fold i
+  my @validation_set = @{$folds[$i]};
+  my $validation_error = validation_error (\@validation_set, 
+    \@selected_features_arr, \%hypothesis);
+  $cv_error += $validation_error;
+}
+$cv_error /= 10;
+print ("Cross-validation error: $cv_error\n");
+
 
 
 
@@ -197,6 +219,7 @@ sub validation_error
   my %hypothesis = %{$_[2]};
   my $validation_error = .0;
  
+
   for my $data (@$validation_set_ref)
   {
     my @features = @{$data->{FEATURES}};
@@ -207,14 +230,52 @@ sub validation_error
     my $class_key = join ("", @class);
     # If the hypothesis has a don't care we will consider it as a
     # classification error
-    my $classified_class = $hypothesis{$features_key};
-    $validation_error += not $classified_class eq $class_key;    
+    if (defined $hypothesis{$features_key})
+    {
+      my $classified_class = $hypothesis{$features_key};
+      $validation_error += not $classified_class eq $class_key;    
+    }
+    else
+    {
+      $validation_error += 1;
+    }
   }
 
   $validation_error /= scalar @$validation_set_ref;
   return $validation_error;
 }
 
+
+sub fold_data 
+{
+  my @data = @{$_[0]};
+  my @folds;
+  my $k = 10;
+  my $n = int (scalar @data / $k);
+  my $remainder = scalar @data % $k;
+  @data = shuffle (@data);
+  for (my $i = 0; $i < $k; $i++)
+  {
+    my $a = $i * $n;
+    my $b = ($i + 1) * $n - 1;
+    my @fold = @data[$a .. $b];
+    $folds[$i] = \@fold;
+  }
+  for (my $i = 0; $i < $remainder; $i++) 
+  {
+    my @fold = @{$folds[$i]};
+    push @fold, $data[$n * $k + $i];
+    $folds[$i] = \@fold;
+  }
+  my $i = 0;
+  #for my $fold_r (@folds)
+  #{
+    #my @fold = @{$fold_r};
+    #print ("\n\nfold $i:\n @fold");
+    #$i++;
+  #}
+  return @folds;
+}
 
 
 sub mask_on_selected_features
@@ -225,7 +286,6 @@ sub mask_on_selected_features
   @masked_features = pairwise {$a * $b} @features, @selected_features;
   return @masked_features;
 }
-
 
 
 sub class_arr_to_int

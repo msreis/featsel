@@ -116,13 +116,13 @@ close (DATA);
 
 # 10-fold Cross Validation
 my @folds = fold_data (\@data_set);
-my $cv_error = 0;
+my $cv_error = .0;
 # For each fold we should calculate in sample error
-for (my $i = 0; $i < 10; $i++)
+for (my $i = 0; $i < scalar @folds; $i++)
 {
   # Samples with all folds except fold i
   my @training_set = ();
-  for (my $j = 0; $j < 10; $j++)
+  for (my $j = 0; $j < scalar @folds; $j++)
   {
     if ($j != $i)
     {
@@ -132,13 +132,17 @@ for (my $i = 0; $i < 10; $i++)
   my %hypothesis = create_hypothesis (\@training_set, 
     \@selected_features_arr);
 
+  #print "Hypothesis: \n";
+  #print Dumper (\%hypothesis);
+  #print "\n\n";
+
   # Validates with fold i
   my @validation_set = @{$folds[$i]};
   my $validation_error = validation_error (\@validation_set, 
     \@selected_features_arr, \%hypothesis);
   $cv_error += $validation_error;
 }
-$cv_error /= 10;
+$cv_error /= scalar @folds;
 print ("Cross-validation error: $cv_error\n");
 
 
@@ -233,10 +237,12 @@ sub validation_error
     if (defined $hypothesis{$features_key})
     {
       my $classified_class = $hypothesis{$features_key};
+      #print "x = $features_key, y  = $class_key, h(x) = $classified_class\n";
       $validation_error += not $classified_class eq $class_key;    
     }
     else
     {
+      #print "x = $features_key, y = $class_key, don't care\n";
       $validation_error += 1;
     }
   }
@@ -250,6 +256,7 @@ sub fold_data
 {
   my @data = @{$_[0]};
   my @folds;
+  #my $k = scalar @data;
   my $k = 10;
   my $n = int (scalar @data / $k);
   my $remainder = scalar @data % $k;

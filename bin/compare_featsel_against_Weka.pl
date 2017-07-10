@@ -60,7 +60,7 @@ if (!length $WEKA_DIR)
   $WEKA_DIR = <STDIN>;
   chomp $WEKA_DIR;
 }
-my $WEKA_CLASSPATH = "test/weka:$WEKA_DIR/weka.jar";
+my $WEKA_CLASSPATH = "test/weka:$WEKA_DIR/weka.jar:$WEKA_DIR/attributeSelectionSearchMethods.jar";
 
 # The used data sets.
 #

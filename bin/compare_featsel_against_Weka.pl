@@ -52,28 +52,47 @@ my $WEKA_BFS_FILE  = "test/weka/$WEKA_BFS_CLASS.java";
 my $WEKA_ES_CLASS  = "RunExhaustiveSearch";
 my $WEKA_ES_FILE  = "test/weka/$WEKA_ES_CLASS.java";
 
-my $WEKA_CLASSPATH = "test/weka:/usr/share/java/weka.jar";
-
+my $WEKA_DIR =  $ENV{'WEKAINSTALL'};
+if (!length $WEKA_DIR) 
+{
+  print "Please enter the weka.jar repository. To avoid this message," .
+    " set up the WEKAINSTALL environment variable\n";
+  $WEKA_DIR = <STDIN>;
+  chomp $WEKA_DIR;
+}
+my $WEKA_CLASSPATH = "test/weka:$WEKA_DIR/weka.jar";
 
 # The used data sets.
 #
-my @DATA_SETS = ("Zoo", "Promoters", "Arrhythmia", "Gisette");
+my @DATA_SETS = ( "Zoo", "Promoters", "Arrhythmia", "Gisette",
+                  "Madelon", "Musk2", "Optdigits", "Waveform");
 
 my %labels    = ("Zoo" => 7,  "Promoters" => 2,  "Arrhythmia" => 16, 
-                 "Gisette" => 2);
+                 "Gisette" => 2, "Madelon" => 2, "Musk2" => 2,
+                 "Optdigits" => 10, "Waveform" => 3);
 
 my %features =  ("Zoo" => 15, "Promoters" => 57, "Arrhythmia" => 279, 
-                 "Gisette" => 5000);
+                 "Gisette" => 5000, "Madelon" => 500, "Musk2" => 166,
+                 "Optdigits" => 64, "Waveform" => 21);
 
 my %dat_file =  ("Zoo" => "input/Zoo/Test_15_3.dat",
                  "Promoters" => "input/Promoters/Test_01_A.dat",
                  "Arrhythmia" => "input/Arrhythmia/Test_01_A.dat",
-                 "Gisette" => "input/Gisette/Test_01_A.dat");
+                 "Gisette" => "input/Gisette/Test_01_A.dat",
+                 "Madelon" => "input/Madelon/Test_01_A.dat",
+                 "Musk2" => "input/Musk2/Test_01_A.dat",
+                 "Optdigits" => "input/Optdigits/Test_01_A.dat",
+                 "Waveform" => "input/Waveform/Test_01_A.dat");
 
 my %algorithm = ("Zoo" => "es",
                  "Promoters" => "bfs", 
                  "Arrhythmia" => "bfs", 
-                 "Gisette" => "bfs");
+                 "Gisette" => "bfs",
+                 "Madelon" => "bfs",
+                 "Musk2" => "bfs",
+                 "Optdigits" => "bfs",
+                 "Waveform" => "bfs");
+
 
 
 # Number of repetitions per data set.
@@ -93,8 +112,8 @@ my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 # Compiling Weka's wrappers.
 #
-system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_BFS_FILE 2> $LOG");
-system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_ES_FILE 2> $LOG");
+system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_BFS_FILE");
+system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_ES_FILE");
 
 # Comparison main loop.
 #
@@ -123,14 +142,14 @@ foreach my $data_set (@DATA_SETS)
     {
       $t0 = [gettimeofday];
       system ("java -classpath \"$WEKA_CLASSPATH\" $WEKA_ES_CLASS " .
-              $arff_file . " " . $features{$data_set} . " 1> $LOG 2>> $LOG");
+              $arff_file . " " . $features{$data_set} . " 1> $LOG");
       $t1 = [gettimeofday];
     }
     else
     {
       $t0 = [gettimeofday];
       system ("java -classpath \"$WEKA_CLASSPATH\" $WEKA_BFS_CLASS " .
-              $arff_file . " " . $features{$data_set} . " 1> $LOG 2>> $LOG");
+              $arff_file . " " . $features{$data_set} . " 1> $LOG");
       $t1 = [gettimeofday];
       
     }
@@ -171,7 +190,9 @@ sub dat2arff
     {
       print OUTPUT "\@ATTRIBUTE $i {0, 1}\n";
     }
-    elsif (($dataset eq "Promoters") || ($dataset eq "Gisette"))
+    elsif (($dataset eq "Promoters") || ($dataset eq "Gisette") ||
+           ($dataset eq "Musk2")     || ($dataset eq "Waveform") ||
+           ($dataset eq "Madelon")   || ($dataset eq "Optdigits"))
     {
       print OUTPUT "\@ATTRIBUTE $i {0, 1, 2, 3}\n";
     }

@@ -55,12 +55,14 @@ my $WEKA_ES_FILE  = "test/weka/$WEKA_ES_CLASS.java";
 my $WEKA_DIR =  $ENV{'WEKAINSTALL'};
 if (!length $WEKA_DIR) 
 {
-  print "Please enter the weka.jar repository. To avoid this message," .
-    " set up the WEKAINSTALL environment variable\n";
+  print "Please enter the weka.jar directory (e.g. /usr/share/java). " . 
+        "To avoid this message," .
+        " set up the WEKAINSTALL environment variable\n";
   $WEKA_DIR = <STDIN>;
   chomp $WEKA_DIR;
 }
-my $WEKA_CLASSPATH = "test/weka:$WEKA_DIR/weka.jar:$WEKA_DIR/attributeSelectionSearchMethods.jar";
+my $WEKA_CLASSPATH = "test/weka:$WEKA_DIR/weka.jar:" . 
+                     "$WEKA_DIR/attributeSelectionSearchMethods.jar";
 
 # The used data sets.
 #
@@ -114,6 +116,11 @@ my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 #
 system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_BFS_FILE");
 system ("javac -Xlint -classpath \"$WEKA_CLASSPATH\" $WEKA_ES_FILE");
+
+
+# Compiling featsel (if it was not compiled yet).
+#
+system ("make");
 
 # Comparison main loop.
 #

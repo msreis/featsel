@@ -30,7 +30,7 @@
 #           RunExhaustiveSearch.java
 #
 # And the system should have installed Java (compiler and JVM) and also the
-# Weka workbench (the tested version was 3.6.13).
+# Weka workbench (the tested versions were >= 3.6.1).
 #
 # To execute this program, just call "bin/compare_featsel_against_Weka.pl".
 
@@ -57,7 +57,7 @@ if (!length $WEKA_DIR)
 {
   print "Please enter the weka.jar directory (e.g. /usr/share/java). " . 
         "To avoid this message," .
-        " set up the WEKAINSTALL environment variable\n";
+        " set up the WEKAINSTALL environment variable!\n";
   $WEKA_DIR = <STDIN>;
   chomp $WEKA_DIR;
 }

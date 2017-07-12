@@ -2,7 +2,7 @@
 // Collection.cpp -- implementation of the class "Collection".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ Collection::Collection ()
 Collection::~Collection ()
 {
   map<string, ElementSubset *>::iterator it;
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = subset_collection.begin (); it != subset_collection.end (); it++)
     delete it->second;
-  my_map.clear ();
+  subset_collection.clear ();
 }
 
 
@@ -44,7 +44,7 @@ bool Collection::lower_covers (ElementSubset * X)
     cout << "Collection::lower_covers error: NULL subset!" << endl;
     return false;
   }
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = subset_collection.begin (); it != subset_collection.end (); it++)
   {
     if (it->second->contains (X))
       return true;
@@ -61,7 +61,7 @@ bool Collection::upper_covers (ElementSubset * X)
     cout << "Collection::upper_covers error: NULL subset!" << endl;
     return false;
   }
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = subset_collection.begin (); it != subset_collection.end (); it++)
   {
     if (it->second->is_contained_by (X))
       return true;
@@ -86,7 +86,7 @@ string Collection::print_collection ()
 {
   map<string, ElementSubset *>::iterator it;
   string collection_string ("");
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = subset_collection.begin (); it != subset_collection.end (); it++)
     collection_string.append (it->second->print_subset ());
   return collection_string;
 }
@@ -97,7 +97,7 @@ string Collection::print_collection (CostFunction * c)
   map<string, ElementSubset *>::iterator it;
   string collection_string ("");
   std::ostringstream value;
-  for (it = my_map.begin (); it != my_map.end (); it++)
+  for (it = subset_collection.begin (); it != subset_collection.end (); it++)
   {
     collection_string.append (it->second->print_subset ());
     collection_string.append (": ");
@@ -113,7 +113,7 @@ string Collection::print_collection (CostFunction * c)
 void Collection::copy (Collection * C)
 {
   map<string, ElementSubset *>::iterator it;
-  for (it = C->my_map.begin (); it != C->my_map.end (); it++)
+  for(it = C->subset_collection.begin(); it != C->subset_collection.end(); it++)
     if (! add_subset (it->second))
       cout << "Error copying collection!" << endl;
 }
@@ -125,7 +125,8 @@ ElementSubset * Collection::add_subset (ElementSubset * X)
   ElementSubset * Y;
   Y = new ElementSubset ("", X->get_set_that_contains_this_subset());
   Y->copy (X);
-  ret = my_map.insert (pair<string, ElementSubset *> (Y->print_subset (), Y));
+  ret = subset_collection.insert
+    (pair<string, ElementSubset *> (Y->print_subset (), Y));
   if (ret.second)
     return ret.first->second;
   else
@@ -140,16 +141,16 @@ ElementSubset * Collection::remove_last_subset ()
 {
   map<string, ElementSubset *>::iterator it;
   ElementSubset * X;
-  it = my_map.begin ();
+  it = subset_collection.begin ();
   X = it->second;
-  my_map.erase (it);
+  subset_collection.erase (it);
   return X;
 }
 
 
 bool Collection::has_subset (ElementSubset * X)
 {
-  if (my_map.find (X->print_subset ()) == my_map.end ())
+  if (subset_collection.find (X->print_subset ()) == subset_collection.end ())
     return false;
   else
     return true;
@@ -159,8 +160,8 @@ bool Collection::has_subset (ElementSubset * X)
 ElementSubset * Collection::get_subset (ElementSubset * X)
 {
   map<string, ElementSubset *>::iterator it;
-  it = my_map.find (X->print_subset ());
-  if (it == my_map.end ())
+  it = subset_collection.find (X->print_subset ());
+  if (it == subset_collection.end ())
     return NULL;
   else
     return it->second;
@@ -169,7 +170,7 @@ ElementSubset * Collection::get_subset (ElementSubset * X)
 
 unsigned int Collection::size ()
 {
-  return my_map.size ();
+  return subset_collection.size ();
 }
 
 
@@ -178,13 +179,13 @@ unsigned int Collection::remove_covered_subsets
 {
   unsigned int number_of_removed_subsets = 0;
   map<string, ElementSubset *>::iterator it;
-  for (it = my_map.begin (); it != my_map.end ();)
+  for (it = subset_collection.begin (); it != subset_collection.end ();)
   {
     if ( ( ( lower_cover) && (X->contains (it->second)) ) ||
          ( (!lower_cover) && (X->is_contained_by (it->second)) ) )
     {
       delete it->second;
-      my_map.erase (it++);
+      subset_collection.erase (it++);
       number_of_removed_subsets++;
     }
     else it++;

@@ -48,7 +48,7 @@ protected:
   // Store the time (in microseconds) spent by all
   // calls of the cost function
   //
-  int elapsed_time_of_all_calls_of_the_cost_function;
+  int elapsed_time_of_cost_function_calls;
 
   // True if this has max number of calls of the cost function, false otherwise
   //

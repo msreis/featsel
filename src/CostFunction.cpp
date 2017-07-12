@@ -25,7 +25,7 @@ CostFunction::CostFunction ()
 {
   set = NULL;
   number_of_calls_of_cost_function = 0;
-  elapsed_time_of_all_calls_of_the_cost_function = 0;
+  elapsed_time_of_cost_function_calls = 0;
   has_threshold_set = false;
   reached_threshold = false;
   has_max_number_of_calls_set = false;
@@ -57,7 +57,7 @@ void CostFunction::add_elapsed_time (int microseconds)
 
   gettimeofday (& end, NULL);
 
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 }
 
 
@@ -69,7 +69,7 @@ unsigned int CostFunction::get_number_of_calls_of_cost_function ()
 
 int CostFunction::get_the_elapsed_time_of_the_calls_of_this_cost_function ()
 {
-  return elapsed_time_of_all_calls_of_the_cost_function;
+  return elapsed_time_of_cost_function_calls;
 }
 
 

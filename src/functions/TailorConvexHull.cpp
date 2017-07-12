@@ -239,7 +239,7 @@ double TailorConvexHull::cost (ElementSubset * X)
   cost = branch_and_bound (X);
 
   gettimeofday (& end, NULL);
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function.
   //

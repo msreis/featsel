@@ -142,3 +142,6 @@ clean:
 	rm -f $(TOBJS) $(TEST)
 	find . -type f -name '*.o' -exec rm {} +
 	rm -f input/tmp/*
+	rm -f test/weka/RunBestFirstSearch.class
+	rm -f test/weka/RunExhaustiveSearch.class
+

@@ -99,7 +99,7 @@ my %algorithm = ("Zoo" => "es",
 
 # Number of repetitions per data set.
 #
-my $k = 5;
+my $k = 20;
 
 # Weka's ARFF file.
 #

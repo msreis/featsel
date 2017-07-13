@@ -88,7 +88,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \
 
-LIBS = -lm -loctave -loctinterp
+LIBS = -lm -loctinterp
 
 TARGET =	bin/featsel
 

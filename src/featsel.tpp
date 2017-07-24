@@ -47,7 +47,7 @@
 int parse_parameters
   (int, char **, string *, unsigned int *, string *,
    unsigned int *, unsigned int *, bool *, string *, unsigned int *, double * p,
-   unsigned int *, unsigned int *);
+   unsigned int *, unsigned int *, unsigned int *);
 
 
 // The main function.
@@ -61,6 +61,7 @@ int main(int argc, char * argv[])
   unsigned int l = 2;                                         // PUCS parameter.
   unsigned int max_number_of_calls_of_cost_function = 0;      // 0 for no limit.
   double p = .5;                                              // PUCS parameter.
+  unsigned int k = 10;        // Spec-CMI parameter.
   int i;
   CostFunction * cost_function;
   Solver * solver;
@@ -78,7 +79,7 @@ int main(int argc, char * argv[])
   //
   i = parse_parameters(argc, argv, &file_name, &max_number_of_minima,
       &a_cost_function, &n, &range, &store_visited_subsets, &algorithm,
-      &max_number_of_calls_of_cost_function, &p, &l, &number_of_labels);
+      &max_number_of_calls_of_cost_function, &p, &l, &number_of_labels, &k);
 
   if (i != EXIT_SUCCESS)    // Help or error in parameters
     return EXIT_FAILURE;
@@ -182,14 +183,15 @@ int parse_parameters (int argc, char ** argv, string * file_name,
 	              unsigned int * m, string * c, unsigned int * n,
 	              unsigned int * range, bool * keep_subsets, string * a,
 	              unsigned int * max_number_of_calls_of_cost_function,
-                double * p, unsigned int * l, unsigned int * number_of_labels)
+                  double * p, unsigned int * l, unsigned int * number_of_labels,
+                      unsigned int * number_of_features)
 {
   int i;
   bool error = false;
   string a_line;
   ifstream a_file;
   string disclaimer ("featsel -- a flexible feature selection program.\n\
-Copyright (C) 2016  Marcelo S. Reis.\n\n \
+Copyright (C) 2017  Marcelo S. Reis.\n\n \
 This program comes with ABSOLUTELY NO WARRANTY.\n \
 This is free software, and you are welcome to redistribute it\n \
 under certain conditions; see 'LICENSE.TXT' for details. \n\n \
@@ -365,6 +367,25 @@ https://github.com/msreis/featsel \n\n \
     else if ( (strcmp (argv[i],"-l") == 0) && ((i+1) >= argc) )
     {
       cout << "\nError: parameter '-l' must have a value." << endl;
+      error = true;
+    }
+
+    // -k
+    //
+    else if ( (strcmp (argv[i], "-k") == 0) && ((i+1) < argc) )
+    {
+      if (atoi (argv[++i]) > 0)
+        *number_of_features = atoi (argv[i]);
+      else
+      {
+        cout << "\nError: number of features to be selected should be "
+             << "a positive integer!\n";
+        error = true;
+      }
+    }
+    else if ( (strcmp (argv[i],"-k") == 0) && ((i+1) >= argc) )
+    {
+      cout << "\nError: parameter '-k' must have a value." << endl;
       error = true;
     }
 

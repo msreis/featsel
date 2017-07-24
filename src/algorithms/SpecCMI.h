@@ -52,6 +52,11 @@ private:
   //
   ConditionalMutualInformation * cmi;
 
+  // Number of best-ranked features to be selected in order to compose the
+  // output feature subset.
+  //
+  unsigned int k;
+
   // Symmetric matrix containing the pairwise conditional mutual information,
   // as described in Xuan Vinh et al. (2014).
   //
@@ -78,6 +83,13 @@ public:
   // Default constructor.
   //
   SpecCMI ();
+
+
+  // Constructor that loads the number k of best ranked features that should.
+  // compose the feature subset.
+  //
+  SpecCMI (unsigned int number_of_features);
+
 
   // Default destructor.
   //

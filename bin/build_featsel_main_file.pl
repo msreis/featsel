@@ -130,6 +130,10 @@ while (<IN>)
       {
         printf OUT "    solver = new PUCS (p, l);\n",   
       }
+      elsif ($list_of_algorithm_codes[$index] eq "spec_cmi")
+      {
+        printf OUT "    solver = new SpecCMI (k);\n",   
+      }
       else
       {
         printf OUT "    solver = new %s ();\n", 

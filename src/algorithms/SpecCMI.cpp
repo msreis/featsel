@@ -26,6 +26,17 @@ SpecCMI::SpecCMI ()
   cost_function = NULL;                        // Main cost function.
   cmi = NULL;                                  // Cost function of the Q matrix.
   Q = NULL;
+  k = 10;                          // Starting value at Xuan Vinh et al. (2014).
+}
+
+
+SpecCMI::SpecCMI (unsigned int number_of_features)
+{
+  list_of_visited_subsets = new Collection ();
+  cost_function = NULL;                        // Main cost function.
+  cmi = NULL;                                  // Cost function of the Q matrix.
+  Q = NULL;
+  k = number_of_features;
 }
 
 
@@ -297,22 +308,30 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   }
 
   ElementSubset X ("", set), * Y;
+  unsigned int i = k;
+
+  // map C++ container has its keys ordered by default.
+  //
+  for (it = feature_queue.rbegin (); 
+       (i >= 1) && (it != feature_queue.rend ()); it++)
+  {
+    /* Remove the comment tags to print into STDOUT the chain [\emptyset, X_k],
+       where X_k is the subset with k best-ranked features.
+
+    Y = new ElementSubset ("", set);
+    Y->copy (&X);
+    Y->cost = cost_function->cost (Y);   
+    list_of_minima.push_back (Y); 
+
+    */
+    X.add_element (it->second); 
+    i--;
+  }
 
   Y = new ElementSubset ("", set);
   Y->copy (&X);
   Y->cost = cost_function->cost (Y);   
   list_of_minima.push_back (Y); 
-
-  // map C++ container has its keys ordered by default.
-  //
-  for (it = feature_queue.rbegin (); it != feature_queue.rend (); it++)
-  {
-    X.add_element (it->second);
-    Y = new ElementSubset ("", set);
-    Y->copy (&X);
-    Y->cost = cost_function->cost (Y);   
-    list_of_minima.push_back (Y); 
-  }
 
   delete [] result;
 

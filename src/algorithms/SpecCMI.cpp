@@ -52,6 +52,20 @@ SpecCMI::~SpecCMI ()
   }
 }
 
+
+void SpecCMI::print_Q_matrix ()
+{
+  unsigned int n = set->get_set_cardinality ();
+  std::cout.precision (4);
+  for (unsigned int i = 0; i < n; i++)
+  {
+    for (unsigned int j = 0; j < n; j++)
+      cout << std::scientific << Q[i][j] << " "<< std::fixed;
+    cout << endl;
+  }
+}
+
+
 void SpecCMI::compute_Q_matrix ()
 {
   int index = 0, n = set->get_set_cardinality ();
@@ -291,6 +305,9 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
 
   compute_Q_matrix ();
 
+  if (PRINT_Q_MATRIX)
+    print_Q_matrix ();
+
   // Result contains the rank of each feature. Now we need to, starting by the
   // empty set, include one feature at a time and compute the cost function.
   // The subset with lowest cost in this process will be returned as the
@@ -315,7 +332,7 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   for (it = feature_queue.rbegin (); it != feature_queue.rend (); it++)
   {
     if (PRINT_FEATURE_RANKING)
-      cout << it->second << " : " << it->first << endl;
+      cout << it->second + 1 << " : " << it->first << endl;
 
     if (PRINT_SUBSET_CHAIN)
     {

@@ -40,8 +40,18 @@
 # define EPSILON 0.001
 
 // Maximum number of iterations of the Rayleigh quotient iteration algorithm.
+// IMPORTANT: It seems that the original Xuan Vinh code (2014) indeed iterates
+// only once!
 //
-# define MAX_NUM_ITER 100
+# define MAX_NUM_ITER 1
+
+// If true, print for each feature index its respective ranking.
+//
+# define PRINT_FEATURE_RANKING true
+
+// If true, it prints the Q matrix.
+//
+# define PRINT_Q_MATRIX false
 
 // If true, it stores the chain of best subset between
 // 
@@ -49,9 +59,6 @@
 //
 # define PRINT_SUBSET_CHAIN false
 
-// If true, print for each feature index its respective ranking.
-//
-# define PRINT_FEATURE_RANKING true
 
 class SpecCMI : public Solver
 {
@@ -81,6 +88,10 @@ private:
   // * NULL, if the matrix A is singular.
   //
   double * Gauss_Jordan_elimination (unsigned int n, double ** A);
+
+  // It prints the Q matrix into STDOUT.
+  //
+  void print_Q_matrix (void);
 
   // Execute the Rayleigh quotient iteration algorithm on matrix Q,
   // with precision epsilon, maximum number of iterations max_num_iter and x as 

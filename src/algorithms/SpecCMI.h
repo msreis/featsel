@@ -43,6 +43,16 @@
 //
 # define MAX_NUM_ITER 100
 
+// If true, it stores the chain of best subset between
+// 
+// \emptyset <= X_1 <= \ldots <= X_k, |X_1| = 1, \ldots |X_k| = k.
+//
+# define PRINT_SUBSET_CHAIN false
+
+// If true, print for each feature index its respective ranking.
+//
+# define PRINT_FEATURE_RANKING true
+
 class SpecCMI : public Solver
 {
 

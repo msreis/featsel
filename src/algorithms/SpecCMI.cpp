@@ -312,20 +312,26 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
 
   // map C++ container has its keys ordered by default.
   //
-  for (it = feature_queue.rbegin (); 
-       (i >= 1) && (it != feature_queue.rend ()); it++)
+  for (it = feature_queue.rbegin (); it != feature_queue.rend (); it++)
   {
-    /* Remove the comment tags to print into STDOUT the chain [\emptyset, X_k],
-       where X_k is the subset with k best-ranked features.
+    if (PRINT_FEATURE_RANKING)
+      cout << it->second << " : " << it->first << endl;
 
-    Y = new ElementSubset ("", set);
-    Y->copy (&X);
-    Y->cost = cost_function->cost (Y);   
-    list_of_minima.push_back (Y); 
+    if (PRINT_SUBSET_CHAIN)
+    {
+      /* It prints into STDOUT the chain [\emptyset, X_k],
+         where X_k is the subset with k best-ranked features. */
+      Y = new ElementSubset ("", set);
+      Y->copy (&X);
+      Y->cost = cost_function->cost (Y);   
+      list_of_minima.push_back (Y); 
+    }
 
-    */
-    X.add_element (it->second); 
-    i--;
+    if (i >= 1)
+    {
+      X.add_element (it->second); 
+      i--;
+    }
   }
 
   Y = new ElementSubset ("", set);

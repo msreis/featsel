@@ -32,7 +32,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/octave-4.0.0/octave
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -88,7 +88,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \
 
-LIBS = -lm
+LIBS = -lm -loctave -loctinterp
 
 TARGET =	bin/featsel
 

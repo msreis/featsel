@@ -43,7 +43,7 @@
 // IMPORTANT: It seems that the original Xuan Vinh code (2014) indeed iterates
 // only once!
 //
-# define MAX_NUM_ITER 1
+# define MAX_NUM_ITER 100
 
 // If true, print for each feature index its respective ranking.
 //
@@ -59,6 +59,10 @@
 //
 # define PRINT_SUBSET_CHAIN false
 
+// If true, it uses the GNU Octave to compute the dominant eigenvalue;
+// otherwise it uses a local implementation of the Rayleigh algorithm.
+//
+# define USE_OCTAVE_API true
 
 class SpecCMI : public Solver
 {
@@ -99,6 +103,12 @@ private:
   //
   double * Rayleigh (double epsilon, double mu, double * x);
 
+  // Alternative to the method above, that uses the "eigs" function in GNU
+  // Octave to compute directly the dominant eigenvalue and returns a positive
+  // eigenvector associated to it.
+  //  
+  double * Octave_dominant_eigenvalue (void);
+
 public:
 
   // Default constructor.
@@ -132,6 +142,10 @@ public:
   // Return the value Q[i][j].
   //
   double get_Q_matrix_value (unsigned int i, unsigned int j);
+
+  // It stores 'value' into Q[i][j].
+  //
+  void put_Q_matrix_value (unsigned int i, unsigned int j, double value);
 
 };
 

@@ -19,6 +19,9 @@
 //
 
 # include "SpecCMI.h"
+# include <oct.h>
+# include <builtin-defun-decls.h>
+
 
 SpecCMI::SpecCMI ()
 {
@@ -96,6 +99,12 @@ void SpecCMI::compute_Q_matrix ()
 double SpecCMI::get_Q_matrix_value (unsigned int i, unsigned int j)
 {
   return Q[i][j];
+}
+
+
+void SpecCMI::put_Q_matrix_value (unsigned int i, unsigned int j, double value)
+{
+  Q[i][j] = value;
 }
 
 
@@ -277,6 +286,74 @@ double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
 }
 
 
+double * SpecCMI::Octave_dominant_eigenvalue ()
+{
+  int      n = set->get_set_cardinality ();
+  double err = 0,
+      lambda = DBL_MIN;
+
+  octave_value_list in;     // Input/output lists to exchange data with 
+  octave_value_list out;    // Octave native functions.
+
+  Matrix H = Matrix (n, n);
+  ComplexMatrix X = ComplexMatrix (n, n),
+                D = ComplexMatrix (n, n);
+
+  ColumnVector x = ColumnVector (n);
+
+  for (octave_idx_type i = 0; i < n; i++)
+    for (octave_idx_type j = 0; j < n; j++)
+      H(i,j) = this->Q[i][j];
+
+  // Compute the largest eigenvalue D and its associated eigenvector x.
+  //
+  in(0) = H;
+  
+  // TODO: replace "eig" with "eigs", which gives directly the dominant
+  //       eigenvalue and an associated eigenvector:
+  //
+  // out = Feigs (in, 3); // "3" means that out will receive 3 variables.
+
+  out = Feig (in, 2);  // "2" means that out will receive 2 variables.
+
+  X = out(0).complex_matrix_value ();
+  D = out(1).complex_matrix_value ();
+  // err = out(2).double_value (); // err is only valid for "eigs"!
+  
+  if (err != 0)
+    cout << "Error while computing dominant eigenvalue in Octave\n!";  
+
+  octave_idx_type j = 0;
+  for (octave_idx_type i = 0; i < n; i++)
+  {
+    if ((D(i,i).imag () == 0) && (D(i,i).real () > lambda))
+    {
+      lambda = D(i,i).real ();
+      j = i;
+    }
+  }
+
+  for (octave_idx_type i = 0; i < n; i++)
+    x(i) = (double) X(i,j).real ();  
+
+  // x = x / ||x||.
+  //
+  in(0) = x;
+  out = Fnorm (in, 1); // "1" means that out will receive 1 variable.
+  x = x / out(0).double_value ();
+
+  double * result = new double [n];
+
+  // From Theorem 2 of Xuan Vinh et al. (2014), we know that any dominant 
+  // eigenvector of Q must be sign-consistent, which allows us to use abs.
+  //
+  for (octave_idx_type i = 0; i < n; i++)
+    result[i] = abs (x(i));
+
+  return result;
+}
+
+
 double * SpecCMI::rank_features ()
 {
   compute_Q_matrix ();
@@ -289,8 +366,13 @@ double * SpecCMI::rank_features ()
   double * x = new double [n];
   for (unsigned int i = 0; i < n; i++)
     x[i] =  sqrt (1 / (double) n);
-
-  double * result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
+  
+  double * result;
+  
+  if (USE_OCTAVE_API == true)
+    result = Octave_dominant_eigenvalue ();
+  else
+    result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
 
   delete [] x;
 

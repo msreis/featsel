@@ -76,7 +76,8 @@ void RandomChain::get_minima_list (unsigned int max_size_of_minima_list)
   if (store_visited_subsets)
     list_of_visited_subsets->add_subset (Y);
 
-  clean_list_of_minima (max_size_of_minima_list);
+  if (SORT_AND_CROP_RESULTS == true)
+    clean_list_of_minima (max_size_of_minima_list);
 
   number_of_visited_subsets =
     cost_function->get_number_of_calls_of_cost_function ();

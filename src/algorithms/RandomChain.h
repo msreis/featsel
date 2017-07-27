@@ -26,6 +26,12 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
+
+// Set this to true in order to sort the chain elements by cost in the
+// featsel output.
+//
+#define SORT_AND_CROP_RESULTS false
+
 class RandomChain : public Solver
 {
 

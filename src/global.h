@@ -36,7 +36,7 @@
 
 // Infinity flag for several algorithms and cost functions.
 //
-# define INFINITY_COST FLT_MAX
+# define INFTY DBL_MAX
 
 // Precision of the cost function value that is printed by the main program.
 //

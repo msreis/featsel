@@ -29,7 +29,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/octave-4.0.0/octave
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -101,4 +101,4 @@ clean:
 	rm -f $(TOBJS) $(TEST)
 	find . -type f -name '*.o' -exec rm {} +
 	rm -f input/tmp/*
-	#rm -f output/*
+	rm -f output/*

@@ -2,7 +2,7 @@
 // HammingDistance.cpp -- implementation of the class "HammingDistance".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -39,11 +39,11 @@ HammingDistance * HammingDistance::get_copy ()
 }
 
 
-float HammingDistance::cost (ElementSubset * X)
+double HammingDistance::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  float cost = 0;
+  double cost = 0;
   number_of_calls_of_cost_function++;
 
   //
@@ -65,7 +65,7 @@ float HammingDistance::cost (ElementSubset * X)
   //
 
   gettimeofday (& end, NULL);
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function
   //

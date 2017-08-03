@@ -39,10 +39,6 @@ class MeanConditionalEntropy : public CostFunction
 
 protected:
 
-  // t is the average of all values
-  //
-  int t;
-
   // Total number of samples.
   //
   unsigned int m;
@@ -53,7 +49,7 @@ protected:
 
   // Return the MCE of a given subset X.
   //
-  float calculate_MCE (ElementSubset *);
+  double calculate_MCE (ElementSubset *);
 
   // Compute the distribution of a subset X from W-operator samples,
   // storing them into as subsets of a set S, where |S| = |X|.
@@ -64,7 +60,7 @@ protected:
   // Return the conditional entropy of Y given X = x; the distribution of the
   // samples must be computed before using this function.
   //
-  float calculate_conditional_entropy (unsigned int *, float);
+  double calculate_conditional_entropy (unsigned int *, double);
 
 public:
 
@@ -84,7 +80,7 @@ public:
 
   // Returns the value of c(X), where X is a subset.
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

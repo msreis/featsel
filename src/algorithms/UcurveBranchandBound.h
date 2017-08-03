@@ -46,7 +46,7 @@ public:
 
   // Run the algorithm, getting up to 'max_size_of_minima_list' minima.
   //
-  void get_minima_list(unsigned int);
+  void get_minima_list (unsigned int);
 
 };
 

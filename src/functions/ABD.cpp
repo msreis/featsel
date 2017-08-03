@@ -29,7 +29,7 @@ ABD::ABD (ElementSet * a_set)
 
   if (n > 0)
   {
-    W = new float * [n];
+    W = new double * [n];
 
     F0 = new ElementSubset ("F0", set);
 
@@ -37,7 +37,7 @@ ABD::ABD (ElementSet * a_set)
     {
       // Values of the positive-definite matrix.
       //
-      W[i] = new float [n];
+      W[i] = new double [n];
       for (unsigned int j = 0; j < n; j++)
          W[i][j] = set->get_element (i)->get_element_value (j);
 
@@ -57,7 +57,7 @@ ABD::~ABD ()
   {
     delete F0;
     for (unsigned int i = 0; i < n; i++)
-      delete W[i];
+      delete[] W[i];
     delete [] W;
   }
 }
@@ -69,11 +69,12 @@ ABD * ABD::get_copy ()
   return copy;
 }
 
-float ABD::compute_products (float * F_minus_F0)
+
+double ABD::compute_products (double * F_minus_F0)
 {
   // first_product = (F - F0)^T * W.
   //
-  float * first_product = new float [n];
+  double * first_product = new double [n];
   for (unsigned int j = 0; j < n; j++)    // slide through the columns
   {
     first_product[j] = 0;
@@ -85,7 +86,7 @@ float ABD::compute_products (float * F_minus_F0)
 
   // second_product = first_product * (F - F0).
   //
-  float second_product = 0;
+  double second_product = 0;
   for (unsigned int i = 0; i < n; i++)
     second_product += first_product[i] * F_minus_F0[i];
 
@@ -96,19 +97,19 @@ float ABD::compute_products (float * F_minus_F0)
 
 // c(F) = c_max * (1 - exp (-1/2 * (F - F0)^T * W * (F - F0) ) ). 
 //
-float ABD::cost (ElementSubset * F)
+double ABD::cost (ElementSubset * F)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost = 0;
+  double cost = 0;
 
   number_of_calls_of_cost_function++;
 
   if (set->get_set_cardinality () == 0)
     return cost;
 
-  float * F_minus_F0 = new float [n];
+  double * F_minus_F0 = new double [n];
 
   for (unsigned int i = 0; i < n; i++)
     if (((F0->has_element (i)) && (F->has_element (i))) || 
@@ -122,7 +123,7 @@ float ABD::cost (ElementSubset * F)
   delete F_minus_F0;
 
   gettimeofday (& end, NULL);
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function
   //

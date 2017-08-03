@@ -44,21 +44,21 @@ private:
   //
   list <unsigned int> L;
 
-  // Name of the subset (e.g. X, Y, etc.)
+  // Name of the subset (e.g. X, Y, etc.).
   //
   string name;
 
-  // Pointer to the set that contains this subset
+  // Pointer to the set that contains this subset.
   //
   ElementSet * set;
 
 public:
 
-  // Value of the subset (default zero)
+  // Value of the subset (default zero).
   //
   float cost;
 
-  // Store the number of times a restriction subset is checked in UCS2b
+  // Store the number of times a restriction subset is checked.
   //
   unsigned int j;
 
@@ -86,6 +86,10 @@ public:
   // Copy in this object the data of the object * X.
   //
   void copy (ElementSubset *);
+
+  // Copy the current list of indices to the list pointed by * M.
+  //
+  void copy_list (list <unsigned int> * M);
 
   // Return the cardinality of the set that contains this subset.
   //

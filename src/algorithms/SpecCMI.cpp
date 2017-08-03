@@ -19,6 +19,9 @@
 //
 
 # include "SpecCMI.h"
+# include <oct.h>
+# include <builtin-defun-decls.h>
+
 
 SpecCMI::SpecCMI ()
 {
@@ -26,6 +29,17 @@ SpecCMI::SpecCMI ()
   cost_function = NULL;                        // Main cost function.
   cmi = NULL;                                  // Cost function of the Q matrix.
   Q = NULL;
+  k = 10;                          // Starting value at Xuan Vinh et al. (2014).
+}
+
+
+SpecCMI::SpecCMI (unsigned int number_of_features)
+{
+  list_of_visited_subsets = new Collection ();
+  cost_function = NULL;                        // Main cost function.
+  cmi = NULL;                                  // Cost function of the Q matrix.
+  Q = NULL;
+  k = number_of_features;
 }
 
 
@@ -40,6 +54,20 @@ SpecCMI::~SpecCMI ()
     delete [] Q;
   }
 }
+
+
+void SpecCMI::print_Q_matrix ()
+{
+  unsigned int n = set->get_set_cardinality ();
+  std::cout.precision (4);
+  for (unsigned int i = 0; i < n; i++)
+  {
+    for (unsigned int j = 0; j < n; j++)
+      cout << std::scientific << Q[i][j] << " "<< std::fixed;
+    cout << endl;
+  }
+}
+
 
 void SpecCMI::compute_Q_matrix ()
 {
@@ -71,6 +99,12 @@ void SpecCMI::compute_Q_matrix ()
 double SpecCMI::get_Q_matrix_value (unsigned int i, unsigned int j)
 {
   return Q[i][j];
+}
+
+
+void SpecCMI::put_Q_matrix_value (unsigned int i, unsigned int j, double value)
+{
+  Q[i][j] = value;
 }
 
 
@@ -219,7 +253,7 @@ double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
       for (unsigned int i = 0; i < n; i++)
         x[i] = y[i] / norm_y;
 
-      delete y;
+      delete[] y;
 
       // Compute err = ||(A - sigma * I) * x||.
       //
@@ -244,11 +278,79 @@ double * SpecCMI::Rayleigh (double epsilon, double max_num_iter, double * x_0)
     cout << "Warning: Rayleigh algorithm did not converge!" << endl;
 
   for (unsigned int i = 0; i < n; i++)
-    delete A[i];
+    delete[] A[i];
 
-  delete [] A;
+  delete[] A;
 
   return x;
+}
+
+
+double * SpecCMI::Octave_dominant_eigenvalue ()
+{
+  int      n = set->get_set_cardinality ();
+  double err = 0,
+      lambda = DBL_MIN;
+
+  octave_value_list in;     // Input/output lists to exchange data with 
+  octave_value_list out;    // Octave native functions.
+
+  Matrix H = Matrix (n, n);
+  ComplexMatrix X = ComplexMatrix (n, n),
+                D = ComplexMatrix (n, n);
+
+  ColumnVector x = ColumnVector (n);
+
+  for (octave_idx_type i = 0; i < n; i++)
+    for (octave_idx_type j = 0; j < n; j++)
+      H(i,j) = this->Q[i][j];
+
+  // Compute the largest eigenvalue D and its associated eigenvector x.
+  //
+  in(0) = H;
+  
+  // TODO: replace "eig" with "eigs", which gives directly the dominant
+  //       eigenvalue and an associated eigenvector:
+  //
+  // out = Feigs (in, 3); // "3" means that out will receive 3 variables.
+
+  out = Feig (in, 2);  // "2" means that out will receive 2 variables.
+
+  X = out(0).complex_matrix_value ();
+  D = out(1).complex_matrix_value ();
+  // err = out(2).double_value (); // err is only valid for "eigs"!
+  
+  if (err != 0)
+    cout << "Error while computing dominant eigenvalue in Octave\n!";  
+
+  octave_idx_type j = 0;
+  for (octave_idx_type i = 0; i < n; i++)
+  {
+    if ((D(i,i).imag () == 0) && (D(i,i).real () > lambda))
+    {
+      lambda = D(i,i).real ();
+      j = i;
+    }
+  }
+
+  for (octave_idx_type i = 0; i < n; i++)
+    x(i) = (double) X(i,j).real ();  
+
+  // x = x / ||x||.
+  //
+  in(0) = x;
+  out = Fnorm (in, 1); // "1" means that out will receive 1 variable.
+  x = x / out(0).double_value ();
+
+  double * result = new double [n];
+
+  // From Theorem 2 of Xuan Vinh et al. (2014), we know that any dominant 
+  // eigenvector of Q must be sign-consistent, which allows us to use abs.
+  //
+  for (octave_idx_type i = 0; i < n; i++)
+    result[i] = abs (x(i));
+
+  return result;
 }
 
 
@@ -264,8 +366,13 @@ double * SpecCMI::rank_features ()
   double * x = new double [n];
   for (unsigned int i = 0; i < n; i++)
     x[i] =  sqrt (1 / (double) n);
-
-  double * result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
+  
+  double * result;
+  
+  if (USE_OCTAVE_API == true)
+    result = Octave_dominant_eigenvalue ();
+  else
+    result = Rayleigh ((double) EPSILON, MAX_NUM_ITER, x);
 
   delete [] x;
 
@@ -279,6 +386,9 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   gettimeofday (& begin_program, NULL);
 
   compute_Q_matrix ();
+
+  if (PRINT_Q_MATRIX)
+    print_Q_matrix ();
 
   // Result contains the rank of each feature. Now we need to, starting by the
   // empty set, include one feature at a time and compute the cost function.
@@ -297,22 +407,36 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   }
 
   ElementSubset X ("", set), * Y;
-
-  Y = new ElementSubset ("", set);
-  Y->copy (&X);
-  Y->cost = cost_function->cost (Y);   
-  list_of_minima.push_back (Y); 
+  unsigned int i = k;
 
   // map C++ container has its keys ordered by default.
   //
   for (it = feature_queue.rbegin (); it != feature_queue.rend (); it++)
   {
-    X.add_element (it->second);
-    Y = new ElementSubset ("", set);
-    Y->copy (&X);
-    Y->cost = cost_function->cost (Y);   
-    list_of_minima.push_back (Y); 
+    if (PRINT_FEATURE_RANKING)
+      cout << it->second + 1 << " : " << it->first << endl;
+
+    if (PRINT_SUBSET_CHAIN)
+    {
+      /* It prints into STDOUT the chain [\emptyset, X_k],
+         where X_k is the subset with k best-ranked features. */
+      Y = new ElementSubset ("", set);
+      Y->copy (&X);
+      Y->cost = cost_function->cost (Y);   
+      list_of_minima.push_back (Y); 
+    }
+
+    if (i >= 1)
+    {
+      X.add_element (it->second); 
+      i--;
+    }
   }
+
+  Y = new ElementSubset ("", set);
+  Y->copy (&X);
+  Y->cost = cost_function->cost (Y);   
+  list_of_minima.push_back (Y); 
 
   delete [] result;
 

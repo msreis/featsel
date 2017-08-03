@@ -41,7 +41,7 @@ public:
   // container map; it is implemented as a self-balancing binary search tree
   // (namely a Red-black tree).
   //
-  map<string, ElementSubset *> my_map;
+  map<string, ElementSubset *> subset_collection;
 
   // Default constructor.
   //

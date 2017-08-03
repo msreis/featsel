@@ -45,7 +45,7 @@ private:
 
   // Cost scale, or ideal maximum value of cost.
   //
-  float c_max;
+  double c_max;
 
   // Global minimum of the cost function.
   //
@@ -57,12 +57,12 @@ private:
 
   // Positive-definite weighting matrix (shapping matrix).
   //
-  float ** W;
+  double ** W;
 
   // This method receives the vector (F - F0), computes
   // (F - F0)^T * W * (F - F0) and returns the resulting scalar.
   //
-  float compute_products (float * F_minus_F0);
+  double compute_products (double * F_minus_F0);
 
 public:
 
@@ -83,7 +83,7 @@ public:
 
   // Returns the value of c(F), where F is a subset.
   //
-  float cost (ElementSubset * F);
+  double cost (ElementSubset * F);
 
 };
 

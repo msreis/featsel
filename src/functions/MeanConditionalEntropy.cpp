@@ -3,7 +3,7 @@
 // "MeanConditionalEntropy".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -20,20 +20,11 @@
 //
 
 #include "MeanConditionalEntropy.h"
-#include <cfloat>
-
 
 MeanConditionalEntropy::MeanConditionalEntropy (ElementSet * a_set)
 {
   set = a_set;
-
-  m = t = 0;
-
-  // Penalized Mean Conditional Entropy reads from a .DAT and
-  // is used for W-operator feature selection.
-  //
-  if (! (set->get_set_cardinality() == 0))
-    t = set->get_element (0)->get_number_of_values ();
+  m = 0;
 }
 
 
@@ -49,11 +40,11 @@ MeanConditionalEntropy * MeanConditionalEntropy::get_copy ()
 }
 
 
-float MeanConditionalEntropy::cost (ElementSubset * X)
+double MeanConditionalEntropy::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  float cost = 0;
+  double cost = 0;
   number_of_calls_of_cost_function++;
 
   if (! (X->get_set_cardinality() == 0))
@@ -63,11 +54,11 @@ float MeanConditionalEntropy::cost (ElementSubset * X)
     if (X->get_subset_cardinality() > 0)
       cost = calculate_MCE (X);
     else
-      cost = INFINITY_COST;  // infinity
+      cost = INFTY;  // infinity
   }
 
   gettimeofday (& end, NULL);
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function
   //
@@ -85,9 +76,9 @@ float MeanConditionalEntropy::cost (ElementSubset * X)
 // The following functions are used to get a MCE value:
 //
 
-float MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
+double MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
 {
-  float cost = 0;
+  double cost = 0;
   map <string, unsigned int *>::iterator it;
 
   // Clean m value.
@@ -105,19 +96,19 @@ float MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
   {
     // Pr(X=x) * H(Y|X=x)
     //
-    float Pr_X_is_x = 0;
+    double Pr_X_is_x = 0;
 
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (float) it->second[i] / (float) m;
+      Pr_X_is_x += (double) it->second[i] / (double) m;
 
-    if (Pr_X_is_x > ((float) 1 / m))
+    if (Pr_X_is_x > ((double) 1 / m))
     {
       cost += Pr_X_is_x * calculate_conditional_entropy (it->second, Pr_X_is_x);
     }
     else
       // if X=x has only one occurrence, it is penalized with 1 / t
       //
-      cost += (float) 1 / t;
+      cost += (double) 1 / m;
 
     delete[] it->second;
   }
@@ -128,20 +119,20 @@ float MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
 }
 
 
-float MeanConditionalEntropy::calculate_conditional_entropy
-(unsigned int * x, float Pr_X_is_x)
+double MeanConditionalEntropy::calculate_conditional_entropy
+(unsigned int * x, double Pr_X_is_x)
 {
   unsigned int y;
-  float  Pr_Y_is_y_given_x, H_of_Y_given_x = 0;
+  double  Pr_Y_is_y_given_x, H_of_Y_given_x = 0;
 
   for (y = 0; y < set->get_number_of_labels (); y++)
   {
-    Pr_Y_is_y_given_x = ((float) x[y] / m) / Pr_X_is_x;
+    Pr_Y_is_y_given_x = ((double) x[y] / m) / Pr_X_is_x;
 
     if (Pr_Y_is_y_given_x > 0)
       H_of_Y_given_x -= Pr_Y_is_y_given_x *
       (log (Pr_Y_is_y_given_x) /
-       log ((float) set->get_number_of_labels ()));
+       log ((double) set->get_number_of_labels ()));
   }
 
   return H_of_Y_given_x;

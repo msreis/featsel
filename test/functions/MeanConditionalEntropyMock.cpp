@@ -3,7 +3,7 @@
 // "MeanConditionalEntropyMock".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
-    delete it->second;
+    delete[] it->second;
   }
   samples.clear ();
 
@@ -77,7 +77,8 @@ string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
     printed_samples.append (it->first);
     printed_samples.append (": ");
     value <<  (int) it->second[0] + it->second[1];
-    delete it->second;
+    delete[] it->second;
+    it->second = NULL;
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
@@ -95,18 +96,20 @@ string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
   string printed_samples ("");
   std::ostringstream value;
 
+  m = 0;
+
   calculate_distributions_from_the_samples (X);
 
   for (it = samples.begin (); it != samples.end (); it++)
   {
-    float Pr_X_is_x = 0;
+    double Pr_X_is_x = 0;
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (float) it->second[i] / (float) m;
+      Pr_X_is_x += (double) it->second[i] / (double) m;
 
     printed_samples.append (it->first);
     printed_samples.append (": ");
     value <<  calculate_conditional_entropy (it->second, Pr_X_is_x);
-    delete it->second;
+    delete[] it->second;
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");

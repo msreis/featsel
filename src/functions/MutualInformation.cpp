@@ -42,11 +42,11 @@ MutualInformation * MutualInformation::get_copy ()
   return new MutualInformation (this->set);
 }
 
-float MutualInformation::cost (ElementSubset * X)
+double MutualInformation::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
-  float cost = INFINITY_COST;
+  double cost = INFTY;
 
   number_of_calls_of_cost_function++;
 
@@ -58,11 +58,11 @@ float MutualInformation::cost (ElementSubset * X)
     if (X->get_subset_cardinality() > 0)
       cost = calculate_MI (X);
     else
-      cost = INFINITY_COST;
+      cost = INFTY;
   }
 
   gettimeofday (& end, NULL);
-  elapsed_time_of_all_calls_of_the_cost_function += diff_us (end, begin);
+  elapsed_time_of_cost_function_calls += diff_us (end, begin);
 
   // Threshold is a maximum number of calls of the cost function
   //
@@ -75,9 +75,9 @@ float MutualInformation::cost (ElementSubset * X)
 }
 
 
-float MutualInformation::calculate_MI (ElementSubset * X)
+double MutualInformation::calculate_MI (ElementSubset * X)
 {
-  float MCE = 0, 
+  double MCE = 0, 
         H_Y = 0;
   map <string, unsigned int *>::iterator it;
 
@@ -95,10 +95,10 @@ float MutualInformation::calculate_MI (ElementSubset * X)
   {
     // H(Y) -= Pr(Y=y) * log (Pr(Y = y))
     //
-    float Pr_Y_is_y = (float) freq_Y[i] / (float) m;
+    double Pr_Y_is_y = (double) freq_Y[i] / (double) m;
 
     H_Y -=  Pr_Y_is_y * (log (Pr_Y_is_y) /
-                        log ((float) set->get_number_of_labels ()));
+                        log ((double) set->get_number_of_labels ()));
   }
 
   delete [] freq_Y;
@@ -110,9 +110,9 @@ float MutualInformation::calculate_MI (ElementSubset * X)
   {
     // E[H(Y|X)] = - \sum_{x in X} Pr(X=x) * H(Y|X=x)
     //
-    float Pr_X_is_x = 0;
+    double Pr_X_is_x = 0;
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (float) it->second[i] / (float) m;
+      Pr_X_is_x += (double) it->second[i] / (double) m;
     
     MCE -= calculate_conditional_entropy (it->second, Pr_X_is_x);
   }
@@ -122,25 +122,25 @@ float MutualInformation::calculate_MI (ElementSubset * X)
 
   samples.clear ();
 
-  return (float) MCE - H_Y;   // I(X;Y) = H(Y)-H(Y|X) => - I(X;Y) = H(Y|X)-H(Y)
+  return (double) MCE - H_Y;   // I(X;Y) = H(Y)-H(Y|X) => - I(X;Y) = H(Y|X)-H(Y)
 }
 
 
-float MutualInformation::calculate_conditional_entropy
-(unsigned int * x, float Pr_X_is_x)
+double MutualInformation::calculate_conditional_entropy
+(unsigned int * x, double Pr_X_is_x)
 {
   unsigned int y;
-  float  Pr_Y_is_y_given_x,
+  double  Pr_Y_is_y_given_x,
          H_of_Y_given_x = 0;
 
   for (y = 0; y < set->get_number_of_labels (); y++)
   {
-    Pr_Y_is_y_given_x = ((float) x[y] / m) / Pr_X_is_x;
+    Pr_Y_is_y_given_x = ((double) x[y] / m) / Pr_X_is_x;
 
     if (Pr_Y_is_y_given_x > 0)
       H_of_Y_given_x += Pr_Y_is_y_given_x *
       (log (Pr_Y_is_y_given_x) /
-       log ((float) set->get_number_of_labels ()));
+       log ((double) set->get_number_of_labels ()));
   }
 
   return Pr_X_is_x * H_of_Y_given_x;

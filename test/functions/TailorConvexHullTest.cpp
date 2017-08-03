@@ -87,7 +87,7 @@ namespace TailorConvexHullTest
     ElementSet set3 ("set", "input/tailor/Test_07_A.xml");
     TailorConvexHull c1 (& set1), c2 (& set2), c3 (& set3);
     ElementSubset X ("", & set1), Y ("", & set2), Z ("", & set3);
-    float cost;
+    double cost;
 
     // Testing c1:
     //
@@ -132,7 +132,7 @@ namespace TailorConvexHullTest
 
     X.set_complete_subset ();               // 111
     cost = c1.cost (& X);
-    if (cost != FLT_MAX)                    // cost = infinity
+    if (cost != INFTY)                      // cost = infinity
       return false;
 
     // Testing c2:
@@ -149,7 +149,7 @@ namespace TailorConvexHullTest
 
     Y.add_element (1);                      // 110
     cost = c2.cost (& Y);
-    if (cost != FLT_MAX)                    // cost = infinity
+    if (cost != INFTY)                      // cost = infinity
       return false;
 
     Y.remove_element (1);
@@ -160,7 +160,7 @@ namespace TailorConvexHullTest
 
     Y.set_complete_subset ();               // 111
     cost = c2.cost (& Y);
-    if (cost != FLT_MAX)                    // cost = infinity
+    if (cost != INFTY)                      // cost = infinity
       return false;
 
     // Testing c3:
@@ -187,7 +187,7 @@ namespace TailorConvexHullTest
 
     Z.add_element (5);                      // 1000111
     cost = c3.cost (& Z);
-    if (cost != FLT_MAX)                    // cost = infinity
+    if (cost != INFTY)                      // cost = infinity
       return false;
 
     return true;

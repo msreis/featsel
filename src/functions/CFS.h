@@ -45,19 +45,49 @@ private:
   //
   double ** correlation;
 
+  // Array containing the entropy of either a single feature or the label;
+  //
+  double * H;
+
   // Number of features.
   //
   unsigned int n;
+
+  // Maximum value among all features.
+  //
+  unsigned int max_feature_value;
 
   // Number of rows in the DAT file.
   //
   unsigned int number_of_rows;
 
-  // It computes H(X_i), H(X_j) and H(X_i,X_j), where X_j may be either a
-  // feature or a label Y.
+  // Auxiliary array to generate contigency tables.
   //
-  void compute_entropies
-  (unsigned int i, unsigned int j, double *H_X1, double *H_X2, double *H_X1_X2);  
+  double * Pr_X;
+
+  // Auxiliary array to generate contigency tables.
+  //
+  double ** Pr_X1_X2;
+
+  // Auxiliary array to generate contigency tables.
+  //
+  double ** Pr_X1_Y;
+
+  // Auxiliary array to generate contigency tables.
+  //
+  double * Pr_Y;
+
+  // Auxiliary function to compute one term of a given entropy.
+  //
+  double compute_entropy_term (double x);
+
+  // It computes H(X_i), where X_i may be either a feature or a label Y.
+  //
+  double compute_entropy (unsigned int i);  
+
+  // It computes H(X_i,X_j), where X_j may be either a feature or a label Y.
+  //
+  double compute_joint_entropy (unsigned int i, unsigned int j);  
 
   // Computes the symmetrical uncertainity (SU) as a measure of correlation
   // between two features or between a feature and a class. It is given by: 
@@ -83,7 +113,6 @@ private:
   //
   double evaluateSubset (ElementSubset * X);
   
-
 public:
 
   // Default constructor.
@@ -105,7 +134,7 @@ public:
   //
   // CFS(X) = 2 * ((H(X) + H(Y) - H(X,Y)) / (H(X) + H(Y))).
   //
-  float cost (ElementSubset *);
+  double cost (ElementSubset *);
 
 };
 

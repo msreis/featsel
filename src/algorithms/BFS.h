@@ -36,9 +36,13 @@
 
 #include <set>
 
+#define HASH_CACHE_SIZE 80               // This value must be the same as 
+                                         // parameter "-S" in Weka, in order
+                                         // to compare the performance of both.
+
 #define MAXIMUM_NUMBER_OF_EXPANSIONS 5   // Same default value in Weka.
 
-#define ACCURACY 0.00001                 // Same default value in Weka. 
+#define ACCURACY 0.00001                 // Same default value in Weka.
 
 class BFS : public Solver
 {
@@ -54,16 +58,6 @@ private:
   //
   float epsilon;
 
-  // Structure that stores a priority queue comparison function.
-  //
-  struct comp_function
-  {
-    bool operator () (const ElementSubset * X, const ElementSubset * Y)
-    {
-      return (X->cost < Y->cost);
-    }
-  };
-
   // Structure to store a simple queue.
   //
   typedef struct Queue
@@ -73,6 +67,8 @@ private:
     unsigned int maximum_size;
 
     unsigned int current_size;
+
+    unsigned int best_index;
 
   } Queue;
 

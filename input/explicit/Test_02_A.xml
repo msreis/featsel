@@ -3,12 +3,8 @@
   <SetName> Test_explicit_function_B </SetName>
   <MaxNumberOfElementValues> 1 </MaxNumberOfElementValues>
   <NumberOfElements> 2 </NumberOfElements>
-  <Element><name>x01</name>
-    <value>1</value>
-  </Element><Element>
-    <name>x02</name>
-    <value>2</value>
-  </Element>  
+  <Element><name>x01</name><value>1</value></Element>
+  <Element><name>x02</name><value>2</value></Element>  
   <Cost>
     <name>_00</name>
     <value>0.77</value>

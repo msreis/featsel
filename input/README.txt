@@ -17,7 +17,16 @@ Gisette           - Converted in .DAT instances from:
 
 hamming_distance  - Examples of the Hamming distance cost function.
 
+Madelon           - Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/Madelon
+
+Musk2             - Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/Musk+(Version+2)
+
 mce               - Examples of the MeanConditionalEntropy cost function.
+
+Optdigits         - Converted in .DAT instances from:
+                    http://archive.ics.uci.edu/ml/datasets/optical+recognition+of+handwritten+digits
 
 parsers           - Instances to test the DAT and XML parsers.
 
@@ -31,6 +40,9 @@ subset_sum        - Examples of the SubsetSum cost function.
 tailor            - Examples of the TailorConvexHull cost function.
 
 tmp               - Directory used to store temporary instances.
+
+Waveform          - Converted in .DAT instances from:
+                    http://archive.ics.uci.edu/ml/datasets/waveform+database+generator+%28version+1%29
 
 Zoo               - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Zoo

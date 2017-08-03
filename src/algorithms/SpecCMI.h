@@ -40,8 +40,29 @@
 # define EPSILON 0.001
 
 // Maximum number of iterations of the Rayleigh quotient iteration algorithm.
+// IMPORTANT: It seems that the original Xuan Vinh code (2014) indeed iterates
+// only once!
 //
 # define MAX_NUM_ITER 100
+
+// If true, print for each feature index its respective ranking.
+//
+# define PRINT_FEATURE_RANKING true
+
+// If true, it prints the Q matrix.
+//
+# define PRINT_Q_MATRIX false
+
+// If true, it stores the chain of best subset between
+// 
+// \emptyset <= X_1 <= \ldots <= X_k, |X_1| = 1, \ldots |X_k| = k.
+//
+# define PRINT_SUBSET_CHAIN false
+
+// If true, it uses the GNU Octave to compute the dominant eigenvalue;
+// otherwise it uses a local implementation of the Rayleigh algorithm.
+//
+# define USE_OCTAVE_API true
 
 class SpecCMI : public Solver
 {
@@ -51,6 +72,11 @@ private:
   // Cost function employed to build the Hessian Q matrix.
   //
   ConditionalMutualInformation * cmi;
+
+  // Number of best-ranked features to be selected in order to compose the
+  // output feature subset.
+  //
+  unsigned int k;
 
   // Symmetric matrix containing the pairwise conditional mutual information,
   // as described in Xuan Vinh et al. (2014).
@@ -67,17 +93,34 @@ private:
   //
   double * Gauss_Jordan_elimination (unsigned int n, double ** A);
 
+  // It prints the Q matrix into STDOUT.
+  //
+  void print_Q_matrix (void);
+
   // Execute the Rayleigh quotient iteration algorithm on matrix Q,
   // with precision epsilon, maximum number of iterations max_num_iter and x as 
   // initial guess for a dominant eigenvector.
   //
   double * Rayleigh (double epsilon, double mu, double * x);
 
+  // Alternative to the method above, that uses the "eigs" function in GNU
+  // Octave to compute directly the dominant eigenvalue and returns a positive
+  // eigenvector associated to it.
+  //  
+  double * Octave_dominant_eigenvalue (void);
+
 public:
 
   // Default constructor.
   //
   SpecCMI ();
+
+
+  // Constructor that loads the number k of best ranked features that should.
+  // compose the feature subset.
+  //
+  SpecCMI (unsigned int number_of_features);
+
 
   // Default destructor.
   //
@@ -99,6 +142,10 @@ public:
   // Return the value Q[i][j].
   //
   double get_Q_matrix_value (unsigned int i, unsigned int j);
+
+  // It stores 'value' into Q[i][j].
+  //
+  void put_Q_matrix_value (unsigned int i, unsigned int j, double value);
 
 };
 

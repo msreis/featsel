@@ -3,7 +3,7 @@
                  sfs SFS
                 sffs SFFS
                  ucs UCurveSearch
-		pucs PUCS
+                pucs PUCS
             spec_cmi SpecCMI
                   rc RandomChain
                 sbfs SBFS

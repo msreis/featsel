@@ -23,15 +23,15 @@
 
 PartCost::PartCost (CostFunction * c_f, PartitionNode * p)
 {
-  orig_cost_f = c_f->get_copy ();
+  orig_cost_f = c_f;
   partition = p;
 }
 
 
 PartCost * PartCost::get_copy () 
 {
-    PartCost * copy = new PartCost (orig_cost_f, partition);
-    return copy;
+  PartCost * copy = new PartCost (orig_cost_f, partition);
+  return copy;
 }
 
 

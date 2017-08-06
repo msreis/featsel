@@ -104,12 +104,12 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
       p_subset = cand_part->get_random_zero_evaluated_element ();
     }
     
-  // t.d.
+    // t.d.
     gettimeofday (& end_walk, NULL);
     //time_walking = diff_us (end_walk, begin_program);
     #pragma omp taskwait
      
-  // t.f.
+    // t.f.
     gettimeofday (& end_wait, NULL);
     //time_waiting = diff_us (end_wait, end_walk);
     

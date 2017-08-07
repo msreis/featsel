@@ -30,7 +30,7 @@ PUCS::PUCS ()
   cand_part = NULL;
   partition = NULL;
   this->p = 0;  // set later
-  this->l = 2;
+  this->l = 1;
 }
 
 PUCS::PUCS (float p, unsigned int l)

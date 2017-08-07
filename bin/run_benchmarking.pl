@@ -56,7 +56,11 @@ use ABD;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('SFS', 'UCS');
+my @LIST_OF_ALGORITHMS = (
+  # 'ES',
+   'SFS', 'SFFS', 
+   'PUCS', 'BFS'
+   );
 
 
 # Constant that works as an upper bound limit for cost function values.
@@ -137,8 +141,7 @@ my $number_of_instances_per_size = 1;
 my $maximum_instance_size = 1;
 
 
-# Search mode:
-#
+# Search mode1#
 # 0: complete search (may be optimal or not, depending on the algorithm) 
 #
 # 1: search constrained by a given number of cost function calls
@@ -454,7 +457,7 @@ my $MAX_ELEM_VALUE = 100000;   # Maximum value of an element of S.
 
 if ($instance_mode == 0)
 {
-  foreach my $i (1..$maximum_instance_size)    
+  foreach my $i (30..$maximum_instance_size)    
   {
     # Create files (either .dat or .xml) containing random instances.
     #
@@ -534,8 +537,8 @@ closedir $dh;
 my %experiment;
 
 
-(scalar(@instance_file) >= $number_of_instances_per_size*$maximum_instance_size)
-  or die "Insufficient number of instance files stored in '$INPUT_DIR'!\n\n";
+#(scalar(@instance_file) >= $number_of_instances_per_size * $maximum_instance_size)
+  #or die "Insufficient number of instance files stored in '$INPUT_DIR'!\n\n";
 
 foreach my $file (sort @instance_file)
 {
@@ -568,7 +571,7 @@ my $MAX_TIME_VALUE = 0;
 print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
-foreach my $i (1..$maximum_instance_size)    
+foreach my $i (30..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 
@@ -626,49 +629,77 @@ foreach my $i (1..$maximum_instance_size)
     {
       my ($t0, $t1);
       my $current_algorithm = lc $algorithms[$j];
-
-      $t0 = [gettimeofday];
-      system ("$FEATSEL_BIN -n $i -a $current_algorithm " . 
+      #print $current_algorithm;
+    
+      if ($current_algorithm eq "es" && $i > 22)
+      {
+        $average_time_of_algorithm[$j] -= 1.0;  
+        push @{$time_of_algorithm[$j]}, -1.0;
+      }
+      else
+      {
+        $t0 = [gettimeofday];
+        system ("$FEATSEL_BIN -n $i -a $current_algorithm " . 
               "-l $NUMBER_OF_LABELS " .
               "-c $cost_function -f $INPUT_DIR/" . $experiment{$i}->[$k-1]  . 
               $max_number_of_calls . " > $LOG_FILE");
-      $t1 = [gettimeofday];
+        $t1 = [gettimeofday];
 
-      $average_time_of_algorithm[$j] += tv_interval ($t0, $t1);
-      push @{$time_of_algorithm[$j]}, tv_interval ($t0, $t1);
-
-      open (LOG, $LOG_FILE);
-      while (<LOG>)
-      {
-        if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
+        $average_time_of_algorithm[$j] += tv_interval ($t0, $t1);
+        push @{$time_of_algorithm[$j]}, tv_interval ($t0, $t1);
+        $minimum_of_algorithms[$j] = -1.0;
+        open (LOG, $LOG_FILE);
+        while (<LOG>)
         {
-          $minimum_of_algorithms[$j] = $2;
+          if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
+          {
+            $minimum_of_algorithms[$j] = $2;
+          }
+          elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
+          { 
+            if ($current_algorithm eq "es" && $i > 22)
+            {
+              $average_calls_of_cost_function[$j] += 0;
+              push @{$calls_of_cost_function[$j]}, 0;
+            }
+            else 
+            {
+              $average_calls_of_cost_function[$j] += $1;
+              push @{$calls_of_cost_function[$j]}, $1;
+            }
+          }
+          elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
+          {
+            $average_time_of_cost_function[$j] += $1;
+            push @{$time_of_cost_function[$j]}, $1;
+          }
         }
-        elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
-        { 
-          $average_calls_of_cost_function[$j] += $1;
-          push @{$calls_of_cost_function[$j]}, $1;
-        }
-        elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
+        close(LOG);
+        if ($minimum_of_algorithms[$j] == -1.0)
         {
-          $average_time_of_cost_function[$j] += $1;
-          push @{$time_of_cost_function[$j]}, $1;
+          die "Algorithm $current_algorithm failed execution\n";
+        }
+        if ($best_solution > $minimum_of_algorithms[$j])
+        {
+          $best_solution = $minimum_of_algorithms[$j];
         }
       }
-      close(LOG);
 
-      if ($best_solution > $minimum_of_algorithms[$j])
-      {
-        $best_solution = $minimum_of_algorithms[$j];
-      }
+
 
     } # for (my $j = 0; $j < $number_of_algorithms; $j++)
       
     for (my $j = 0; $j < $number_of_algorithms; $j++)
     {
+
+      my $current_algorithm = lc $algorithms[$j];
+    
       if ($minimum_of_algorithms[$j] == $best_solution)
       {
- 	      $number_of_times_that_has_a_best_solution[$j]++;
+        if (!($current_algorithm eq "es" && $i > 22))
+        {
+ 	        $number_of_times_that_has_a_best_solution[$j]++;
+        }
       }
     }
       
@@ -859,7 +890,7 @@ sub print_time_graphs
   {
     open (DATA, ">$GNUPLOT_DATA_FILE");
 
-    for (my $i = 1; $i <= $maximum_instance_size; $i++)
+    for (my $i = 30; $i <= $maximum_instance_size; $i++)
     {
       printf DATA "$i %.4f %.4f\n", $cost_function_calls{$algo}->[$i],
                                     $total_time{$algo}->[$i];

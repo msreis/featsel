@@ -1,8 +1,8 @@
 //
-// UCurveSearch.h -- definition of the namespace "UCurveSearch".
+// UCSRTest.h -- definition of the namespace "UCSRTest".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2016 Gustavo Estrela
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,29 +18,23 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef UCURVE_SEARCH_TEST_H_
-#define UCURVE_SEARCH_TEST_H_
+#ifndef UCSR_TEST_H_
+#define UCSR_TEST_H_
 
-#include "../../src/algorithms/UCurveSearch.h"
+#include "../../src/algorithms/UCSR.h"
 #include "../../src/functions/SubsetSum.h"
 #include "../../src/functions/HammingDistance.h"
 #include "../../src/functions/Explicit.h"
 
-namespace UCurveSearchTest
+namespace UCSRTest
 {
-  bool a_lattice_with_constant_cost_should_be_totally_exausted ();
-
   bool it_should_find_a_global_minimum ();
 
   bool it_should_converge_for_large_hamming_sets ();
 
   bool it_should_converge_for_large_subset_sum_sets ();
 
-  bool it_should_store_all_the_visited_subsets ();
-
-  bool it_should_give_the_number_of_the_visited_subsets ();
-
   bool it_should_always_give_the_correct_answer ();
 }
 
-#endif /* UCURVE_SEARCH_TEST_H_ */
+#endif /* UCSR_TEST_H_ */

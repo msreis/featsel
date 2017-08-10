@@ -59,7 +59,7 @@
 #include "algorithms/SBFS.h"
 #include "algorithms/SBS.h"
 #include "algorithms/BFS.h"
-
+#include "algorithms/UCSR.h"
 
 // Function to parse and verify the correctness of the parameters.
 // It returns '0' if all the parameters were correct, '1' if there was an error,
@@ -131,6 +131,8 @@ int main(int argc, char * argv[])
     solver = new SFFS ();
   else if (algorithm.compare ("ucs") == 0)
     solver = new UCurveSearch ();
+  else if (algorithm.compare ("ucsr") == 0)
+    solver = new UCSR ();
   else if (algorithm.compare ("spec_cmi") == 0)
     solver = new SpecCMI (k);
   else if (algorithm.compare ("rc") == 0)
@@ -342,7 +344,7 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
     else if ( (strcmp (argv[i],"-c") == 0) && ((i+1) < argc) )
     {
       i++;
-      if ( (0) 
+      if ( (0)
           || (strcmp (argv[i], "explicit") == 0)
           || (strcmp (argv[i], "mce") == 0)
           || (strcmp (argv[i], "hamming_distance") == 0)
@@ -375,7 +377,8 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
     else if ( (strcmp(argv[i],"-a") == 0) && ((i+1) < argc) )
     {
       i++;
-      if ( (0)  
+      if ( (0)
+          || (strcmp (argv[i], "ucsr") == 0)
           || (strcmp (argv[i], "ubb") == 0)
           || (strcmp (argv[i], "es") == 0)
           || (strcmp (argv[i], "sfs") == 0)

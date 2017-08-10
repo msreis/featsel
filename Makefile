@@ -60,6 +60,7 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/Collection.o src/Solver.o src/CostFunction.o \
       src/algorithms/UCurveToolBox.o \
       src/algorithms/UCSRToolBox.o \
+      src/algorithms/UCSR.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/ROBDDTest.o test/PartitionTest.o \
@@ -85,6 +86,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/algorithms/SBFSTest.o \
       test/algorithms/SBSTest.o \
       test/algorithms/BFSTest.o \
+      test/algorithms/UCSRTest.o \
       test/ElementSubsetTest.o test/CollectionTest.o \
       test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \

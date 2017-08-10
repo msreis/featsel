@@ -51,6 +51,8 @@ namespace UCSRToolBox
         {
             X = select_ul_unvisited_adjacent (R, Y, direction);
             visit_adjacent (R, L, &Y, X, direction, c, &upper_greater, &lower_greater);
+            if (c->has_reached_threshold ())
+                return;
             direction = 1 - direction;
         }
 

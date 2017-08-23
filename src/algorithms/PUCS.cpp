@@ -83,9 +83,14 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   gettimeofday (& begin_program, NULL);
 
   if (p == 0)
-    p = 15.0 / set->get_set_cardinality ();
+    p = 3.0 / set->get_set_cardinality ();
   if (p > .5)
     p = .5;
+
+  cout << "p  = " << p << endl;
+  cout << "l  = " << l << endl;
+  return;
+
   this->max_size_of_minima_list = max_size_of_minima_list;
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list)
@@ -229,8 +234,9 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   else
   {
     Collection * visited_subsets;
-    if (p_elm_set->get_set_cardinality () <= SFS_CUTOFF ||
-        l <= 1)
+    if (p_elm_set->get_set_cardinality () <= ES_CUTOFF)
+        sub_solver = new ExhaustiveSearch ();
+    else if (l <= 1)
       sub_solver = new SFS ();
     else
       sub_solver = new PUCS (p, l - 1);

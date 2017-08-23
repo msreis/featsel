@@ -35,9 +35,10 @@
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
 #include "SFS.h"
+#include "ExhaustiveSearch.h"
 #include <omp.h>
 
-#define SFS_CUTOFF 10
+#define ES_CUTOFF 5
 
 class PUCS : public Solver
 {

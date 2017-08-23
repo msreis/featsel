@@ -43,19 +43,16 @@ protected:
   //
   unsigned int m;
 
-  // Samples for a W-operator feature selection.
-  //
-  map <string, unsigned int *> samples;
-
   // Return the MCE of a given subset X.
   //
-  double calculate_MCE (ElementSubset *);
+  double calculate_MCE (ElementSubset *, map<string, unsigned int *> *);
 
   // Compute the distribution of a subset X from W-operator samples,
   // storing them into as subsets of a set S, where |S| = |X|.
   // |X| must be greater than zero.
   //
-  void calculate_distributions_from_the_samples (ElementSubset *);
+  void calculate_distributions_from_the_samples (ElementSubset *, 
+          map<string, unsigned int *> *);
 
   // Return the conditional entropy of Y given X = x; the distribution of the
   // samples must be computed before using this function.

@@ -321,8 +321,12 @@ https://github.com/msreis/featsel \n\n \
           if (i + 2 < argc) {
             if (argv[i + 1][0] != '-')
               *p = atof (argv[++i]);
+            else 
+              *p = 0;
             if (argv[i + 1][0] != '-')
               *l = atoi (argv[++i]);
+            else
+              *l = 1;
           }
           else {
             *l = 1;

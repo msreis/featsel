@@ -2,6 +2,7 @@
                   es ExhaustiveSearch
                  sfs SFS
                 sffs SFFS
+            spec_cmi SpecCMI
                  ucs UCurveSearch
                 pucs PUCS
                   rc RandomChain

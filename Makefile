@@ -32,7 +32,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/octave-4.0.0/octave
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
@@ -53,13 +53,13 @@ OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/algorithms/SFFS.o \
       src/algorithms/UCurveSearch.o \
 	  src/algorithms/PUCS.o \
-      src/algorithms/SpecCMI.o \
       src/algorithms/RandomChain.o \
       src/algorithms/SBFS.o \
       src/algorithms/SBS.o \
       src/algorithms/BFS.o \
       src/Collection.o src/Solver.o src/CostFunction.o \
       src/algorithms/UCurveToolBox.o \
+      # src/algorithms/SpecCMI.o \
 
 TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/ROBDDTest.o test/PartitionTest.o \
@@ -81,7 +81,6 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/algorithms/SFFSTest.o \
       test/algorithms/UCurveSearchTest.o \
 	  test/algorithms/PUCSTest.o \
-      test/algorithms/SpecCMITest.o \
       test/algorithms/RandomChainTest.o \
       test/algorithms/SBFSTest.o \
       test/algorithms/SBSTest.o \
@@ -89,8 +88,9 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/ElementSubsetTest.o test/CollectionTest.o \
       test/functions/MeanConditionalEntropyMock.o \
       test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \
+      # test/algorithms/SpecCMITest.o \
 
-LIBS = -lm -loctave -loctinterp
+LIBS = -lm
 
 TARGET =	bin/featsel
 

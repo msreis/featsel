@@ -55,7 +55,6 @@
 #include "algorithms/SFFS.h"
 #include "algorithms/UCurveSearch.h"
 #include "algorithms/PUCS.h"
-#include "algorithms/SpecCMI.h"
 #include "algorithms/RandomChain.h"
 #include "algorithms/SBFS.h"
 #include "algorithms/SBS.h"
@@ -80,9 +79,9 @@ int main(int argc, char * argv[])
   unsigned int n = 3;
   unsigned int range = 1000;
   unsigned int number_of_labels = 2;
-  unsigned int l = 2;                                         // PUCS parameter.
+  unsigned int l = 1;                                         // PUCS parameter.
   unsigned int max_number_of_calls_of_cost_function = 0;      // 0 for no limit.
-  double p = .5;                                              // PUCS parameter.
+  double p = 0;                                               // PUCS parameter.
   unsigned int k = 10;        // Spec-CMI parameter.
   int i;
   CostFunction * cost_function;
@@ -138,8 +137,6 @@ int main(int argc, char * argv[])
     solver = new UCurveSearch ();
   else if (algorithm.compare ("pucs") == 0)
     solver = new PUCS (p, l);
-  else if (algorithm.compare ("spec_cmi") == 0)
-    solver = new SpecCMI (k);
   else if (algorithm.compare ("rc") == 0)
     solver = new RandomChain ();
   else if (algorithm.compare ("sbfs") == 0)
@@ -388,7 +385,6 @@ https://github.com/msreis/featsel \n\n \
           || (strcmp (argv[i], "sffs") == 0)
           || (strcmp (argv[i], "ucs") == 0)
           || (strcmp (argv[i], "pucs") == 0)
-          || (strcmp (argv[i], "spec_cmi") == 0)
           || (strcmp (argv[i], "rc") == 0)
           || (strcmp (argv[i], "sbfs") == 0)
           || (strcmp (argv[i], "sbs") == 0)
@@ -402,7 +398,7 @@ https://github.com/msreis/featsel \n\n \
           if (i + 2 < argc) {
             if (argv[i + 1][0] != '-')
               *p = atof (argv[++i]);
-            else 
+            else
               *p = 0;
             if (argv[i + 1][0] != '-')
               *l = atoi (argv[++i]);

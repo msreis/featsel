@@ -57,7 +57,7 @@ use ABD;
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
 my @LIST_OF_ALGORITHMS = (
-  # 'ES',
+    # 'ES',
    'SFS', 'SFFS', 
    'PUCS', 'BFS'
    );
@@ -457,7 +457,7 @@ my $MAX_ELEM_VALUE = 100000;   # Maximum value of an element of S.
 
 if ($instance_mode == 0)
 {
-  foreach my $i (30..$maximum_instance_size)    
+  foreach my $i (200..$maximum_instance_size)    
   {
     # Create files (either .dat or .xml) containing random instances.
     #
@@ -571,7 +571,7 @@ my $MAX_TIME_VALUE = 0;
 print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
-foreach my $i (30..$maximum_instance_size)    
+foreach my $i (200..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 
@@ -629,12 +629,16 @@ foreach my $i (30..$maximum_instance_size)
     {
       my ($t0, $t1);
       my $current_algorithm = lc $algorithms[$j];
-      #print $current_algorithm;
     
-      if ($current_algorithm eq "es" && $i > 22)
+      if ($current_algorithm eq "es" && $i > 25)
       {
         $average_time_of_algorithm[$j] -= 1.0;  
         push @{$time_of_algorithm[$j]}, -1.0;
+        $minimum_of_algorithms[$j] = -1;
+        $average_calls_of_cost_function[$j] -= 1.0;
+        push @{$calls_of_cost_function[$j]}, -1.0;
+        $average_time_of_cost_function[$j] -= 1.0;
+        push @{$time_of_cost_function[$j]}, -1.0;
       }
       else
       {
@@ -657,16 +661,8 @@ foreach my $i (30..$maximum_instance_size)
           }
           elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
           { 
-            if ($current_algorithm eq "es" && $i > 22)
-            {
-              $average_calls_of_cost_function[$j] += 0;
-              push @{$calls_of_cost_function[$j]}, 0;
-            }
-            else 
-            {
-              $average_calls_of_cost_function[$j] += $1;
-              push @{$calls_of_cost_function[$j]}, $1;
-            }
+            $average_calls_of_cost_function[$j] += $1;
+            push @{$calls_of_cost_function[$j]}, $1;
           }
           elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
           {
@@ -679,26 +675,25 @@ foreach my $i (30..$maximum_instance_size)
         {
           die "Algorithm $current_algorithm failed execution\n";
         }
+
         if ($best_solution > $minimum_of_algorithms[$j])
         {
           $best_solution = $minimum_of_algorithms[$j];
         }
       }
-
+      
 
 
     } # for (my $j = 0; $j < $number_of_algorithms; $j++)
       
     for (my $j = 0; $j < $number_of_algorithms; $j++)
     {
-
       my $current_algorithm = lc $algorithms[$j];
-    
       if ($minimum_of_algorithms[$j] == $best_solution)
       {
-        if (!($current_algorithm eq "es" && $i > 22))
+        if (!($current_algorithm eq "es" && $i > 25))
         {
- 	        $number_of_times_that_has_a_best_solution[$j]++;
+          $number_of_times_that_has_a_best_solution[$j]++;
         }
       }
     }
@@ -749,7 +744,7 @@ foreach my $i (30..$maximum_instance_size)
     $deviation_time_of_cost_function[$j] /= 1000000; # convert to seconds
 
     if ($average_time_of_algorithm[$j] > $MAX_TIME_VALUE){    
-	     $MAX_TIME_VALUE = $average_time_of_algorithm[$j];
+       $MAX_TIME_VALUE = $average_time_of_algorithm[$j];
       }
     
     $cost_function_time{$algorithms[$j]}->[$i] = 
@@ -890,7 +885,7 @@ sub print_time_graphs
   {
     open (DATA, ">$GNUPLOT_DATA_FILE");
 
-    for (my $i = 30; $i <= $maximum_instance_size; $i++)
+    for (my $i = 200; $i <= $maximum_instance_size; $i++)
     {
       printf DATA "$i %.4f %.4f\n", $cost_function_calls{$algo}->[$i],
                                     $total_time{$algo}->[$i];

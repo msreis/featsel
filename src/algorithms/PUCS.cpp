@@ -87,10 +87,6 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   if (p > .5)
     p = .5;
 
-  cout << "p  = " << p << endl;
-  cout << "l  = " << l << endl;
-  return;
-
   this->max_size_of_minima_list = max_size_of_minima_list;
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list)

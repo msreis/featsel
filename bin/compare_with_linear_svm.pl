@@ -23,55 +23,92 @@
 #
 
 use strict;
-use Time::HiRes qw (gettimeofday tv_interval)
+use Time::HiRes qw (gettimeofday tv_interval);
 
 # Main definitions
 my $FEATSEL_BIN    = "./bin/featsel";
-my $LOG            = "output/result.log";
+my $LOG_FILE       = "output/result.log";
 my $INPUT_DIR      = "input/";
 # Number of repetitions on runs over a dataset
-my $m = 20;
+my $m = 2;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 my @ALGORITHMS = ("pucs",
-          "es",
-          "sffs",
-          "spec_cmi");
-my %cost_function ("pucs" => "mce",
-           "es" => "mce",
-           "sffs" => "mce",
-           "spec_cmi" => "cmi");
-
-my @DATA_SETS = ("Iris", "Car", "Wine", "Zoo", "Waveform");
+  "es",
+  "sffs",
+  "spec_cmi");
+my %cost_function = ("pucs" => "mce",
+  "es" => "mce",
+  "sffs" => "mce",
+  "spec_cmi" => "cmi");
+my @DATA_SETS = ("Iris", "Car", "Wine", "Zoo");#,
+ # "Waveform");
 my %labels    = ("Iris" => 3, "Car" => 4, "Zoo" => 7,  "Wine" => 3,
-         "Waveform" => 3);
+  "Waveform" => 3);
 my %features =  ("Iris" => 4, "Car" => 6, "Zoo" => 15, "Wine" => 13,
-         "Waveform" => 21);
+  "Waveform" => 21);
+my %data_size = ("Iris" => 150, "Car" => 1728, "Wine" => 178, 
+  "Zoo" => 101, "Waveform" => 5000);
 my %dat_file =  ("Iris" => "input/Iris/Test_01_A.dat",
-         "Car"  => "input/Car/Test_01_A.dat",
-         "Wine" => "input/Wine/Test_01_A.dat",
-         "Zoo"  => "input/Zoo/Test_15_3.dat");
+  "Car" => "input/Car/Test_01_A.dat",
+  "Wine" => "input/Wine/Test_01_A.dat",
+  "Zoo" => "input/Zoo/Test_15_3.dat",
+  "Waveform" => "input/Waveform/Test_01_A.dat");
 
+my $DATA_FILE = "output/dat.temp";
+open (DATA, ">$DATA_FILE");
 foreach my $data_set (@DATA_SETS)
 {
   foreach my $algorithm (@ALGORITHMS)
   {
+    my $cv_error = -1;
+    my $execution_time;
     foreach my $i (1..$m)
     {
-      my $t0 = [gettimeofday];
-      system ("$FEATSEL_BIN " . 
-              " -n " . $features{$data_set} . 
-              " -a " . $algorithm . 
-              " -l " . $labels{$data_set} .
-              " -c " . $cost_function{$algorithm} .
-              " -t " . $MAX_NUMBER_OF_COST_FUNCTION_CALLS .
-              " -f " . $dat_file{$data_set} . 
-              " > $LOG");
-      my $t1 = [gettimeofday];
+      my $k;
+      if ($data_size{$data_set} > 100)
+      {
+        $k = 10;
+      }
+      else
+      {
+        $k = $data_size{$data_set};
+      }
+      system ("./bin/svm_cross_validation.pl " .
+              "$dat_file{$data_set} $features{$data_set} " .
+              "$labels{$data_set} $cost_function{$algorithm} " .
+              "$k $algorithm > $LOG_FILE");
 
-      printf "%2d featsel run on $data_set with $algorithm, required time = %f\n",
-        $i, tv_interval ($t0, $t1);
+      # Cross-validation error: 0.2418
+      # Average run-time: 44.557726
+      open LOG, $LOG_FILE;
+      while (<LOG>)
+      {
+        if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
+        {
+          $cv_error = $1;
+        }
+        elsif ($_ =~ /Average\srun-time:\s(\d+\.\d+)/)
+        {
+          $execution_time = $1;
+        }
+      }
+      close (LOG);
 
-      
+      if ($cv_error == -1)
+      {
+        die "\nCould not perform cross validation on $data_set with " . 
+        "model with features selected by $algorithm\n\n";
+      }
+
+      printf DATA "\n%2d-run on %8s with %8s takes " .
+        "%6.3f and has cross-validation error of %4.3f ",
+        $i, $data_set, $algorithm, $execution_time, $cv_error;
+
+      printf "\n%2d-run on %8s with %8s takes " .
+      "%6.3f and has cross-validation error of %4.3f ",
+      $i, $data_set, $algorithm, $execution_time, $cv_error;
+    }
   }
 }
+close (DATA);

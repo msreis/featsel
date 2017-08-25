@@ -23,6 +23,7 @@
 #
 
 use strict;
+use Time::HiRes qw (gettimeofday tv_interval);
 use List::MoreUtils 'pairwise';
 use List::Util qw/shuffle/;
 use Data::Dumper;
@@ -32,7 +33,7 @@ use lib './lib';
 
 # Set constants
 my $OUTPUT_DIR = "output";
-my $LOG_FILE = $OUTPUT_DIR . "/result.log";
+my $LOG_FILE = $OUTPUT_DIR . "/svm_result.log";
 my $FEATSEL_BIN = "./bin/featsel";
 my $LIBSVM_DIR = "/home/gustavo/cs/libsvm/libsvm-3.22/";
 
@@ -52,8 +53,8 @@ if ((@ARGV == 6) || (@ARGV == 8))
   $number_of_features = $ARGV[1];
   $number_of_classes = $ARGV[2];
   $cost_function = $ARGV[3];
-  $algorithm = $ARGV[4];
-  $k = $ARGV[5];
+  $k = $ARGV[4];
+  $algorithm = $ARGV[5];
   if ((@ARGV) > 6)
   {
     $pucs_p = $ARGV[6];
@@ -87,7 +88,12 @@ my $featsel_call_string = "$FEATSEL_BIN " .
   "-c $cost_function -f $data_set_file_name " .
   "-a $algorithm" .
   " > $LOG_FILE\n";
+
+my $t0 = [gettimeofday];
 system ($featsel_call_string);
+my $t1 = [gettimeofday];
+my $execution_time = tv_interval ($t0, $t1);
+
 open LOG, $LOG_FILE;
 while (<LOG>)
 {
@@ -124,6 +130,7 @@ my $tf = "data_set.txt";
 create_libsvm_file ($tf, \@data_set, \@selected_features_arr);
 my $libsvmcallstr = $LIBSVM_DIR . "svm-train -s 0 -t 0 -c 1 -v $k " .
 $tf . " > $LOG_FILE\n";
+
 system ($libsvmcallstr);    
 open LOG, $LOG_FILE;
 while (<LOG>)
@@ -135,8 +142,8 @@ while (<LOG>)
   }
 }
 close (LOG);
-print ("Cross-validation error: $cv_error\n\n");
-
+print ("Cross-validation error: $cv_error\n");
+print ("Average run-time: $execution_time\n\n");
 
 sub fold_data 
 {

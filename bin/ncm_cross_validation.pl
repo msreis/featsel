@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w 
 
 #
-# svm_cross_validation.pl : this program performs a k-fold cross 
+# ncm_cross_validation.pl : this program performs a k-fold cross 
 #                           validation with the given algorithm and
 #                           dataset.
 #
@@ -33,9 +33,8 @@ use lib './lib';
 
 # Set constants
 my $OUTPUT_DIR = "output";
-my $LOG_FILE = $OUTPUT_DIR . "/svm_result.log";
+my $LOG_FILE = $OUTPUT_DIR . "/ncm_result.log";
 my $FEATSEL_BIN = "./bin/featsel";
-my $LIBSVM_DIR = "/home/gestrela/projects/libsvm-3.22/";
 
 
 # Arguments parsing
@@ -96,18 +95,25 @@ my $execution_time = tv_interval ($t0, $t1);
 
 open LOG, $LOG_FILE;
 while (<LOG>)
-{
-  print $_;
+{ 
   if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
   {
     $selected_features = $1;
   }
 }
 close (LOG);
-print ("[Done!]\n");
+if ($selected_features eq "")
+{
+  die "Could not perform feature selection!\n";
+}
+else
+{
+  print ("[Done!]\n");
+  print "Selected features: $selected_features \n";
+}
+
 print ("Calculating error with " . $k . "-Cross-validation\n");
 my @selected_features_arr = split ('', $selected_features);
-
 # Parses data file
 my @data_set = ();
 my $i = 0;
@@ -116,6 +122,8 @@ while (<DATA>)
 {
   my @line_arr = split (' ', $_);
   my @features = @line_arr[0 .. $number_of_features - 1];
+  @features = mask_on_selected_features (\@features,
+   \@selected_features_arr);
   my @class = @line_arr[$number_of_features .. $#line_arr];
   $data_set[$i] = {};
   $data_set[$i]->{FEATURES} = \@features;
@@ -126,22 +134,8 @@ close (DATA);
 
 # k-fold Cross Validation
 my $cv_error = .0;
-my $tf = "data_set.txt";
-create_libsvm_file ($tf, \@data_set, \@selected_features_arr);
-my $libsvmcallstr = $LIBSVM_DIR . "svm-train -s 0 -t 0 -c 1 -v $k " .
-$tf . " > $LOG_FILE\n";
+$cv_error = ncm_cross_validation (\@data_set, $k);
 
-system ($libsvmcallstr);    
-open LOG, $LOG_FILE;
-while (<LOG>)
-{
-  if ($_ =~ /.*=\s(\d+(\.)*\d*)%.*/)
-  {
-    my $accuracy = $1;
-    $cv_error = (100.0 - $accuracy) / 100.0;
-  }
-}
-close (LOG);
 print ("Cross-validation error: $cv_error\n");
 print ("Average run-time: $execution_time\n\n");
 
@@ -197,26 +191,124 @@ sub class_arr_to_int
 }
 
 
-sub create_libsvm_file
+sub ncm_cross_validation
 {
-  my $file_name = "./" . $_[0];
-  my @data = @{$_[1]};
-  my @sel_feat = @{$_[2]};
-
-  open (DATA, ">$file_name");
-  for my $sample (@data)
+  my @data = @{$_[0]};
+  my $k = $_[1];
+  my @folds = fold_data (\@data, $k);
+  my $cv_err = 0.0;
+  for (my $fold_idx = 0; $fold_idx < $k; $fold_idx++)
   {
-    my @attr_arr = @{$sample->{FEATURES}};
-    my @label_arr = @{$sample->{CLASS}};
-    @attr_arr = mask_on_selected_features (\@attr_arr, \@sel_feat);
-    my $label = class_arr_to_int (@label_arr);
-
-    printf DATA "$label ";
-    foreach my $i (0..$#attr_arr)
-    {
-      printf DATA  ($i + 1) . ":$attr_arr[$i] ";
-    }
-    printf DATA "\n";
+    my ($training_set_r, $test_set_r) = split_on_fold (\@folds, 
+      $fold_idx);
+    my $v_err = ncm_validation ($training_set_r, $test_set_r);
+    $cv_err += $v_err;
   }
-  close (DATA);
+  return $cv_err / $k;
+}
+
+
+sub ncm_validation
+{
+  my @training_set = @{$_[0]};
+  my @test_set = @{$_[1]};
+  my %class_mean;
+  my %class_n;
+  my $validation_err = 0.0;
+
+  # Creates model
+  for my $sample (@training_set)
+  {
+    my @features = @{$sample->{FEATURES}};
+    my @class = @{$sample->{CLASS}};
+    my $class_str = join ("", @class);
+    if (!exists $class_mean{$class_str})
+    {
+      my @feature_arr = @features;
+      $class_mean{$class_str} = \@feature_arr;
+      $class_n{$class_str} = 1;
+    }
+    else
+    {
+      array_sum ($class_mean{$class_str}, \@features);
+      $class_n{$class_str} += 1;
+    }
+  }
+  foreach my $class (keys %class_mean)
+  {
+    my $mean_arr_ref = $class_mean{$class};
+    for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
+    {
+      $mean_arr_ref->[$i] /= $class_n{$class} * 1.0;
+    }
+  }
+
+  # Validate data
+  for my $test (@test_set)
+  {
+    my $min_d = -1;
+    my $classification_str;
+    my $test_class_str = join ("", @{$test->{CLASS}});
+    for my $class_str (keys %class_mean)
+    {
+      my $d2 = array_dist2 ($class_mean{$class_str}, $test->{FEATURES});
+      if ($d2 < $min_d || $min_d  == -1)
+      {
+        $min_d = $d2;
+        $classification_str = $class_str;
+      }
+    }
+
+    if ($test_class_str ne $classification_str)
+    {
+      $validation_err += 1.0;
+    }
+  }
+
+  return $validation_err / scalar @test_set;
+}
+
+sub array_dist2
+{
+  my @arr1 = @{$_[0]};
+  my @arr2 = @{$_[1]};
+  my $d = 0.0;
+  for (my $i = 0; $i < scalar @arr1; $i++)
+  {
+    $d += ($arr1[$i] - $arr2[$i]) ** 2;
+  }
+  return $d;
+}
+
+sub array_sum
+{
+  my $arr1 = $_[0];
+  my $arr2 = $_[1];
+  for (my $i = 0; $i < scalar @$arr1; $i++)
+  {
+    $arr1->[$i] = $arr1->[$i] + $arr2->[$i];
+  }
+}
+
+
+sub split_on_fold
+{
+  my @training_set;
+  my @test_set;
+  my @folds = @{$_[0]};
+  my $fold_idx = $_[1];
+  my $k = scalar @folds;
+
+  for (my $i = 0; $i < $k; $i++)
+  {
+    if ($fold_idx == $i)
+    {
+      push @test_set, @{$folds[$i]};
+    }
+    else
+    {
+      push @training_set, @{$folds[$i]};
+    }
+  }
+  return (\@training_set, \@test_set);
 }

@@ -48,6 +48,7 @@ double MutualInformation::cost (ElementSubset * X)
   gettimeofday (& begin, NULL);
   double cost = INFTY;
 
+  map<string, unsigned int *> samples;
   number_of_calls_of_cost_function++;
 
   if (set->get_set_cardinality () == 0)
@@ -56,7 +57,7 @@ double MutualInformation::cost (ElementSubset * X)
   if (! (X->get_set_cardinality() == 0))
   {
     if (X->get_subset_cardinality() > 0)
-      cost = calculate_MI (X);
+      cost = calculate_MI (X, &samples);
     else
       cost = INFTY;
   }
@@ -75,7 +76,7 @@ double MutualInformation::cost (ElementSubset * X)
 }
 
 
-double MutualInformation::calculate_MI (ElementSubset * X)
+double MutualInformation::calculate_MI (ElementSubset * X, map<string, unsigned int *> * samples)
 {
   double MCE = 0, 
         H_Y = 0;
@@ -87,7 +88,8 @@ double MutualInformation::calculate_MI (ElementSubset * X)
 
   // Calculate the distribution of X = x and initialize sample attribute.
   //
-  unsigned int * freq_Y = calculate_distributions_from_the_samples (X);
+  unsigned int * freq_Y = calculate_distributions_from_the_samples (X,
+      samples);
 
   // Calculate H(Y).
   //
@@ -106,7 +108,7 @@ double MutualInformation::calculate_MI (ElementSubset * X)
   // Calculates the MCE and clear the table of distribution of
   // X taken from the samples.
   //
-  for (it = samples.begin (); it != samples.end (); it++)
+  for (it = samples->begin (); it != samples->end (); it++)
   {
     // E[H(Y|X)] = - \sum_{x in X} Pr(X=x) * H(Y|X=x)
     //
@@ -117,10 +119,10 @@ double MutualInformation::calculate_MI (ElementSubset * X)
     MCE -= calculate_conditional_entropy (it->second, Pr_X_is_x);
   }
 
-  for (it = samples.begin (); it != samples.end (); it++)
+  for (it = samples->begin (); it != samples->end (); it++)
     delete [] it->second;
 
-  samples.clear ();
+  samples->clear ();
 
   return (double) MCE - H_Y;   // I(X;Y) = H(Y)-H(Y|X) => - I(X;Y) = H(Y|X)-H(Y)
 }
@@ -148,7 +150,7 @@ double MutualInformation::calculate_conditional_entropy
 
 
 unsigned int * MutualInformation::calculate_distributions_from_the_samples
-(ElementSubset * X)
+(ElementSubset * X, map<string, unsigned int *> * samples)
 {
   unsigned int i, j, k;
 
@@ -177,11 +179,11 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
       }
     }
 
-    it = samples.find (observation);
+    it = samples->find (observation);
 
     // First occurrence of the subset
     //
-    if ((it == samples.end ()))
+    if ((it == samples->end ()))
     {
       unsigned int * row = new unsigned int [set->get_number_of_labels ()];
    
@@ -192,7 +194,7 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
         m         += row[k];
         freq_Y[k] += row[k];
       }
-      samples.insert (pair<string, unsigned int *> (observation, row));
+      samples->insert (pair<string, unsigned int *> (observation, row));
     }
 
     // Increment the occurrence of X

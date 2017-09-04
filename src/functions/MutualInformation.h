@@ -40,23 +40,20 @@ protected:
   //
   unsigned int m;
 
-  // Samples for a W-operator feature selection.
-  //
-  map <string, unsigned int *> samples;
-
   // Calculates H (Y | X = x)
   //
   double calculate_conditional_entropy (unsigned int *, double);
 
   // Calculates the Mutual Information of X
   //
-  double calculate_MI (ElementSubset *);
+  double calculate_MI (ElementSubset *, map<string, unsigned int *> *);
 
   // Compute the distribution of a subset X from samples,
   // storing them into as subsets of a set S, where |S| = |X|.
   // |X| must be greater than zero.
   //
-  unsigned int * calculate_distributions_from_the_samples (ElementSubset *);
+  unsigned int * calculate_distributions_from_the_samples 
+    (ElementSubset *, map<string, unsigned int *> *);
 
 public:
 

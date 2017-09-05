@@ -35,7 +35,7 @@ use lib './lib';
 my $OUTPUT_DIR = "output";
 my $LOG_FILE = $OUTPUT_DIR . "/svm_result.log";
 my $FEATSEL_BIN = "./bin/featsel";
-my $LIBSVM_DIR = "/home/gestrela/projects/libsvm-3.22/";
+my $LIBSVM_DIR = "/home/gustavo/cs/libsvm/libsvm-3.22/";
 
 
 # Arguments parsing
@@ -105,7 +105,6 @@ while (<LOG>)
 }
 close (LOG);
 print ("Cross-validation error: $cv_error\n");
-print ("Average run-time: $execution_time\n\n");
 
 sub fold_data 
 {

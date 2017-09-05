@@ -83,6 +83,8 @@ if ($k > 0)
 }
 $featsel_call_string = $featsel_call_string . "> $LOG_FILE\n";
 
+print "calling: $featsel_call_string\n\n";
+
 my $t0 = [gettimeofday];
 system ($featsel_call_string);
 my $t1 = [gettimeofday];

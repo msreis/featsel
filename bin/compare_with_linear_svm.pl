@@ -76,13 +76,30 @@ foreach my $data_set (@DATA_SETS)
 
       if ($algorithm ne "es" or $features{$data_set} < 21)
       {
-        system ("./bin/svm_cross_validation.pl " .
+        # Performs feature selection
+        my $selected_features;
+        my ($t0, $t1);
+        $t0 = [gettimeofday];
+        system ("bin/perform_feature_selection.pl " .
           "$dat_file{$data_set} $features{$data_set} " .
           "$labels{$data_set} $cost_function{$algorithm} " .
-          "$k $algorithm > $LOG_FILE");
+          " $algorithm > $LOG_FILE");
+        $t1 = [gettimeofday];
+        $execution_time = tv_interval ($t0, $t1);
+        open LOG, $LOG_FILE;
+        while (<LOG>)
+        {
+          if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
+          {
+            $selected_features = $1;
+          }
+        }
+        close (LOG);
 
-        # Cross-validation error: 0.2418
-        # Average run-time: 44.557726
+        # Performs cross-validation
+        system ("./bin/svm_cross_validation.pl " .
+          "$dat_file{$data_set} $features{$data_set} " .
+          "$labels{$data_set} $k $selected_features > $LOG_FILE");
         open LOG, $LOG_FILE;
         while (<LOG>)
         {

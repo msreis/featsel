@@ -496,7 +496,7 @@ ElementSubset * ROBDD::get_random_zero_evaluated_element ()
     else if (v->get_child (false)->is_terminal () && v->get_child (false)->get_value ())
       next_v = v->get_child (true);
     else
-      next_v = v->get_child ((int) rand() % 2);
+      next_v = v->get_child (false);
 
     if (next_v == v->get_child (true))
       subset->add_element (v->get_index () - 1);

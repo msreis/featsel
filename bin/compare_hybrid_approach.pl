@@ -27,98 +27,179 @@ use Time::HiRes qw (gettimeofday tv_interval);
 
 # Main definitions
 my $FEATSEL_BIN    = "./bin/featsel";
-my $LOG_FILE       = "output/result.log";
+my $LOG_FILE       = "output/hybrid.log";
 my $INPUT_DIR      = "input/";
-# Number of repetitions on runs over a dataset
-my $m = 2;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
-my @ALGORITHMS = ("pucs",
-  "spec_cmi");
-my %cost_function = ("pucs" => "mi",
-  "spec_cmi" => "cmi");
-my @DATA_SETS = ("Promoters", "Optdigits", "Mus2", "Arrythimia", 
-  "Madelon");
-  #, "Gisette");
+my @DATA_SETS = ("Promoters", 
+  # "Optdigits", "Mus2",
+  "Arrhythmia", 
+  # "Madelon");
+  #, "Gisette"
+  );
 my %labels    = ("Promoters"  => 2,
                  "Optdigits"  => 10,
                  "Musk2"      => 2,
-                 "Arrythimia" => 16,
+                 "Arrhythmia" => 16,
                  "Madelon"    => 2,
                  "Gisette"    => 2);
 my %features =  ("Promoters"  => 57,
                  "Optdigits"  => 64,
                  "Musk2"      => 166,
-                 "Arrythimia" => 279,
+                 "Arrhythmia" => 279,
                  "Madelon"    => 500,
                  "Gisette"    => 5000);
 my %data_size = ("Promoters"  => 106,
                  "Optdigits"  => 5620,
                  "Musk2"      => 6598,
-                 "Arrythimia" => 452,
+                 "Arrhythmia" => 452,
                  "Madelon"    => 2600,
                  "Gisette"    => 1000);
 my %dat_file =  ("Promoters" => "input/Promoters/Test_01_A.dat",
   "Optdigits" => "input/Optdigits/Test_01_A.dat",
   "Musk2" => "input/Musk2/Test_01_A.dat",
-  "Arrythimia" => "input/Arrythimia/Test_01_A.dat",
+  "Arrhythmia" => "input/Arrhythmia/Test_01_A.dat",
   "Madelon" => "input/Madelon/Test_01_A.dat",
   "Gisette" => "input/Gisette/Test_01_A.dat");
 
-my $DATA_FILE = "output/dat.temp";
-open (DATA, ">$DATA_FILE");
 foreach my $data_set (@DATA_SETS)
 {
-  foreach my $algorithm (@ALGORITHMS)
+  my @ranked_features;
+  my $pucs_features;
+  my $spec_cmi_features;
+  my $hybrid_features;
+  my $k;
+
+  # Find features selected by PUCS
+  my $featsel_call_str = "$FEATSEL_BIN " . 
+    "-n $features{$data_set} -l $labels{$data_set} -c mi " .
+    "-f $dat_file{$data_set} -a pucs > $LOG_FILE";
+  system ($featsel_call_str);
+  open LOG, $LOG_FILE;
+  while (<LOG>)
   {
-    my $cv_error = -1;
-    my $execution_time;
-    foreach my $i (1..$m)
+    if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
     {
-      my $k;
-      if ($data_size{$data_set} > 100)
-      {
-        $k = 10;
-      }
-      else
-      {
-        $k = $data_size{$data_set};
-      }
-      system ("./bin/svm_cross_validation.pl " .
-              "$dat_file{$data_set} $features{$data_set} " .
-              "$labels{$data_set} $cost_function{$algorithm} " .
-              "$k $algorithm > $LOG_FILE");
-
-      # Cross-validation error: 0.2418
-      # Average run-time: 44.557726
-      open LOG, $LOG_FILE;
-      while (<LOG>)
-      {
-        if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
-        {
-          $cv_error = $1;
-        }
-        elsif ($_ =~ /Average\srun-time:\s(\d+\.\d+)/)
-        {
-          $execution_time = $1;
-        }
-      }
-      close (LOG);
-
-      if ($cv_error == -1)
-      {
-        die "\nCould not perform cross validation on $data_set with " . 
-        "model with features selected by $algorithm\n\n";
-      }
-
-      printf DATA "\n%2d-run on %8s with %8s takes " .
-        "%6.3f and has cross-validation error of %4.3f ",
-        $i, $data_set, $algorithm, $execution_time, $cv_error;
-
-      printf "\n%2d-run on %8s with %8s takes " .
-      "%6.3f and has cross-validation error of %4.3f ",
-      $i, $data_set, $algorithm, $execution_time, $cv_error;
+      $pucs_features = $1;
     }
   }
+  close (LOG);
+
+  # Find features ranking by SpecCMI
+  $featsel_call_str = "$FEATSEL_BIN " . 
+    "-n $features{$data_set} -l $labels{$data_set} -c cmi " .
+    "-f $dat_file{$data_set} -a spec_cmi > $LOG_FILE";
+  system ($featsel_call_str);
+  open LOG, $LOG_FILE;
+  while (<LOG>)
+  {
+    print $_;
+    if ($_ =~ /(\d+)\s+:.*/)
+    {
+      my $feature = $1;
+      push (@ranked_features, $feature);
+    }
+  }
+  close (LOG);
+
+  # While features selected from spec cmi do not cover features
+  # selected by PUCS we design two operators: the first one with
+  # k best features from SpecCMI; the second operator has the union
+  # of the best k features from SpecCMI
+  $k = 10;
+  print ("\nFor dataset $data_set:\n");
+  do
+  {
+    my $hybrid_err;
+    my $spec_cmi_err;
+    my $k_best_feat = ranked_best (\@ranked_features, $k);
+    $hybrid_features = join_features ($k_best_feat, $pucs_features);
+    my $card = $hybrid_features =~ tr/1/1/;
+    $spec_cmi_features = ranked_best (\@ranked_features, $card);
+
+    # Performs cross-validation
+    system ("./bin/svm_cross_validation.pl " .
+      "$dat_file{$data_set} $features{$data_set} " .
+      "$labels{$data_set} $k $hybrid_features > $LOG_FILE");
+    open LOG, $LOG_FILE;
+    while (<LOG>)
+    {
+      if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
+      {
+        $hybrid_err = $1;
+      }
+    }
+    close (LOG);
+
+    system ("./bin/svm_cross_validation.pl " .
+      "$dat_file{$data_set} $features{$data_set} " .
+      "$labels{$data_set} $k $spec_cmi_features > $LOG_FILE");
+    open LOG, $LOG_FILE;
+    while (<LOG>)
+    {
+      if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
+      {
+        $spec_cmi_err = $1;
+      }
+    }
+    close (LOG);
+
+    if (!defined $hybrid_err || !defined $spec_cmi_features)
+    {
+      die "\nCould not perform cross validation on $data_set\n\n";
+    }
+
+    print ("\nk = $k\n");
+    print ("Hybrid  features: $hybrid_features\n");
+    print ("SpecCMI features: $spec_cmi_features\n");
+    printf ("Hybrid  feature selection has error %6.3f\n", $hybrid_err);
+    printf ("SpecCMI feature selection has error %6.3f\n", $spec_cmi_err);
+    $k++;
+  } while (!covers ($spec_cmi_features, $pucs_features));
 }
-close (DATA);
+
+
+sub ranked_best
+{
+  my @rank = @{$_[0]};
+  my $k = $_[1];
+  my @feat_arr = (0) x scalar @rank;
+  for (my $i = 0; $i < $k; $i++)
+  {
+    $feat_arr[$rank[$i] - 1] = 1;
+  }
+  return join ('', @feat_arr);
+}
+
+
+sub join_features
+{
+  my $features1 = $_[0];
+  my $features2 = $_[1];
+  my @feature_arr1 = split ('', $features1);
+  my @feature_arr2 = split ('', $features2);
+  my @joint_features = ();
+  for (my $i = 0; $i < scalar @feature_arr1; $i++)
+  {
+    my $m = $feature_arr1[$i] || $feature_arr2[$i];
+    push (@joint_features, $m);
+  }
+  return join ('', @joint_features);
+}
+
+sub covers
+{
+  my $features1 = $_[0];
+  my $features2 = $_[1];
+  my @feature_arr1 = split ('', $features1);
+  my @feature_arr2 = split ('', $features2);
+  for (my $i = 0; $i < scalar @feature_arr1; $i++)
+  {
+    if ($feature_arr1[$i] < $feature_arr2[$i])
+    {
+      return 0;
+    }
+  }
+  return 1;
+}
+

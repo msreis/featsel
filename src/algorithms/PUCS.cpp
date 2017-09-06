@@ -30,7 +30,7 @@ PUCS::PUCS ()
   cand_part = NULL;
   partition = NULL;
   this->p = 0;  // set later
-  this->l = 2;
+  this->l = 1;
 }
 
 PUCS::PUCS (float p, unsigned int l)
@@ -83,7 +83,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   gettimeofday (& begin_program, NULL);
 
   if (p == 0)
-    p = 10.0 / set->get_set_cardinality ();
+    p = 5.0 / set->get_set_cardinality ();
   if (p > .5)
     p = .5;
 

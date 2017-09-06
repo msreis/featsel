@@ -107,10 +107,6 @@ foreach my $data_set (@DATA_SETS)
           {
             $cv_error = $1;
           }
-          elsif ($_ =~ /Average\srun-time:\s(\d+\.\d+)/)
-          {
-            $execution_time = $1;
-          }
         }
         close (LOG);
 

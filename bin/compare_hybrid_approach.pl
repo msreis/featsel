@@ -31,12 +31,14 @@ my $LOG_FILE       = "output/hybrid.log";
 my $INPUT_DIR      = "input/";
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
-my @DATA_SETS = ("Promoters", 
+my @DATA_SETS = (
+  "Promoters"); 
   # "Optdigits", "Mus2",
-  "Arrhythmia", 
+  # "Arrhythmia"
+  # , 
   # "Madelon");
   #, "Gisette"
-  );
+  # );
 my %labels    = ("Promoters"  => 2,
                  "Optdigits"  => 10,
                  "Musk2"      => 2,
@@ -93,7 +95,6 @@ foreach my $data_set (@DATA_SETS)
   open LOG, $LOG_FILE;
   while (<LOG>)
   {
-    print $_;
     if ($_ =~ /(\d+)\s+:.*/)
     {
       my $feature = $1;
@@ -120,7 +121,7 @@ foreach my $data_set (@DATA_SETS)
     # Performs cross-validation
     system ("./bin/svm_cross_validation.pl " .
       "$dat_file{$data_set} $features{$data_set} " .
-      "$labels{$data_set} $k $hybrid_features > $LOG_FILE");
+      "$labels{$data_set} 10 $hybrid_features > $LOG_FILE");
     open LOG, $LOG_FILE;
     while (<LOG>)
     {
@@ -133,7 +134,7 @@ foreach my $data_set (@DATA_SETS)
 
     system ("./bin/svm_cross_validation.pl " .
       "$dat_file{$data_set} $features{$data_set} " .
-      "$labels{$data_set} $k $spec_cmi_features > $LOG_FILE");
+      "$labels{$data_set} 10 $spec_cmi_features > $LOG_FILE");
     open LOG, $LOG_FILE;
     while (<LOG>)
     {

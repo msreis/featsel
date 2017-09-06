@@ -398,8 +398,8 @@ void SpecCMI::get_minima_list (unsigned int max_size_of_minima_list)
   // 
   double * result = rank_features ();
 
-  map <double, unsigned int> feature_queue;
-  map <double, unsigned int>::reverse_iterator it;
+  multimap <double, unsigned int> feature_queue;
+  multimap <double, unsigned int>::reverse_iterator it;
 
   for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
   {

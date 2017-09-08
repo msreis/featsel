@@ -36,13 +36,10 @@ protected:
   //
   unsigned int t;
 
-  // Total number of samples.
-  //
-  unsigned int m;
-
   // Calculates H (Y | X = x)
   //
-  double calculate_conditional_entropy (unsigned int *, double);
+  double calculate_conditional_entropy (unsigned int *, double, 
+          unsigned int);
 
   // Calculates the Mutual Information of X
   //
@@ -53,7 +50,7 @@ protected:
   // |X| must be greater than zero.
   //
   unsigned int * calculate_distributions_from_the_samples 
-    (ElementSubset *, map<string, unsigned int *> *);
+    (ElementSubset *, map<string, unsigned int *> *, unsigned int *);
 
 public:
 

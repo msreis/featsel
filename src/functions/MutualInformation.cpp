@@ -24,7 +24,6 @@
 MutualInformation::MutualInformation (ElementSet * a_set)
 {
   set = a_set;
-  m = 0;
   t = 0;
   if (! (set->get_set_cardinality() == 0))
     t = set->get_element (0)->get_number_of_values ();
@@ -76,20 +75,21 @@ double MutualInformation::cost (ElementSubset * X)
 }
 
 
-double MutualInformation::calculate_MI (ElementSubset * X, map<string, unsigned int *> * samples)
+double MutualInformation::calculate_MI (ElementSubset * X, map<string, 
+        unsigned int *> * samples)
 {
   double MCE = 0, 
         H_Y = 0;
   map <string, unsigned int *>::iterator it;
-
-  // Clean m value.
+    
+  // Stores the total number of samples
   //
-  m = 0; 
+  unsigned int m = 0;
 
   // Calculate the distribution of X = x and initialize sample attribute.
   //
   unsigned int * freq_Y = calculate_distributions_from_the_samples (X,
-      samples);
+      samples, &m);
 
   // Calculate H(Y).
   //
@@ -116,7 +116,7 @@ double MutualInformation::calculate_MI (ElementSubset * X, map<string, unsigned 
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
       Pr_X_is_x += (double) it->second[i] / (double) m;
     
-    MCE -= calculate_conditional_entropy (it->second, Pr_X_is_x);
+    MCE -= calculate_conditional_entropy (it->second, Pr_X_is_x, m);
   }
 
   for (it = samples->begin (); it != samples->end (); it++)
@@ -129,7 +129,7 @@ double MutualInformation::calculate_MI (ElementSubset * X, map<string, unsigned 
 
 
 double MutualInformation::calculate_conditional_entropy
-(unsigned int * x, double Pr_X_is_x)
+(unsigned int * x, double Pr_X_is_x, unsigned int m)
 {
   unsigned int y;
   double  Pr_Y_is_y_given_x,
@@ -150,7 +150,8 @@ double MutualInformation::calculate_conditional_entropy
 
 
 unsigned int * MutualInformation::calculate_distributions_from_the_samples
-(ElementSubset * X, map<string, unsigned int *> * samples)
+(ElementSubset * X, map<string, unsigned int *> * samples, 
+ unsigned int * m)
 {
   unsigned int i, j, k;
 
@@ -191,7 +192,7 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
       {
         row[k] = set->get_element
                  (set->get_set_cardinality () + k)->get_element_value (j);
-        m         += row[k];
+        *m         += row[k];
         freq_Y[k] += row[k];
       }
       samples->insert (pair<string, unsigned int *> (observation, row));
@@ -207,7 +208,7 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
              (set->get_set_cardinality () + k)->get_element_value (j);
 
         it->second[k] += label_value;
-        m             += label_value;
+        *m             += label_value;
         freq_Y[k]     += label_value;
       }
     }   

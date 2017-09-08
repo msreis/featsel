@@ -24,7 +24,6 @@
 MeanConditionalEntropy::MeanConditionalEntropy (ElementSet * a_set)
 {
   set = a_set;
-  m = 0;
 }
 
 
@@ -85,13 +84,13 @@ double MeanConditionalEntropy::calculate_MCE (ElementSubset * X,
   double cost = 0;
   map <string, unsigned int *>::iterator it;
 
-  // Clean m value.
+  // m is the total number of samples
   //
-  m = 0;
+  unsigned int m = 0;
 
   // calculates the distribution of X = x through the samples
   //
-  calculate_distributions_from_the_samples (X, samples);
+  calculate_distributions_from_the_samples (X, samples, &m);
 
   // calculates the MCE and clear the table of distribution of X taken from
   // the samples
@@ -108,7 +107,7 @@ double MeanConditionalEntropy::calculate_MCE (ElementSubset * X,
     if (Pr_X_is_x > ((double) 1 / m))
     {
       cost += Pr_X_is_x * calculate_conditional_entropy (it->second, 
-          Pr_X_is_x);
+          Pr_X_is_x, m);
     }
     else
       // if X=x has only one occurrence, it is penalized with 1 / t
@@ -125,7 +124,7 @@ double MeanConditionalEntropy::calculate_MCE (ElementSubset * X,
 
 
 double MeanConditionalEntropy::calculate_conditional_entropy 
-(unsigned int * x, double Pr_X_is_x)
+(unsigned int * x, double Pr_X_is_x, unsigned int m)
 {
   unsigned int y;
   double  Pr_Y_is_y_given_x, H_of_Y_given_x = 0;
@@ -145,7 +144,8 @@ double MeanConditionalEntropy::calculate_conditional_entropy
 
 
 void MeanConditionalEntropy::calculate_distributions_from_the_samples
-(ElementSubset * X, map<string, unsigned int *> * samples)
+(ElementSubset * X, map<string, unsigned int *> * samples, 
+ unsigned int * m)
 {
 
   unsigned int i, j, k;
@@ -186,7 +186,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
       {
         row[k] = set->get_element
                  (set->get_set_cardinality () + k)->get_element_value (j);
-        m += row[k];
+        *m += row[k];
       }
       samples->insert (pair<string, unsigned int *> (observation, row));
     }
@@ -201,7 +201,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
              (set->get_set_cardinality () + k)->get_element_value (j);
 
         it->second[k] += label_value;
-        m             += label_value;
+        *m             += label_value;
       }
     }
 

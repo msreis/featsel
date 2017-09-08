@@ -32,13 +32,13 @@ my $INPUT_DIR      = "input/";
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 my @DATA_SETS = (
-  "Promoters"); 
+  "Promoters" 
   # "Optdigits", "Mus2",
   # "Arrhythmia"
   # , 
   # "Madelon");
   #, "Gisette"
-  # );
+  );
 my %labels    = ("Promoters"  => 2,
                  "Optdigits"  => 10,
                  "Musk2"      => 2,
@@ -74,7 +74,7 @@ foreach my $data_set (@DATA_SETS)
 
   # Find features selected by PUCS
   my $featsel_call_str = "$FEATSEL_BIN " . 
-    "-n $features{$data_set} -l $labels{$data_set} -c mi " .
+    "-n $features{$data_set} -l $labels{$data_set} -c mce " .
     "-f $dat_file{$data_set} -a pucs > $LOG_FILE";
   system ($featsel_call_str);
   open LOG, $LOG_FILE;
@@ -86,6 +86,8 @@ foreach my $data_set (@DATA_SETS)
     }
   }
   close (LOG);
+
+  # print "PUCS selected: $pucs_features\n";
 
   # Find features ranking by SpecCMI
   $featsel_call_str = "$FEATSEL_BIN " . 

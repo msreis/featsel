@@ -99,8 +99,9 @@ double MutualInformation::calculate_MI (ElementSubset * X, map<string,
     //
     double Pr_Y_is_y = (double) freq_Y[i] / (double) m;
 
-    H_Y -=  Pr_Y_is_y * (log (Pr_Y_is_y) /
-                        log ((double) set->get_number_of_labels ()));
+    if (Pr_Y_is_y > 0)
+      H_Y -=  Pr_Y_is_y * (log (Pr_Y_is_y) / 
+          log ((double) set->get_number_of_labels ()));
   }
 
   delete [] freq_Y;

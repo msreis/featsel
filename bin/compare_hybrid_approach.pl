@@ -32,12 +32,12 @@ my $INPUT_DIR      = "input/";
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 my @DATA_SETS = (
-  "Promoters" 
-  # "Optdigits", "Mus2",
-  # "Arrhythmia"
-  # , 
+  # "Promoters",
+  # "Optdigits", 
+  # "Musk2",
+  # "Arrhythmia", 
   # "Madelon");
-  #, "Gisette"
+   "Gisette"
   );
 my %labels    = ("Promoters"  => 2,
                  "Optdigits"  => 10,
@@ -80,14 +80,13 @@ foreach my $data_set (@DATA_SETS)
   open LOG, $LOG_FILE;
   while (<LOG>)
   {
+    print $_;
     if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
     {
       $pucs_features = $1;
     }
   }
   close (LOG);
-
-  # print "PUCS selected: $pucs_features\n";
 
   # Find features ranking by SpecCMI
   $featsel_call_str = "$FEATSEL_BIN " . 
@@ -97,6 +96,7 @@ foreach my $data_set (@DATA_SETS)
   open LOG, $LOG_FILE;
   while (<LOG>)
   {
+    print $_;
     if ($_ =~ /(\d+)\s+:.*/)
     {
       my $feature = $1;
@@ -111,6 +111,7 @@ foreach my $data_set (@DATA_SETS)
   # of the best k features from SpecCMI
   $k = 10;
   print ("\nFor dataset $data_set:\n");
+  print "PUCS selected features: $pucs_features\n";
   do
   {
     my $hybrid_err;

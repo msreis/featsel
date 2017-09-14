@@ -39,14 +39,6 @@ class MeanConditionalEntropy : public CostFunction
 
 protected:
 
-  // Total number of samples.
-  //
-  unsigned int m;
-
-  // Samples for a W-operator feature selection.
-  //
-  map <string, unsigned int *> samples;
-
   // Return the MCE of a given subset X.
   //
   double calculate_MCE (ElementSubset *);
@@ -55,12 +47,13 @@ protected:
   // storing them into as subsets of a set S, where |S| = |X|.
   // |X| must be greater than zero.
   //
-  void calculate_distributions_from_the_samples (ElementSubset *);
+  void calculate_distributions_from_the_samples (ElementSubset *, 
+          map<string, SampleLabels *> *, unsigned int *);
 
   // Return the conditional entropy of Y given X = x; the distribution of the
   // samples must be computed before using this function.
   //
-  double calculate_conditional_entropy (unsigned int *, double);
+  double calculate_conditional_entropy (SampleLabels *, double, unsigned int);
 
 public:
 

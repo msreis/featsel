@@ -36,17 +36,10 @@ protected:
   //
   unsigned int t;
 
-  // Total number of samples.
-  //
-  unsigned int m;
-
-  // Samples for a W-operator feature selection.
-  //
-  map <string, unsigned int *> samples;
-
   // Calculates H (Y | X = x)
   //
-  double calculate_conditional_entropy (unsigned int *, double);
+  double calculate_conditional_entropy (SampleLabels *, double, 
+          unsigned int);
 
   // Calculates the Mutual Information of X
   //
@@ -56,7 +49,8 @@ protected:
   // storing them into as subsets of a set S, where |S| = |X|.
   // |X| must be greater than zero.
   //
-  unsigned int * calculate_distributions_from_the_samples (ElementSubset *);
+  unsigned int * calculate_distributions_from_the_samples 
+    (ElementSubset *, map<string, SampleLabels *> *, unsigned int *);
 
 public:
 
@@ -64,11 +58,13 @@ public:
   //
   MutualInformation (ElementSet *);
 
-
   // Default destructor.
   //
   virtual ~MutualInformation ();
 
+  // Creates a copy of this object
+  //
+  virtual MutualInformation * get_copy ();
 
   // Returns the value of c(X), where X is a subset.
   //

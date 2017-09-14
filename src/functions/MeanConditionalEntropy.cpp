@@ -24,7 +24,6 @@
 MeanConditionalEntropy::MeanConditionalEntropy (ElementSet * a_set)
 {
   set = a_set;
-  m = 0;
 }
 
 
@@ -41,6 +40,7 @@ double MeanConditionalEntropy::cost (ElementSubset * X)
   double cost = 0;
   number_of_calls_of_cost_function++;
 
+  
   if (! (X->get_set_cardinality() == 0))
   {
     // Penalized Mean Conditional Entropy
@@ -73,15 +73,19 @@ double MeanConditionalEntropy::cost (ElementSubset * X)
 double MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
 {
   double cost = 0;
-  map <string, unsigned int *>::iterator it;
+  map<string, SampleLabels *>::iterator it;
 
-  // Clean m value.
+  // Samples for a W-operator feature selection.
   //
-  m = 0;
+  map<string, SampleLabels *> samples;
 
+  // Total number of samples
+  //
+  unsigned int m = 0;
+    
   // calculates the distribution of X = x through the samples
   //
-  calculate_distributions_from_the_samples (X);
+  calculate_distributions_from_the_samples (X, &samples, &m);
 
   // calculates the MCE and clear the table of distribution of X taken from
   // the samples
@@ -91,37 +95,41 @@ double MeanConditionalEntropy::calculate_MCE (ElementSubset * X)
     // Pr(X=x) * H(Y|X=x)
     //
     double Pr_X_is_x = 0;
+    SampleLabels * sample_labels = it->second;
+    SampleLabels::iterator label_it = sample_labels->begin ();
 
-    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (double) it->second[i] / (double) m;
+    for (; label_it != sample_labels->end (); label_it++)
+      Pr_X_is_x += (double) label_it->second / (double) m;
 
     if (Pr_X_is_x > ((double) 1 / m))
     {
-      cost += Pr_X_is_x * calculate_conditional_entropy (it->second, Pr_X_is_x);
+      cost += Pr_X_is_x * calculate_conditional_entropy (sample_labels, 
+          Pr_X_is_x, m);
     }
     else
       // if X=x has only one occurrence, it is penalized with 1 / t
       //
       cost += (double) 1 / m;
 
-    delete[] it->second;
   }
+  
+  for (it = samples.begin (); it != samples.end (); it++)
+    delete it->second;
 
   samples.clear ();
-
   return cost;
 }
 
 
-double MeanConditionalEntropy::calculate_conditional_entropy
-(unsigned int * x, double Pr_X_is_x)
+double MeanConditionalEntropy::calculate_conditional_entropy 
+(SampleLabels * sample_labels, double Pr_X_is_x, unsigned int m)
 {
-  unsigned int y;
   double  Pr_Y_is_y_given_x, H_of_Y_given_x = 0;
+  SampleLabels::iterator label_it = sample_labels->begin ();
 
-  for (y = 0; y < set->get_number_of_labels (); y++)
+  for (; label_it != sample_labels->end (); label_it++)
   {
-    Pr_Y_is_y_given_x = ((double) x[y] / m) / Pr_X_is_x;
+    Pr_Y_is_y_given_x = ((double) label_it->second / m) / Pr_X_is_x;
 
     if (Pr_Y_is_y_given_x > 0)
       H_of_Y_given_x -= Pr_Y_is_y_given_x *
@@ -134,16 +142,16 @@ double MeanConditionalEntropy::calculate_conditional_entropy
 
 
 void MeanConditionalEntropy::calculate_distributions_from_the_samples
-(ElementSubset * X)
+(ElementSubset * X, map<string, SampleLabels *> * samples, 
+ unsigned int * m)
 {
   unsigned int i, j, k;
 
-  map <string, unsigned int *>::iterator it;
+  map <string, SampleLabels *>::iterator it;
 
   for (j = 0; j < set->get_element (0)->get_number_of_values (); j++)
   {
     string observation;
-
     for (i = 0; i < set->get_set_cardinality (); i++)
     {
       if (X->has_element (i))
@@ -158,21 +166,26 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
       }
     }
 
-    it = samples.find (observation);
+    it = samples->find (observation);
 
     // First occurrence of the subset
     //
-    if ((it == samples.end ()))
+    if ((it == samples->end ()))
     {
-      unsigned int * row = new unsigned int [set->get_number_of_labels ()];
-
+      SampleLabels * row = new SampleLabels ();
       for (k = 0; k < set->get_number_of_labels (); k++)
       {
-        row[k] = set->get_element
-                 (set->get_set_cardinality () + k)->get_element_value (j);
-        m += row[k];
+        unsigned int y_idx, y_freq_given_x;
+        y_idx = set->get_set_cardinality () + k;
+        y_freq_given_x =
+         set->get_element (y_idx)->get_element_value (j);
+        if (y_freq_given_x > 0)
+        {
+          row->insert (make_pair (k, y_freq_given_x));
+          *m += y_freq_given_x;
+        }
       }
-      samples.insert (pair<string, unsigned int *> (observation, row));
+      samples->insert (pair<string, SampleLabels *> (observation, row));
     }
 
     // Increment the occurrence of X
@@ -181,14 +194,12 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     {
       for (k = 0; k < set->get_number_of_labels (); k++)
       {
-        unsigned int label_value = set->get_element
+        unsigned int y_freq_given_x = set->get_element
              (set->get_set_cardinality () + k)->get_element_value (j);
-
-        it->second[k] += label_value;
-        m             += label_value;
+        (*it->second)[k] += y_freq_given_x;
+        *m               += y_freq_given_x;
       }
     }
-
     observation.clear ();
   }
 }

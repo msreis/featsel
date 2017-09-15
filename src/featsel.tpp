@@ -10,7 +10,8 @@
 //   M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera
 //   "featsel: A Framework for Benchmarking of
 //   Feature Selection Algorithms and Cost Functions"
-//   https://github.com/msreis/featsel
+//   SoftwareX 6 (2017) pp. 193-197.
+//   DOI: 10.1016/j.softx.2017.07.005.
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -204,7 +205,8 @@ by citing the paper that describes this framework: \n\n \
 M.S. Reis, G. Estrela, C.E. Ferreira and J. Barrera \n \
 'featsel: A Framework for Benchmarking of \n \
 Feature Selection Algorithms and Cost Functions' \n \
-https://github.com/msreis/featsel \n\n \
+SoftwareX 6 (2017) pp. 193-197.\n \
+DOI: 10.1016/j.softx.2017.07.005.\n\n \
 ");
 
   // Parse the arguments

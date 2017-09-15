@@ -83,5 +83,17 @@ namespace MutualInformationTest
     return true;
   }
 
+
+  bool it_should_work_when_theres_no_sample_of_a_label ()
+  {
+    ElementSet set (16, "input/mi/Test_01_A.dat", 279);
+    ElementSubset X ("", &set);
+    MutualInformation c (&set);
+    X.set_complete_subset (); 
+    if (isnan (c.cost (&X)))
+      return false;
+    return true;
+  } 
+
 } // end of namespace
 

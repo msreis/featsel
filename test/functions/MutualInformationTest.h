@@ -35,6 +35,8 @@ namespace MutualInformationTest
   bool an_empty_set_should_have_cost_zero ();
 
   bool it_should_add_and_retrieve_the_elapsed_time ();
+
+  bool it_should_work_when_theres_no_sample_of_a_label ();
 }
 
 #endif /* MUTUALINFORMATIONTEST_TEST_H_ */

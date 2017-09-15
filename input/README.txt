@@ -5,6 +5,9 @@ abd               - Examples of the ABD cost function.
 Arrhythmia        - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Arrhythmia
 
+Car               - Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/Car+Evaluation
+
 cfs               - Examples of the CFS cost function.
 
 cmi               - Examples of the ConditionalMutualInformation cost function.
@@ -16,6 +19,9 @@ Gisette           - Converted in .DAT instances from:
                     (the file of this data set is zipped.)
 
 hamming_distance  - Examples of the Hamming distance cost function.
+
+Iris              - Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/iris
 
 Madelon           - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Madelon
@@ -43,6 +49,9 @@ tmp               - Directory used to store temporary instances.
 
 Waveform          - Converted in .DAT instances from:
                     http://archive.ics.uci.edu/ml/datasets/waveform+database+generator+%28version+1%29
+
+Wine              - Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/Wine
 
 Zoo               - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Zoo

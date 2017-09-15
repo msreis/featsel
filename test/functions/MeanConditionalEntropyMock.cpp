@@ -37,11 +37,11 @@ MeanConditionalEntropyMock::~MeanConditionalEntropyMock ()
 
 string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
 {
-  map <string, unsigned int *>::iterator it;
+  map <string, SampleLabels *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
 
-  map <string, unsigned int *> samples;
+  map <string, SampleLabels *> samples;
   unsigned int m = 0;
   calculate_distributions_from_the_samples (X, &samples, &m);
 
@@ -49,15 +49,15 @@ string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
   {
     printed_samples.append (it->first);
     printed_samples.append (": ");
-    value <<  (int) it->second[0];
+    value <<  (int) (*it->second)[0];
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append (" ");
-    value <<  (int) it->second[1];
+    value <<  (int) (*it->second)[1];
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");
-    delete[] it->second;
+    delete it->second;
   }
   samples.clear ();
 
@@ -68,11 +68,11 @@ string MeanConditionalEntropyMock::print_label_frequencies (ElementSubset * X)
 string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
 (ElementSubset * X)
 {
-  map <string, unsigned int *>::iterator it;
+  map <string, SampleLabels *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
 
-  map <string, unsigned int *> samples;
+  map <string, SampleLabels *> samples;
   unsigned int m = 0;
   calculate_distributions_from_the_samples (X, &samples, &m);
 
@@ -80,8 +80,8 @@ string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
   {
     printed_samples.append (it->first);
     printed_samples.append (": ");
-    value <<  (int) it->second[0] + it->second[1];
-    delete[] it->second;
+    value <<  (int) (*it->second)[0] + (*it->second)[1];
+    delete it->second;
     it->second = NULL;
     printed_samples.append (value.str ());
     value.str ("");
@@ -96,11 +96,11 @@ string MeanConditionalEntropyMock::print_W_operator_samples_frequencies
 
 string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
 {
-  map <string, unsigned int *>::iterator it;
+  map <string, SampleLabels *>::iterator it;
   string printed_samples ("");
   std::ostringstream value;
 
-  map <string, unsigned int *> samples;
+  map <string, SampleLabels *> samples;
   unsigned int m = 0;
   calculate_distributions_from_the_samples (X, &samples, &m);
 
@@ -108,12 +108,12 @@ string MeanConditionalEntropyMock::print_conditional_entropy (ElementSubset * X)
   {
     double Pr_X_is_x = 0;
     for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-      Pr_X_is_x += (double) it->second[i] / (double) m;
+      Pr_X_is_x += (double) (*it->second)[i] / (double) m;
 
     printed_samples.append (it->first);
     printed_samples.append (": ");
     value <<  calculate_conditional_entropy (it->second, Pr_X_is_x, m);
-    delete[] it->second;
+    delete it->second;
     printed_samples.append (value.str ());
     value.str ("");
     printed_samples.append ("\n");

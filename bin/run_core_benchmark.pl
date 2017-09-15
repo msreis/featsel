@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 
-
 #
 # run_core_benchmark : program that creates a benchmark especifically
 #     for the PUCS algorithm. This benchmark creates a table that shows

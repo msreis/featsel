@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementSet>
+  <SetName> Mus_musculus_KEGG_Ras_pathway </SetName>
+  <MaxNumberOfElementValues> 2 </MaxNumberOfElementValues>
+  <NumberOfElements> 3 </NumberOfElements>
+  <Element>
+    <name>RasGTP-activates-Raf1</name>
+    <value>15461</value>
+    <value>110157</value>
+  </Element>
+  <Element>
+    <name>Raf1-activates-MEK</name>
+    <value>110157</value>
+    <value>26395</value>
+  </Element>
+  <Element>
+    <name>MEK-activates-ERK</name>
+    <value>26395</value>
+    <value>26413</value>
+  </Element>
+</ElementSet>
+

@@ -41,6 +41,13 @@ point             - Instances of the Point cost function.
 Promoters         - Converted in .DAT instances from: 
                     https://archive.ics.uci.edu/ml/datasets/Molecular+Biology+(Promoter+Gene+Sequences)
 
+SigNetSim         - A SigNetSim XML instance is a list of KEGG edges (ids of two chemical species
+                   that interacts to each other in a given KEGG signaling pathway map). A subset X of
+                   S here is passed through this cost function to the SigNetSim tool, in order to
+                   induce a dynamic model and ajust it through curve-fitting optimization. SigNetSim
+                   source code is available at:
+                   https://github.com/vincent-noel/SigNetSim
+
 subset_sum        - Examples of the SubsetSum cost function.
 
 tailor            - Examples of the TailorConvexHull cost function.

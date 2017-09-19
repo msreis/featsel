@@ -33,12 +33,12 @@
 }
 
 
-float %template%::cost (ElementSubset * X)
+double %template%::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
 
-  float cost = -1; // This value will make it fail in the empty set
+  double cost = -1; // This value will make it fail in the empty set
                    // unit test, which should return zero.
 
   number_of_calls_of_cost_function++;

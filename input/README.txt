@@ -5,6 +5,10 @@ abd               - Examples of the ABD cost function.
 Arrhythmia        - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Arrhythmia
 
+Breast_cancer     - m = 699, n = 10, l = 2
+                    Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)
+
 Car               - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Car+Evaluation
 
@@ -22,6 +26,10 @@ hamming_distance  - Examples of the Hamming distance cost function.
 
 Iris              - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/iris
+
+Lung_cancer       - m = 32, n = 56, l = 3
+                    Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/lung+cancer
 
 Madelon           - Converted in .DAT instances from:
                     https://archive.ics.uci.edu/ml/datasets/Madelon

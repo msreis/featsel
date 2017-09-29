@@ -82,8 +82,13 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   // t.i.
   gettimeofday (& begin_program, NULL);
 
-  if (p == 0)
-    p = 5.0 / set->get_set_cardinality ();
+  if (p == 0) {
+    p = 10.0 / set->get_set_cardinality ();
+    if (set->get_set_cardinality () > 30)
+      l = 1;
+    else
+      l = 2;
+  }
   if (p > .5)
     p = .5;
 

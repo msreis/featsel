@@ -33,31 +33,36 @@ my $INPUT_DIR      = "input/";
 my $m = 10;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
-my @ALGORITHMS = ("pucs", "sffs");
+my @ALGORITHMS = ("pucs");
+  # ,
+  #                  "sffs");
 my %cost_function = ("pucs" => "mce", "sffs" => "mce");
-my @DATA_SETS = ("Iris", 
-                 "Promoters",
+my @DATA_SETS = (
+                 "Iris", 
+                 # "Promoters",
                  "Wine",
                  "Zoo",
-                 "Arrhythmia",
-                 "Musk2");
-                 #, "Lung", "Breast");
+                 # "Arrhythmia",
+                 # "Musk2",
+                 "Lung_cancer",
+                 "Breast_cancer");
 my %labels    = ("Iris" => 3, "Arrhythmia" => 16, "Musk2" => 2, 
-                 "Promoters" => 2, "Wine" => 3, "Zoo" => 7);
-                 #"Lung" => , "Breast" =>);
+                 "Promoters" => 2, "Wine" => 3, "Zoo" => 7,
+                 "Lung_cancer" => 3, "Breast_cancer" => 2);
 my %features = ("Iris" => 4, "Arrhythmia" => 279, "Musk2" => 166, 
-                 "Promoters" => 57, "Wine" => 13, "Zoo" => 15);
-                 #"Lung" => , "Breast" =>);
+                 "Promoters" => 57, "Wine" => 13, "Zoo" => 15,
+                 "Lung_cancer" => 56, "Breast_cancer" => 10);
 my %data_size = ("Iris" => 150, "Arrhythmia" => 452, "Musk2" => 6598,
-                 "Promoters" => 106, "Wine" => 178, "Zoo" => 101);
-                 #"Lung" =>, "Breast" =>);
+                 "Promoters" => 106, "Wine" => 178, "Zoo" => 101,
+                 "Lung_cancer" => 32, "Breast_cancer" => 699);
 my %dat_file =  ("Iris" => "input/Iris/Test_01_A.dat",
                  "Arrhythmia" => "input/Arrhythmia/Test_01_A.dat",
                  "Musk2" => "input/Musk2/Test_01_A.dat",
                  "Promoters" => "input/Promoters/Test_01_A.dat",
                  "Wine" => "input/Wine/Test_01_A.dat",
-                 "Zoo" => "input/Zoo/Test_15_3.dat");
-                 #"Lung" =>, "Breast" =>);
+                 "Zoo" => "input/Zoo/Test_15_3.dat",
+                 "Lung_cancer" => "input/Lung_cancer/Test_01_A.dat",
+                 "Breast_cancer" => "input/Breast_cancer/Test_01_A.dat");
   
 
 my $DATA_FILE = "output/dat.temp";

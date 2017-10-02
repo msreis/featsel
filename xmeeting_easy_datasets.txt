@@ -1,0 +1,51 @@
+
+ 1-run on     Iris with     pucs takes  0.077 and has cross-validation error of 0.067 
+ 2-run on     Iris with     pucs takes  0.085 and has cross-validation error of 0.067 
+ 3-run on     Iris with     pucs takes  0.086 and has cross-validation error of 0.067 
+ 4-run on     Iris with     pucs takes  0.077 and has cross-validation error of 0.067 
+ 5-run on     Iris with     pucs takes  0.076 and has cross-validation error of 0.067 
+ 6-run on     Iris with     pucs takes  0.084 and has cross-validation error of 0.067 
+ 7-run on     Iris with     pucs takes  0.118 and has cross-validation error of 0.067 
+ 8-run on     Iris with     pucs takes  0.090 and has cross-validation error of 0.067 
+ 9-run on     Iris with     pucs takes  0.086 and has cross-validation error of 0.067 
+10-run on     Iris with     pucs takes  0.091 and has cross-validation error of 0.067 
+ 1-run on     Wine with     pucs takes  2.864 and has cross-validation error of 0.022 
+ 2-run on     Wine with     pucs takes  3.069 and has cross-validation error of 0.022 
+ 3-run on     Wine with     pucs takes  2.395 and has cross-validation error of 0.022 
+ 4-run on     Wine with     pucs takes  3.106 and has cross-validation error of 0.022 
+ 5-run on     Wine with     pucs takes  2.592 and has cross-validation error of 0.022 
+ 6-run on     Wine with     pucs takes  2.745 and has cross-validation error of 0.022 
+ 7-run on     Wine with     pucs takes  3.578 and has cross-validation error of 0.022 
+ 8-run on     Wine with     pucs takes  2.734 and has cross-validation error of 0.022 
+ 9-run on     Wine with     pucs takes  3.051 and has cross-validation error of 0.022 
+10-run on     Wine with     pucs takes  2.699 and has cross-validation error of 0.022 
+ 1-run on      Zoo with     pucs takes  8.380 and has cross-validation error of 0.069 
+ 2-run on      Zoo with     pucs takes  7.927 and has cross-validation error of 0.069 
+ 3-run on      Zoo with     pucs takes  8.049 and has cross-validation error of 0.069 
+ 4-run on      Zoo with     pucs takes  8.414 and has cross-validation error of 0.069 
+ 5-run on      Zoo with     pucs takes  6.998 and has cross-validation error of 0.069 
+ 6-run on      Zoo with     pucs takes  7.848 and has cross-validation error of 0.069 
+ 7-run on      Zoo with     pucs takes  7.155 and has cross-validation error of 0.069 
+ 8-run on      Zoo with     pucs takes  8.079 and has cross-validation error of 0.069 
+ 9-run on      Zoo with     pucs takes  9.423 and has cross-validation error of 0.069 
+10-run on      Zoo with     pucs takes  8.603 and has cross-validation error of 0.069 
+ 1-run on Lung_cancer with     pucs takes  4.917 and has cross-validation error of 0.375 
+ 2-run on Lung_cancer with     pucs takes  6.806 and has cross-validation error of 0.156 
+ 3-run on Lung_cancer with     pucs takes  3.981 and has cross-validation error of 0.500 
+ 4-run on Lung_cancer with     pucs takes  6.207 and has cross-validation error of 0.156 
+ 5-run on Lung_cancer with     pucs takes  3.770 and has cross-validation error of 0.375 
+ 6-run on Lung_cancer with     pucs takes  7.549 and has cross-validation error of 0.156 
+ 7-run on Lung_cancer with     pucs takes  7.043 and has cross-validation error of 0.375 
+ 8-run on Lung_cancer with     pucs takes  9.710 and has cross-validation error of 0.375 
+ 9-run on Lung_cancer with     pucs takes  6.887 and has cross-validation error of 0.375 
+10-run on Lung_cancer with     pucs takes  8.880 and has cross-validation error of 0.156 
+ 1-run on Breast_cancer with     pucs takes  2.270 and has cross-validation error of 0.040 
+ 2-run on Breast_cancer with     pucs takes  2.067 and has cross-validation error of 0.040 
+ 3-run on Breast_cancer with     pucs takes  2.431 and has cross-validation error of 0.040 
+ 4-run on Breast_cancer with     pucs takes  2.321 and has cross-validation error of 0.040 
+ 5-run on Breast_cancer with     pucs takes  2.312 and has cross-validation error of 0.040 
+ 6-run on Breast_cancer with     pucs takes  2.455 and has cross-validation error of 0.040 
+ 7-run on Breast_cancer with     pucs takes  2.234 and has cross-validation error of 0.040 
+ 8-run on Breast_cancer with     pucs takes  2.294 and has cross-validation error of 0.040 
+ 9-run on Breast_cancer with     pucs takes  2.295 and has cross-validation error of 0.040 
+10-run on Breast_cancer with     pucs takes  2.283 and has cross-validation error of 0.040 

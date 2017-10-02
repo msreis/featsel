@@ -1,0 +1,41 @@
+
+ 1-run on Lung_cancer with     pucs takes 11.867 and has cross-validation error of 0.156 
+ 2-run on Lung_cancer with     pucs takes  8.857 and has cross-validation error of 0.375 
+ 3-run on Lung_cancer with     pucs takes  8.230 and has cross-validation error of 0.500 
+ 4-run on Lung_cancer with     pucs takes  2.366 and has cross-validation error of 0.375 
+ 5-run on Lung_cancer with     pucs takes 12.143 and has cross-validation error of 0.500 
+ 6-run on Lung_cancer with     pucs takes  5.232 and has cross-validation error of 0.156 
+ 7-run on Lung_cancer with     pucs takes  9.037 and has cross-validation error of 0.375 
+ 8-run on Lung_cancer with     pucs takes  7.104 and has cross-validation error of 0.375 
+ 9-run on Lung_cancer with     pucs takes  9.090 and has cross-validation error of 0.375 
+10-run on Lung_cancer with     pucs takes  2.726 and has cross-validation error of 0.156 
+ 1-run on Lung_cancer with     sffs takes  0.159 and has cross-validation error of 0.375 
+ 2-run on Lung_cancer with     sffs takes  0.153 and has cross-validation error of 0.375 
+ 3-run on Lung_cancer with     sffs takes  0.170 and has cross-validation error of 0.375 
+ 4-run on Lung_cancer with     sffs takes  0.133 and has cross-validation error of 0.375 
+ 5-run on Lung_cancer with     sffs takes  0.168 and has cross-validation error of 0.375 
+ 6-run on Lung_cancer with     sffs takes  0.136 and has cross-validation error of 0.375 
+ 7-run on Lung_cancer with     sffs takes  0.122 and has cross-validation error of 0.375 
+ 8-run on Lung_cancer with     sffs takes  0.161 and has cross-validation error of 0.375 
+ 9-run on Lung_cancer with     sffs takes  0.156 and has cross-validation error of 0.375 
+10-run on Lung_cancer with     sffs takes  0.133 and has cross-validation error of 0.375 
+ 1-run on Breast_cancer with     pucs takes  2.015 and has cross-validation error of 0.040 
+ 2-run on Breast_cancer with     pucs takes  2.073 and has cross-validation error of 0.040 
+ 3-run on Breast_cancer with     pucs takes  2.172 and has cross-validation error of 0.040 
+ 4-run on Breast_cancer with     pucs takes  2.266 and has cross-validation error of 0.040 
+ 5-run on Breast_cancer with     pucs takes  2.254 and has cross-validation error of 0.040 
+ 6-run on Breast_cancer with     pucs takes  2.237 and has cross-validation error of 0.040 
+ 7-run on Breast_cancer with     pucs takes  2.214 and has cross-validation error of 0.040 
+ 8-run on Breast_cancer with     pucs takes  2.092 and has cross-validation error of 0.040 
+ 9-run on Breast_cancer with     pucs takes  2.242 and has cross-validation error of 0.040 
+10-run on Breast_cancer with     pucs takes  2.150 and has cross-validation error of 0.040 
+ 1-run on Breast_cancer with     sffs takes  1.088 and has cross-validation error of 0.040 
+ 2-run on Breast_cancer with     sffs takes  1.117 and has cross-validation error of 0.040 
+ 3-run on Breast_cancer with     sffs takes  1.131 and has cross-validation error of 0.040 
+ 4-run on Breast_cancer with     sffs takes  1.112 and has cross-validation error of 0.040 
+ 5-run on Breast_cancer with     sffs takes  1.174 and has cross-validation error of 0.040 
+ 6-run on Breast_cancer with     sffs takes  1.098 and has cross-validation error of 0.040 
+ 7-run on Breast_cancer with     sffs takes  1.095 and has cross-validation error of 0.040 
+ 8-run on Breast_cancer with     sffs takes  1.109 and has cross-validation error of 0.040 
+ 9-run on Breast_cancer with     sffs takes  1.118 and has cross-validation error of 0.040 
+10-run on Breast_cancer with     sffs takes  1.110 and has cross-validation error of 0.040 

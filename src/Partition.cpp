@@ -2,7 +2,7 @@
 // Partition.cpp -- implementation of the class "Partition".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis, Gustavo E. Matos
+//    Copyright (C) 2016  Gustavo E. Matos, Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by

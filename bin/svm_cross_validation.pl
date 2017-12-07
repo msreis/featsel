@@ -90,7 +90,7 @@ close (DATA);
 my $cv_error = .0;
 my $tf = "data_set.txt";
 create_libsvm_file ($tf, \@data_set, \@selected_features_arr);
-my $libsvmcallstr = $LIBSVM_DIR . "svm-train -s 0 -t 0 -c 1 -v $k " .
+my $libsvmcallstr = $LIBSVM_DIR . "svm-train -s 0 -t 0 -c 100 -v $k " .
 $tf . " > $LOG_FILE\n";
 
 system ($libsvmcallstr);    
@@ -101,6 +101,7 @@ while (<LOG>)
   {
     my $accuracy = $1;
     $cv_error = (100.0 - $accuracy) / 100.0;
+    $cv_error = sprintf("%.3f", $cv_error);
   }
 }
 close (LOG);

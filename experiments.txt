@@ -1,0 +1,141 @@
+
+ 1-run on           Iris with     pucs takes  0.075 and has cross-validation error of 0.080 <0111>
+ 2-run on           Iris with     pucs takes  0.072 and has cross-validation error of 0.080 <0111>
+ 3-run on           Iris with     pucs takes  0.070 and has cross-validation error of 0.080 <0111>
+ 4-run on           Iris with     pucs takes  0.069 and has cross-validation error of 0.080 <0111>
+ 5-run on           Iris with     pucs takes  0.065 and has cross-validation error of 0.080 <0111>
+ 6-run on           Iris with     pucs takes  0.069 and has cross-validation error of 0.080 <0111>
+ 7-run on           Iris with     pucs takes  0.073 and has cross-validation error of 0.080 <0111>
+ 8-run on           Iris with     pucs takes  0.072 and has cross-validation error of 0.080 <0111>
+ 9-run on           Iris with     pucs takes  0.066 and has cross-validation error of 0.080 <0111>
+10-run on           Iris with     pucs takes  0.075 and has cross-validation error of 0.080 <0111>
+ 1-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 2-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 3-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 4-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 5-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 6-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 7-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 8-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 9-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+10-run on           Iris with      all takes  0.000 and has cross-validation error of 0.067 <1111>
+ 1-run on       Thoracic with     pucs takes 60.527 and has cross-validation error of 0.149 <0101000011001001>
+ 2-run on       Thoracic with     pucs takes 95.160 and has cross-validation error of 0.149 <0101000011001001>
+ 3-run on       Thoracic with     pucs takes 84.766 and has cross-validation error of 0.149 <0101000011001001>
+ 4-run on       Thoracic with     pucs takes 70.741 and has cross-validation error of 0.149 <0101000011000011>
+ 5-run on       Thoracic with     pucs takes 57.134 and has cross-validation error of 0.149 <0101000011001001>
+ 6-run on       Thoracic with     pucs takes 65.092 and has cross-validation error of 0.149 <0101000011001101>
+ 7-run on       Thoracic with     pucs takes 82.529 and has cross-validation error of 0.149 <0101000011001001>
+ 8-run on       Thoracic with     pucs takes 77.495 and has cross-validation error of 0.149 <0101000011001011>
+ 9-run on       Thoracic with     pucs takes 75.744 and has cross-validation error of 0.149 <0101000011001001>
+10-run on       Thoracic with     pucs takes 66.737 and has cross-validation error of 0.149 <0101000011001001>
+ 1-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 2-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 3-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 4-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 5-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 6-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 7-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 8-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 9-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+10-run on       Thoracic with      all takes  0.000 and has cross-validation error of 0.149 <1111111111111111>
+ 1-run on      Promoters with     pucs takes  5.058 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 2-run on      Promoters with     pucs takes  5.504 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 3-run on      Promoters with     pucs takes  5.656 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 4-run on      Promoters with     pucs takes  5.431 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 5-run on      Promoters with     pucs takes  5.138 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 6-run on      Promoters with     pucs takes  5.399 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 7-run on      Promoters with     pucs takes  4.877 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 8-run on      Promoters with     pucs takes  5.067 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 9-run on      Promoters with     pucs takes  5.636 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+10-run on      Promoters with     pucs takes  5.843 and has cross-validation error of 0.160 <000000000000001010000000000000000000001000000000000000000>
+ 1-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 2-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 3-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 4-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 5-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 6-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 7-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 8-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 9-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+10-run on      Promoters with      all takes  0.000 and has cross-validation error of 0.142 <111111111111111111111111111111111111111111111111111111111>
+ 1-run on           Wine with     pucs takes  2.539 and has cross-validation error of 0.028 <1000001000101>
+ 2-run on           Wine with     pucs takes  3.133 and has cross-validation error of 0.028 <1000001000101>
+ 3-run on           Wine with     pucs takes  2.798 and has cross-validation error of 0.028 <1000001000101>
+ 4-run on           Wine with     pucs takes  2.132 and has cross-validation error of 0.028 <1000001000101>
+ 5-run on           Wine with     pucs takes  2.454 and has cross-validation error of 0.028 <1000001000101>
+ 6-run on           Wine with     pucs takes  2.214 and has cross-validation error of 0.028 <1000001000101>
+ 7-run on           Wine with     pucs takes  2.887 and has cross-validation error of 0.028 <1000001000101>
+ 8-run on           Wine with     pucs takes  2.015 and has cross-validation error of 0.028 <1000001000101>
+ 9-run on           Wine with     pucs takes  2.745 and has cross-validation error of 0.028 <1000001000101>
+10-run on           Wine with     pucs takes  2.622 and has cross-validation error of 0.028 <1000001000101>
+ 1-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 2-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 3-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 4-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 5-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 6-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 7-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 8-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 9-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+10-run on           Wine with      all takes  0.000 and has cross-validation error of 0.011 <1111111111111>
+ 1-run on            Zoo with     pucs takes  5.552 and has cross-validation error of 0.069 <110101001001000>
+ 2-run on            Zoo with     pucs takes  6.837 and has cross-validation error of 0.069 <110101001001000>
+ 3-run on            Zoo with     pucs takes  8.828 and has cross-validation error of 0.069 <110101001001000>
+ 4-run on            Zoo with     pucs takes  7.620 and has cross-validation error of 0.069 <110101001001000>
+ 5-run on            Zoo with     pucs takes  8.213 and has cross-validation error of 0.069 <110101001001000>
+ 6-run on            Zoo with     pucs takes  8.445 and has cross-validation error of 0.069 <110101001001000>
+ 7-run on            Zoo with     pucs takes  8.563 and has cross-validation error of 0.069 <110101001001000>
+ 8-run on            Zoo with     pucs takes  7.915 and has cross-validation error of 0.069 <110101001001000>
+ 9-run on            Zoo with     pucs takes  8.706 and has cross-validation error of 0.069 <110101001001000>
+10-run on            Zoo with     pucs takes  7.717 and has cross-validation error of 0.069 <110101001001000>
+ 1-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 2-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 3-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 4-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 5-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 6-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 7-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 8-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 9-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+10-run on            Zoo with      all takes  0.000 and has cross-validation error of 0.089 <111111111111111>
+ 1-run on    Lung_cancer with     pucs takes  3.578 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 2-run on    Lung_cancer with     pucs takes  3.272 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 3-run on    Lung_cancer with     pucs takes  5.571 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 4-run on    Lung_cancer with     pucs takes 10.025 and has cross-validation error of 0.250 <00000000000000000000001000100000101000000000010000001000>
+ 5-run on    Lung_cancer with     pucs takes  7.795 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 6-run on    Lung_cancer with     pucs takes  5.563 and has cross-validation error of 0.438 <00000100000000000101000000000000000000000000000001000000>
+ 7-run on    Lung_cancer with     pucs takes  5.475 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 8-run on    Lung_cancer with     pucs takes  7.557 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 9-run on    Lung_cancer with     pucs takes  8.737 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+10-run on    Lung_cancer with     pucs takes  6.405 and has cross-validation error of 0.375 <00000100000100000001001000000000000000000000000000000000>
+ 1-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 2-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 3-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 4-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 5-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 6-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 7-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 8-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 9-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+10-run on    Lung_cancer with      all takes  0.000 and has cross-validation error of 0.594 <11111111111111111111111111111111111111111111111111111111>
+ 1-run on  Breast_cancer with     pucs takes  2.004 and has cross-validation error of 0.041 <0001101101>
+ 2-run on  Breast_cancer with     pucs takes  2.118 and has cross-validation error of 0.041 <0101101101>
+ 3-run on  Breast_cancer with     pucs takes  2.175 and has cross-validation error of 0.041 <0001101101>
+ 4-run on  Breast_cancer with     pucs takes  2.151 and has cross-validation error of 0.041 <0101101101>
+ 5-run on  Breast_cancer with     pucs takes  2.150 and has cross-validation error of 0.041 <0001101101>
+ 6-run on  Breast_cancer with     pucs takes  2.152 and has cross-validation error of 0.041 <0001101101>
+ 7-run on  Breast_cancer with     pucs takes  2.164 and has cross-validation error of 0.041 <0001101101>
+ 8-run on  Breast_cancer with     pucs takes  2.189 and has cross-validation error of 0.041 <0001101101>
+ 9-run on  Breast_cancer with     pucs takes  2.156 and has cross-validation error of 0.041 <0001101101>
+10-run on  Breast_cancer with     pucs takes  1.892 and has cross-validation error of 0.041 <0001101101>
+ 1-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 2-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 3-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 4-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 5-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 6-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 7-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 8-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+ 9-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>
+10-run on  Breast_cancer with      all takes  0.000 and has cross-validation error of 0.040 <1111111111>

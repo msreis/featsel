@@ -84,7 +84,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
 
   if (p == 0) {
     p = 10.0 / set->get_set_cardinality ();
-    if (set->get_set_cardinality () > 30)
+    if (set->get_set_cardinality () > 20)
       l = 1;
     else
       l = 2;

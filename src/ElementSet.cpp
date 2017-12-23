@@ -49,7 +49,8 @@ ElementSet::ElementSet (ElementSet * elm_set)
   if (elm_set->has_extra_element)
   {
     unsigned int real_nof_elements;
-    real_nof_elements = elm_set->number_of_elements + this->number_of_labels;
+    real_nof_elements = elm_set->number_of_elements 
+      + 2 * this->number_of_labels + 1;
     this->list_of_elements = new Element*[real_nof_elements];
     for (unsigned int i = 0; i < real_nof_elements; i++)
       this->list_of_elements[i] =
@@ -113,31 +114,35 @@ ElementSet::ElementSet (string a_set_name, string file_name)
 
 void ElementSet::load_dat_file (string file_name, unsigned int n)
 {
+  unsigned int i, k, max, tot_elements;
   DatParserDriver * driver = new DatParserDriver ();
   has_extra_element = true;
   name = "Classifier design";
   number_of_elements = n;
   value = 0;
+  tot_elements = number_of_elements + 2 * number_of_labels + 1;
 
   if (driver->parse (n, number_of_labels, file_name))
   {
-    std::cout << "Error in ElementSet, processing the DAT file!" << std::endl;
+    std::cout << "Error in ElementSet, processing the DAT file!" << 
+      std::endl;
   }
   else
   {
-    list_of_elements = new Element * [number_of_elements + number_of_labels];
+    list_of_elements = new Element * [tot_elements];
 
-    for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
-      list_of_elements[i] = new Element (driver->max_number_of_values, "");
+    for (i = 0; i < tot_elements; i++)
+      list_of_elements[i] = 
+        new Element (driver->max_number_of_values, "");
 
-    unsigned int max = driver->list_of_elements[0]->get_number_of_values ();
-
-    for (unsigned int k = 0; k < max; k++)
+    max = driver->list_of_elements[0]->get_number_of_values ();
+    for (k = 0; k < max; k++)
     {
-      for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
+      for (i = 0; i < tot_elements; i++)
       {
-        list_of_elements[i]->add_element_value
-        (driver->list_of_elements[i]->get_element_value (k));
+        list_of_elements[i]->add_element_value 
+          (driver->list_of_elements[i]->get_element_value (k));
+        
       }
     }
   }
@@ -273,9 +278,8 @@ unsigned int ElementSet::get_set_cardinality ()
 
 Element * ElementSet::get_element (unsigned int index)
 {
-  if ((has_extra_element
-        &&
-      (index < (number_of_elements + number_of_labels)) )
+  if ((has_extra_element && index < 
+        number_of_elements + 2 * number_of_labels + 1)
       ||
       (index < number_of_elements))
     return list_of_elements[index];

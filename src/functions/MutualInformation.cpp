@@ -27,12 +27,13 @@ MutualInformation::MutualInformation (ElementSet * a_set)
   t = 0;
   if (! (set->get_set_cardinality() == 0))
     t = set->get_element (0)->get_number_of_values ();
+  H_Y = NULL;
 }
 
 
 MutualInformation::~MutualInformation ()
 {
-  // Empty destructor.
+  delete H_Y;
 }
 
 
@@ -76,8 +77,7 @@ double MutualInformation::cost (ElementSubset * X)
 
 double MutualInformation::calculate_MI (ElementSubset * X)
 {
-  double MCE = 0, 
-        H_Y = 0;
+  double MCE = 0; 
   map <string, SampleLabels *>::iterator it;
     
   // Stores the samples.
@@ -90,26 +90,30 @@ double MutualInformation::calculate_MI (ElementSubset * X)
 
   // Calculate the distribution of X = x and initialize sample attribute.
   //
-  unsigned int * freq_Y = calculate_distributions_from_the_samples (X,
+  // TODO: if there's many labels that are not seen we could change
+  // freq_Y to a map
+  unsigned int * freq_Y = calculate_distributions_from_the_samples (X, 
       &samples, &m);
 
   // Calculate H(Y).
   //
-  for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
-  {
-    // H(Y) -= Pr(Y=y) * log (Pr(Y = y))
-    //
-    double Pr_Y_is_y = (double) freq_Y[i] / (double) m;
-
-    if (Pr_Y_is_y > 0)
-      H_Y -=  Pr_Y_is_y * (log (Pr_Y_is_y) / 
-          log ((double) set->get_number_of_labels ()));
+  #pragma omp critical
+  if (H_Y == NULL) {
+    H_Y = new double;
+    *H_Y = 0;
+    for (unsigned int i = 0; i < set->get_number_of_labels (); i++)
+    {
+      // H(Y) -= Pr(Y=y) * log (Pr(Y = y))
+      //
+      double Pr_Y_is_y = (double) freq_Y[i] / (double) m;
+      if (Pr_Y_is_y > 0)
+        *H_Y -=  Pr_Y_is_y * (log (Pr_Y_is_y) / 
+            log ((double) set->get_number_of_labels ()));
+    }
   }
-
   delete [] freq_Y;
 
-  // Calculates the MCE and clear the table of distribution of
-  // X taken from the samples.
+  // Calculates the MCE
   //
   for (it = samples.begin (); it != samples.end (); it++)
   {
@@ -127,9 +131,7 @@ double MutualInformation::calculate_MI (ElementSubset * X)
   for (it = samples.begin (); it != samples.end (); it++)
     delete it->second;
 
-  samples.clear ();
-
-  return (double) MCE - H_Y;   // I(X;Y) = H(Y)-H(Y|X) => - I(X;Y) = H(Y|X)-H(Y)
+  return (double) MCE - (*H_Y);   // I(X;Y) = H(Y)-H(Y|X) => - I(X;Y) = H(Y|X)-H(Y)
 }
 
 
@@ -158,9 +160,10 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
 (ElementSubset * X, map<string, SampleLabels *> * samples, 
  unsigned int * m)
 {
-  unsigned int i, j, k;
+  unsigned int i, j, k, n, seen_labels;
   map <string, SampleLabels *>::iterator it;
   
+  n = set->get_set_cardinality ();
   unsigned int * freq_Y = new unsigned int [set->get_number_of_labels ()];
   for (k = 0; k < set->get_number_of_labels (); k++)
     freq_Y[k] = 0;
@@ -168,7 +171,7 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
   for (j = 0; j < set->get_element (0)->get_number_of_values (); j++)
   {
     string observation;
-    for (i = 0; i < set->get_set_cardinality (); i++)
+    for (i = 0; i < n; i++)
     {
       if (X->has_element (i))
       {
@@ -188,17 +191,20 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
     if (it == samples->end ())
     {
       SampleLabels * row = new SampleLabels ();
-      for (k = 0; k < set->get_number_of_labels (); k++)
+      seen_labels = set->get_element (n)->get_element_value (j);
+
+      for (k = 0; k < seen_labels; k++)
       {
-        unsigned int y_idx, y_freq_given_x;
-        y_idx = set->get_set_cardinality () + k;
-        y_freq_given_x =
-         set->get_element (y_idx)->get_element_value (j);
+        unsigned int y_idx, y, y_freq_given_x;
+        y_idx = n + 1 + 2 * k;
+        y = set->get_element (y_idx)->get_element_value (j);
+        y_freq_given_x = 
+          set->get_element (y_idx + 1)->get_element_value (j);
         if (y_freq_given_x > 0)
         {
-          row->insert (make_pair (k, y_freq_given_x));
+          row->insert (make_pair (y, y_freq_given_x));
           *m += y_freq_given_x;
-          freq_Y[k] += y_freq_given_x;
+          freq_Y[y] += y_freq_given_x;
         }
       }
       samples->insert (pair<string, SampleLabels * > (observation, 
@@ -209,15 +215,19 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
     //
     else
     {
-      for (k = 0; k < set->get_number_of_labels (); k++)
+      seen_labels = set->get_element (n)->get_element_value (j);
+      for (k = 0; k < seen_labels; k++)
       {
-        unsigned int y_freq_given_x = set->get_element
-             (set->get_set_cardinality () + k)->get_element_value (j);
+        unsigned int y_idx, y, y_freq_given_x;
+        y_idx = n + 1 + 2 * k;
+        y = set->get_element (y_idx)->get_element_value (j);
+        y_freq_given_x =
+          set->get_element (y_idx + 1)->get_element_value (j);
         if (y_freq_given_x > 0)
         {
-          (*it->second)[k] += y_freq_given_x;
+          (*it->second)[y] += y_freq_given_x;
           *m += y_freq_given_x;
-          freq_Y[k] += y_freq_given_x;
+          freq_Y[y] += y_freq_given_x;
         }
       }
     }   

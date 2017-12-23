@@ -52,6 +52,10 @@ protected:
   unsigned int * calculate_distributions_from_the_samples 
     (ElementSubset *, map<string, SampleLabels *> *, unsigned int *);
 
+  // Stores the entropy of Y, H (Y)
+  //
+  double * H_Y;
+
 public:
 
   // Default constructor.

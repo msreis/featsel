@@ -145,14 +145,14 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
 (ElementSubset * X, map<string, SampleLabels *> * samples, 
  unsigned int * m)
 {
-  unsigned int i, j, k;
-
+  unsigned int i, j, k, n, seen_labels;
   map <string, SampleLabels *>::iterator it;
 
+  n = set->get_set_cardinality (); 
   for (j = 0; j < set->get_element (0)->get_number_of_values (); j++)
   {
     string observation;
-    for (i = 0; i < set->get_set_cardinality (); i++)
+    for (i = 0; i < n; i++)
     {
       if (X->has_element (i))
       {
@@ -173,15 +173,17 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     if ((it == samples->end ()))
     {
       SampleLabels * row = new SampleLabels ();
-      for (k = 0; k < set->get_number_of_labels (); k++)
+      seen_labels = set->get_element (n)->get_element_value (j);
+      for (k = 0; k < seen_labels; k++)
       {
-        unsigned int y_idx, y_freq_given_x;
-        y_idx = set->get_set_cardinality () + k;
+        unsigned int y_idx, y, y_freq_given_x;
+        y_idx = n + 1 + 2 * k;
+        y = set->get_element (y_idx)->get_element_value (j);
         y_freq_given_x =
-         set->get_element (y_idx)->get_element_value (j);
+         set->get_element (y_idx + 1)->get_element_value (j);
         if (y_freq_given_x > 0)
         {
-          row->insert (make_pair (k, y_freq_given_x));
+          row->insert (make_pair (y, y_freq_given_x));
           *m += y_freq_given_x;
         }
       }
@@ -192,11 +194,15 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     //
     else
     {
-      for (k = 0; k < set->get_number_of_labels (); k++)
+      seen_labels = set->get_element (n)->get_element_value (j);
+      for (k = 0; k < seen_labels; k++)
       {
-        unsigned int y_freq_given_x = set->get_element
-             (set->get_set_cardinality () + k)->get_element_value (j);
-        (*it->second)[k] += y_freq_given_x;
+        unsigned int y_idx, y, y_freq_given_x;
+        y_idx = n + 1 + 2 * k;
+        y = set->get_element (y_idx)->get_element_value (j);
+        y_freq_given_x = 
+          set->get_element (y_idx + 1)->get_element_value (j);
+        (*it->second)[y] += y_freq_given_x;
         *m               += y_freq_given_x;
       }
     }

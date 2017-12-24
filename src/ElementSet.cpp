@@ -248,7 +248,7 @@ ElementSet::~ElementSet ()
   }
   if (has_extra_element)
   {
-    for (i = 0; i < number_of_labels; i++)
+    for (i = 0; i < 2 * number_of_labels + 1; i++)
     {
       delete list_of_elements [number_of_elements + i];
     }

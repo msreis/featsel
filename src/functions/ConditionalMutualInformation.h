@@ -58,6 +58,10 @@ private:
   double conditional_mutual_information (unsigned int x1, unsigned int x2);
 
 
+  // Stores the sample label distribution Pr (Y = y)
+  //
+  double * Pr_Y; 
+  
 public:
 
   // Default constructor.

@@ -40,11 +40,6 @@ class CostFunction
 {
 
 protected:
-    
-  // Struct used to store a sample class
-  //
-  typedef map<unsigned int, unsigned int> SampleLabels;
-
 
   // Return the difference (in microseconds) between t2 and t1
   //

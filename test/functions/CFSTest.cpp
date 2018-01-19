@@ -49,30 +49,37 @@ namespace CFSTest
     X.add_element (0);               // X = 100 
 
     if ((c.cost (&X) <= -0.463453) || (c.cost (&X) >= -0.463451))
+      cout << "desired: " << -0.4634 << ", got: " << c.cost (&X) << endl;
       return false;
 
     X.add_element (1);               // X = 110
     if ((c.cost (&X) <= -0.548042) || (c.cost (&X) >= -0.548040))
+      cout << "desired: " << -0.54804 << ", got: " << c.cost (&X) << endl;
       return false;
 
     X.add_element (2);               // X = 111
     if ((c.cost (&X) <= -0.611840) || (c.cost (&X) >= -0.611838))
+      cout << "desired: " << -0.61183 << ", got: " << c.cost (&X) << endl;
       return false;
 
     X.remove_element (1);            // X = 101
     if ((c.cost (&X) <= -0.543845) || (c.cost (&X) >= -0.543843))
+      cout << "desired: " << -0.54384 << ", got: " << c.cost (&X) << endl;
       return false;
 
     X.remove_element (0);            // X = 001
     if ((c.cost (&X) <= -0.511102) || (c.cost (&X) >= -0.511100))
+      cout << "desired: " << -0.51110 << ", got: " << c.cost (&X) << endl;
       return false;
     
     X.add_element (1);               // X = 011
     if ((c.cost (&X) <= -0.575682) || (c.cost (&X) >= -0.575680))
+      cout << "desired: " << -0.57568 << ", got: " << c.cost (&X) << endl;
       return false;
 
     X.remove_element (2);            // X = 010
     if ((c.cost (&X) <= -0.359795) || (c.cost (&X) >= -0.359793))
+      cout << "desired: " << -0.35979 << ", got: " << c.cost (&X) << endl;
       return false;
 
 

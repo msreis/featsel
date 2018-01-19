@@ -58,6 +58,10 @@ private:
   double conditional_mutual_information (unsigned int x1, unsigned int x2);
 
 
+  // Stores the sample label distribution Pr (Y = y)
+  //
+  double * Pr_Y; 
+  
 public:
 
   // Default constructor.
@@ -68,6 +72,11 @@ public:
   // Default destructor.
   //
   virtual ~ConditionalMutualInformation ();
+
+
+  // Creates a copy of this object.
+  //
+  virtual ConditionalMutualInformation * get_copy ();
 
 
   // Returns the value of c(X), where X is a subset.

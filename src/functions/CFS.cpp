@@ -105,15 +105,22 @@ double CFS::compute_entropy (unsigned int i)
   {
     double sum_Y = 0;
 
-    for (unsigned int label = 0; label < set->get_number_of_labels(); label++)
+    for (unsigned int label = 0; label < set->get_number_of_labels (); 
+        label++)
       Pr_Y [label] = 0;
 
     for (unsigned int k = 0; k < number_of_rows; k++)
-      for (unsigned int label = 0; label < set->get_number_of_labels(); label++)
-        Pr_Y [label] += set->get_element (n + label)->get_element_value (k);
+    {
+      SampleLabels::iterator l_it;
+      SampleLabels * row;
+      row = set->get_sample_labels_map (k).second;
+      for (l_it = row->begin (); l_it != row->end (); l_it++)
+        Pr_Y[l_it->first] += l_it->second;
+    }
 
-    for (unsigned int label = 0; label < set->get_number_of_labels (); label++)
-        sum_Y -= compute_entropy_term (Pr_Y [label]);
+    for (unsigned int label = 0; label < set->get_number_of_labels (); 
+        label++)
+      sum_Y -= compute_entropy_term (Pr_Y [label]);
 
     return (sum_Y + compute_entropy_term (m)) / (m * log (2));
   }
@@ -143,12 +150,22 @@ double CFS::compute_joint_entropy (unsigned int i, unsigned int j)
     double sum_X1_Y = 0;
 
     for (unsigned int k = 0; k < number_of_rows; k++)
-      for (unsigned int label = 0; label < set->get_number_of_labels(); label++)
-        Pr_X1_Y [set->get_element (i)->get_element_value (k)][label] +=
-          set->get_element (n + label)->get_element_value (k);
+    {
+      SampleLabels::iterator l_it;
+      SampleLabels * row = set->get_sample_labels_map (k).second;
+      for (l_it = row->begin (); l_it != row->end (); l_it++)
+      {
+        unsigned int x1_value, label, freq;
+        x1_value = set->get_element (i)->get_element_value (k);
+        label = l_it->first;
+        freq = l_it->second;
+        Pr_X1_Y[x1_value][label] += freq;
+      }
+    }
 
     for (unsigned int ii = 0; ii <= max_feature_value; ii++)
-      for (unsigned int label =0; label < set->get_number_of_labels (); label++)
+      for (unsigned int label = 0; label < set->get_number_of_labels (); 
+          label++)
       {
         sum_X1_Y -= compute_entropy_term (Pr_X1_Y [ii][label]);
         Pr_X1_Y [ii][label] = 0; // clean up for the next call.
@@ -160,16 +177,18 @@ double CFS::compute_joint_entropy (unsigned int i, unsigned int j)
   else // X2 is a feature.
   {
     double sum_X1_X2 = 0;
-
+    cout << "i = " << i << ", n = " << set->get_set_cardinality () << endl;
     for (unsigned int k = 0; k < number_of_rows; k++)
     {
-      unsigned int X1_value = set->get_element (i)->get_element_value (k);
-      unsigned int X2_value = set->get_element (j)->get_element_value (k);
+      unsigned int X1_value = 
+        set->get_element (i)->get_element_value (k);
+      unsigned int X2_value = 
+        set->get_element (j)->get_element_value (k);
       Pr_X1_X2 [X1_value][X2_value]++;
     }
 
     for (unsigned int ii = 0; ii <= max_feature_value; ii++)
-      for (unsigned int jj =0; jj <= max_feature_value; jj++)
+      for (unsigned int jj = 0; jj <= max_feature_value; jj++)
       {
         sum_X1_X2 -= compute_entropy_term (Pr_X1_X2 [ii][jj]);
         Pr_X1_X2 [ii][jj] = 0; // clean up for the next call.

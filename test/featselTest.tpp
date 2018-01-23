@@ -115,11 +115,13 @@ int main (void)
   result ("it_should_return_an_element_that_belongs_to_the_set",
     ElementSetTest::it_should_return_an_element_that_belongs_to_the_set ());
   result ("it_should_not_return_an_element_that_not_belongs_to_the_set",
-    ElementSetTest::
-    it_should_not_return_an_element_that_not_belongs_to_the_set ());
+    ElementSetTest::it_should_not_return_an_element_that_not_belongs_to_the_set ());
   result ("values_from_a_random_set_should_be_within_the_given_range",
-    ElementSetTest::
-    values_from_a_random_set_should_be_within_the_given_range ());
+    ElementSetTest::values_from_a_random_set_should_be_within_the_given_range ());
+  result ("it_should_return_sample_row_as_map",
+    ElementSetTest::it_should_return_sample_row_as_map ());
+  result ("it_should_return_sample_row_as_array",
+    ElementSetTest::it_should_return_sample_row_as_array ());
   cout << endl;
 
   // Testing Class "ElementSubset"

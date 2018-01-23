@@ -116,6 +116,7 @@ double CFS::compute_entropy (unsigned int i)
       row = set->get_sample_labels_map (k).second;
       for (l_it = row->begin (); l_it != row->end (); l_it++)
         Pr_Y[l_it->first] += l_it->second;
+      delete row;
     }
 
     for (unsigned int label = 0; label < set->get_number_of_labels (); 
@@ -161,8 +162,9 @@ double CFS::compute_joint_entropy (unsigned int i, unsigned int j)
         freq = l_it->second;
         Pr_X1_Y[x1_value][label] += freq;
       }
+      delete row;
     }
-
+    
     for (unsigned int ii = 0; ii <= max_feature_value; ii++)
       for (unsigned int label = 0; label < set->get_number_of_labels (); 
           label++)
@@ -177,7 +179,6 @@ double CFS::compute_joint_entropy (unsigned int i, unsigned int j)
   else // X2 is a feature.
   {
     double sum_X1_X2 = 0;
-    cout << "i = " << i << ", n = " << set->get_set_cardinality () << endl;
     for (unsigned int k = 0; k < number_of_rows; k++)
     {
       unsigned int X1_value = 
@@ -218,7 +219,6 @@ double CFS::symmetrical_uncertainity (unsigned int i, unsigned int j)
     // Compute H(X1), H(X2) and H(X1,X2).
     //
     double H_Xi_Xj = compute_joint_entropy (i, j);  
-
     if (i == j)
       result = 2 * ((H[i] + H[n] - H_Xi_Xj) / (H[i] + H[n]));
     else
@@ -243,7 +243,7 @@ double CFS::evaluateSubset (ElementSubset * X)
 
   list <unsigned int> L; 
 
-  X->copy_list (& L);
+  X->copy_list (&L);
 
   for (it_i = L.begin (); it_i != L.end (); it_i++)
   {

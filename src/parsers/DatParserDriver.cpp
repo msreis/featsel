@@ -71,7 +71,7 @@ int DatParserDriver::parse (unsigned int n, unsigned int l, string f)
   // often have more than 2 digits.
   //
   max_number_of_values = (end - begin) /
-                         (2 * (number_of_elements + number_of_labels) + 1);
+                         (2 * (number_of_elements + number_of_labels)) + 1;
 
   // The extra positions are to store the classification for a given subset,
   // which requires two index per label (label index, number of 

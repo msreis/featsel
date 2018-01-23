@@ -68,9 +68,7 @@ namespace ElementSetTest
   {
     ElementSet set ("input/parsers/Test_DatParserDriver_A.dat", 7);
     if ((set.get_set_cardinality () == 7) &&
-        (set.get_element (0)->get_max_number_of_values () == 4) &&
-        // (set.get_element (7)->get_element_value(3) == 8) && // W-operator label
-        // (set.get_element (7)->get_element_value(0) == 2) && // W-operator label
+        (set.get_element (0)->get_max_number_of_values () >= 4) &&
         (set.get_element (0)->get_element_value(3) == 0) &&
         (set.get_element (5)->get_element_value(1) == 0))
       return true;
@@ -145,5 +143,43 @@ namespace ElementSetTest
     return true;
   }
 
+
+  bool it_should_return_sample_row_as_map ()
+  {
+    ElementSet set ("input/parsers/Test_DatParserDriver_A.dat", 7);
+    SampleLabels * row0 = set.get_sample_labels_map (0).second;
+    SampleLabels * row2 = set.get_sample_labels_map (2).second;
+    bool answ = true;
+
+    if ((set.get_set_cardinality () == 7) &&
+        (*row0)[0] != 2 &&
+        (*row0)[1] != 555 &&
+        (*row2)[0] != 5 &&
+        (*row2)[1] != 70)
+      answ = false;
+
+    delete row0;
+    delete row2;
+    return answ;
+  }
+
+  bool it_should_return_sample_row_as_array ()
+  {
+    ElementSet set ("input/parsers/Test_DatParserDriver_A.dat", 7);
+    unsigned int * row0 = set.get_sample_labels_row (0).second;
+    unsigned int * row2 = set.get_sample_labels_row (2).second;
+    bool answ = true;
+
+    if ((set.get_set_cardinality () == 7) &&
+         row0[0] != 2 &&
+         row0[1] != 555 &&
+         row2[0] != 5 &&
+         row2[1] != 70)
+         answ = false;
+
+    delete[] row0;
+    delete[] row2;
+    return answ;
+  }
 
 } // end namespace

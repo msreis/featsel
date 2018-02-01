@@ -135,10 +135,10 @@ namespace MeanConditionalEntropyTest
   {
     ElementSet set_1 ("input/mce/Test_03_09_C.dat", 3);
     ElementSet set_2 ("input/mce/Test_03_06_D.dat", 3);
-    MeanConditionalEntropy cf_1 (& set_1);
-    MeanConditionalEntropy cf_2 (& set_2);
-    ElementSubset X ("X", & set_1);
-    ElementSubset Y ("Y", & set_2);
+    MeanConditionalEntropy cf_1 (&set_1);
+    MeanConditionalEntropy cf_2 (&set_2);
+    ElementSubset X ("X", &set_1);
+    ElementSubset Y ("Y", &set_2);
     double cost;
 
     X.set_complete_subset ();

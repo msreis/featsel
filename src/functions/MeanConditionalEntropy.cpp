@@ -195,8 +195,7 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
         y = l_it->first;
         y_freq = l_it->second;
         (*it->second)[y] += y_freq;
-        *m += y_freq;
-      }
+      }      
       delete row;
     }
     observation.clear ();

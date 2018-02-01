@@ -50,8 +50,8 @@ SpecCMI::~SpecCMI ()
   if (Q != NULL)
   {
     for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
-      delete [] Q[i];
-    delete [] Q;
+      delete[] Q[i];
+    delete[] Q;
   }
 }
 
@@ -71,9 +71,18 @@ void SpecCMI::print_Q_matrix ()
 
 void SpecCMI::compute_Q_matrix ()
 {
+
   int index = 0, n = set->get_set_cardinality ();
   ElementSubset X ("subset", set);
   cmi = new ConditionalMutualInformation (set);
+
+  if (Q != NULL)
+  {
+    for (unsigned int i = 0; i < set->get_set_cardinality (); i++)
+      delete[] Q[i];
+    delete[] Q;
+    Q = NULL;
+  }
 
   this->Q = new double * [n];
   

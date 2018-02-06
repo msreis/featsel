@@ -1,8 +1,8 @@
 //
-// %template%.h -- definition of the class "%template%".
+// SigNetSim.h -- definition of the class "SigNetSim".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2015  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,28 +18,33 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef %TEMPLATE%_H_
-#define %TEMPLATE%_H_
-
+#ifndef SIGNETSIM_H_
+#define SIGNETSIM_H_
 
 #include "../global.h"
 #include "../ElementSet.h"
 #include "../ElementSubset.h"
 #include "../CostFunction.h"
 
-class %template% : public CostFunction
+#define SIGNETSIM_PROGRAM "SigNetSim.py"
+
+#define SIGNETSIM_INPUT_PATH "src/functions/SigNetSim.py"
+
+#define SIGNETSIM_OUTPUT_PATH "output/SigNetSim.tmp"
+
+class SigNetSim : public CostFunction
 {
 
 public:
 
   // Default constructor.
   //
-  %template% (ElementSet *);
+  SigNetSim (ElementSet *);
 
 
   // Default destructor.
   //
-  virtual ~%template% ();
+  virtual ~SigNetSim ();
 
 
   // Returns the value of c(X), where X is a subset.
@@ -48,4 +53,4 @@ public:
 
 };
 
-#endif /* %TEMPLATE%_H_ */
+#endif /* SIGNETSIM_H_ */

@@ -1,8 +1,7 @@
-//
-// %template%.cpp -- implementation of the class "%template%".
+// SigNetSim.cpp -- implementation of the class "SigNetSim".
 //
 //    This file is part of the featsel program
-//    Copyright (C) 2016  Marcelo S. Reis
+//    Copyright (C) 2017  Marcelo S. Reis
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -18,22 +17,23 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "%template%.h"
+#include "SigNetSim.h"
+#include "Python.h"
 
 
-%template%::%template% (ElementSet * a_set)
+SigNetSim::SigNetSim (ElementSet * a_set)
 {
   set = a_set;
 }
 
 
-%template%::~%template% ()
+SigNetSim::~SigNetSim ()
 {
   // Empty destructor.
 }
 
 
-double %template%::cost (ElementSubset * X)
+double SigNetSim::cost (ElementSubset * X)
 {
   timeval begin, end;
   gettimeofday (& begin, NULL);
@@ -46,11 +46,39 @@ double %template%::cost (ElementSubset * X)
   if (set->get_set_cardinality () == 0)
     return 0;
 
-  //
+  Py_Initialize ();
 
-  // TODO: [ADD YOUR COST FUNCTION CODE HERE!]
+  int argc = 1;
+  char * argv [1], * str;
+  str = argv[0] = new char [set->get_set_cardinality () + 3];
+  strcpy (argv[0], X->print_subset ().c_str ());
 
-  //
+  PySys_SetArgv (argc, argv);
+
+  FILE * sns_input_f = fopen (SIGNETSIM_INPUT_PATH, "r");
+
+  if (sns_input_f == NULL)
+    cout << "Error while opening SigNetSim input file!" << endl;
+
+  PyRun_SimpleFile (sns_input_f, SIGNETSIM_PROGRAM);
+
+  fclose (sns_input_f);
+
+  Py_Finalize ();
+
+  FILE * sns_output_f = fopen (SIGNETSIM_OUTPUT_PATH, "r");
+
+  if (sns_output_f == NULL)
+    cout << "Error while opening SigNetSim output file!" << endl;
+
+  while (fscanf (sns_output_f, "%s", str) > 0)
+    cout << str << " ";
+  cout << endl;
+
+  fclose (sns_output_f);
+
+
+  delete argv[0];
 
   gettimeofday (& end, NULL);
   elapsed_time_of_cost_function_calls += diff_us (end, begin);

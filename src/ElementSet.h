@@ -23,6 +23,10 @@
 
 #include "Element.h"
 
+// Struct used to store a sample class
+//
+typedef map<unsigned int, unsigned int> SampleLabels;
+
 class ElementSet
 {
 
@@ -66,7 +70,7 @@ private:
   void load_dat_file (string file_name, unsigned int n);
 
 public:
-
+  
   // Default constructor: an empty set with a given name.
   //
   ElementSet (string);
@@ -137,6 +141,18 @@ public:
   // Return the number of labels of a given set.
   //
   unsigned int get_number_of_labels ();
+  
+  // Returns a SampleLabels object with the label observations of the
+  // k-th sample and the number of observations
+  //
+  pair<unsigned int, SampleLabels *> get_sample_labels_map
+      (unsigned int);
+  
+  // Returns an array with the label observations of the k-th sample, 
+  // and number of observations
+  //
+  pair<unsigned int, unsigned int *> get_sample_labels_row
+      (unsigned int);
 };
 
 #endif /* ELEMENTSET_H_ */

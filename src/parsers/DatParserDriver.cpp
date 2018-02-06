@@ -71,7 +71,7 @@ int DatParserDriver::parse (unsigned int n, unsigned int l, string f)
   // often have more than 2 digits.
   //
   max_number_of_values = (end - begin) /
-                         (2 * (number_of_elements + number_of_labels) + 1);
+                         (2 * (number_of_elements + number_of_labels)) + 1;
 
   // The extra positions are to store the classification for a given subset,
   // which requires two index per label (label index, number of 
@@ -102,11 +102,7 @@ int DatParserDriver::parse (unsigned int n, unsigned int l, string f)
       list_of_elements[l_idx]->add_element_value 
         (i - number_of_elements);
       list_of_elements[l_idx + 1]->add_element_value (current_value);
-      //cout << "current value = " << current_value << endl;
       seen_labels++;
-      //unsigned int k = list_of_elements[l_idx]->get_number_of_values ();
-      //cout << "Sample " << k << " has " << current_value << " occurrences of label " << i - number_of_elements << endl;
-      //cout << "l_idx = " << l_idx << endl;
     }
     i++;
     if (i == (number_of_elements + number_of_labels))
@@ -118,39 +114,9 @@ int DatParserDriver::parse (unsigned int n, unsigned int l, string f)
           j < number_of_elements + 2 * number_of_labels + 1; j++)
         list_of_elements[j]->add_element_value (0);
       seen_labels = 0;
-  
-      //unsigned int k = list_of_elements[0]->get_number_of_values () - 1;
-      //for (unsigned int j = 0; j < number_of_labels * 2 + 1 + number_of_elements; j++)
-      //{
-        //cout << list_of_elements[j]->get_element_value (k) << " ";
-        //if (j == number_of_elements - 1)
-        //{
-          //cout << "\t";
-        //}
-      //}
-      //cout << endl;
     }
   }
   my_file.close ();
-
-  //for (unsigned int j = 0; 
-      //j < list_of_elements[0]->get_number_of_values (); j++)
-  //{
-    //seen_labels = 
-      //list_of_elements[number_of_elements]->get_element_value (j);
-    //cout << "Sample " << j << " has " << seen_labels << " labels" << endl;
-    //cout << "\t";
-    //for (unsigned l = 0; l < seen_labels; l++)
-    //{
-      //cout << list_of_elements[number_of_elements + 1 + 2 * l]->get_element_value (j) << ": " << list_of_elements[number_of_elements + 2 + 2 * l]->get_element_value (j) << " ";
-    //}
-    //cout << endl;
-  //}
-  //cout << "nof_values = " << list_of_elements[59]->get_number_of_values () << endl;
-
-  // After-processing: we chance labels occurrence storage to a
-  // (label index, frequency) fashion
-  //
   return 0;
 }
 

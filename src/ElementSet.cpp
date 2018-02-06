@@ -142,11 +142,9 @@ void ElementSet::load_dat_file (string file_name, unsigned int n)
       {
         list_of_elements[i]->add_element_value 
           (driver->list_of_elements[i]->get_element_value (k));
-        
       }
     }
   }
-
   delete driver;
 }
 
@@ -278,14 +276,10 @@ unsigned int ElementSet::get_set_cardinality ()
 
 Element * ElementSet::get_element (unsigned int index)
 {
-  if ((has_extra_element && index < 
-        number_of_elements + 2 * number_of_labels + 1)
-      ||
-      (index < number_of_elements))
+  if (index < number_of_elements)
     return list_of_elements[index];
-  else
-    // ElementSet error: index out of range!
-    return NULL;
+  else 
+    return NULL; // ElementSet error: index out of range!
 }
 
 
@@ -342,4 +336,60 @@ void ElementSet::permute_set ()
 unsigned int ElementSet::get_number_of_labels ()
 {
   return number_of_labels;
+}
+
+
+pair<unsigned int, SampleLabels *> ElementSet::get_sample_labels_map
+  (unsigned int k)
+{
+  unsigned int n, seen_labels, m;
+  unsigned int y, y_idx, y_freq;
+  SampleLabels * row = new SampleLabels ();
+  m = 0;
+  n = number_of_elements;
+  
+  if (has_extra_element)
+    seen_labels = list_of_elements[n]->get_element_value (k);
+  else
+    seen_labels = 0;
+  
+  for (unsigned int i = 0; i < seen_labels; i++)
+  {
+    y_idx = n + 1 + 2 * i;
+    y = list_of_elements[y_idx]->get_element_value (k);
+    y_freq = list_of_elements[y_idx + 1]->get_element_value (k);
+    (*row)[y] = y_freq;
+    m += y_freq;
+  }
+  return make_pair (m, row);
+}
+
+// TODO: this is incorrect
+pair<unsigned int, unsigned int *> ElementSet::get_sample_labels_row
+  (unsigned int k)
+{
+  unsigned int n, l, m, seen_labels;
+  unsigned int * row = new unsigned int[number_of_labels];
+  n = number_of_elements;
+  l = number_of_labels;
+  m = 0;
+  for (unsigned int i = 0; i < l; i++)  
+    row[i] = 0;
+  
+  if (has_extra_element)
+    seen_labels = list_of_elements[n]->get_element_value (k);
+  else
+    seen_labels = 0;
+
+  for (unsigned int i = 0; i < seen_labels; i++)
+  {
+    unsigned int y, y_idx, y_freq;
+    y_idx = n + 1 + 2 * i;
+    y = list_of_elements[y_idx]->get_element_value (k);
+    y_freq = list_of_elements[y_idx + 1]->get_element_value (k);
+    row[y] = y_freq;
+    m += y_freq;
+  }
+
+  return make_pair (m, row);
 }

@@ -66,18 +66,17 @@ namespace SpecCMITest
     SpecCMI t;
 
     t.set_parameters (&c, &set, true);
-
+    
     t.compute_Q_matrix ();   
 
-    double * rank = new double [set.get_set_cardinality ()]; 
-
+    double * rank;
     rank = t.rank_features ();
 
     if ((rank[0] <= 0.91) || (rank[0] >= 0.93) ||
         (rank[1] <= 0.37) || (rank[1] >= 0.39))
       result = false;
 
-    delete [] rank;
+    delete[] rank;
                 
     return result;
   }

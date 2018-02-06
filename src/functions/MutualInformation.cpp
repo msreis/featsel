@@ -160,8 +160,10 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
 (ElementSubset * X, map<string, SampleLabels *> * samples, 
  unsigned int * m)
 {
-  unsigned int i, j, k, n, seen_labels;
+  unsigned int i, j, k, n;
   map <string, SampleLabels *>::iterator it;
+  SampleLabels::iterator l_it;
+  SampleLabels * row;
   
   n = set->get_set_cardinality ();
   unsigned int * freq_Y = new unsigned int [set->get_number_of_labels ()];
@@ -190,22 +192,16 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
     //
     if (it == samples->end ())
     {
-      SampleLabels * row = new SampleLabels ();
-      seen_labels = set->get_element (n)->get_element_value (j);
-
-      for (k = 0; k < seen_labels; k++)
+      pair<unsigned int, SampleLabels *> sample_entry;
+      sample_entry = set->get_sample_labels_map (j);
+      *m += sample_entry.first;
+      row = sample_entry.second;
+      for (l_it = row->begin (); l_it != row->end (); l_it++)
       {
-        unsigned int y_idx, y, y_freq_given_x;
-        y_idx = n + 1 + 2 * k;
-        y = set->get_element (y_idx)->get_element_value (j);
-        y_freq_given_x = 
-          set->get_element (y_idx + 1)->get_element_value (j);
-        if (y_freq_given_x > 0)
-        {
-          row->insert (make_pair (y, y_freq_given_x));
-          *m += y_freq_given_x;
-          freq_Y[y] += y_freq_given_x;
-        }
+        unsigned int y, y_freq;
+        y = l_it->first;
+        y_freq = l_it->second;
+        freq_Y[y] += y_freq;
       }
       samples->insert (pair<string, SampleLabels * > (observation, 
         row));
@@ -215,24 +211,21 @@ unsigned int * MutualInformation::calculate_distributions_from_the_samples
     //
     else
     {
-      seen_labels = set->get_element (n)->get_element_value (j);
-      for (k = 0; k < seen_labels; k++)
+      pair<unsigned int, SampleLabels *> sample_entry;
+      sample_entry = set->get_sample_labels_map (j);
+      *m += sample_entry.first;
+      row = sample_entry.second;
+      for (l_it = row->begin (); l_it != row->end (); l_it++)
       {
-        unsigned int y_idx, y, y_freq_given_x;
-        y_idx = n + 1 + 2 * k;
-        y = set->get_element (y_idx)->get_element_value (j);
-        y_freq_given_x =
-          set->get_element (y_idx + 1)->get_element_value (j);
-        if (y_freq_given_x > 0)
-        {
-          (*it->second)[y] += y_freq_given_x;
-          *m += y_freq_given_x;
-          freq_Y[y] += y_freq_given_x;
-        }
+        unsigned int y, y_freq;
+        y = l_it->first;
+        y_freq = l_it->second;
+        freq_Y[y] += y_freq;
+        (*it->second)[y] += y_freq;
       }
+      delete row;
     }   
     observation.clear ();
   }
-
   return freq_Y;
 }

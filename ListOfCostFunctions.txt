@@ -8,3 +8,4 @@
               tailor     TailorConvexHull                  xml
                  cfs                  CFS                  dat
                  abd                  ABD                  xml
+                 sns            SigNetSim                  xml

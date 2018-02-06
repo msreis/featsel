@@ -39,26 +39,17 @@ my $FEATSEL_BIN = "./bin/featsel";
 
 # Arguments parsing
 my $data_set_file_name;
-my $cost_function;
-my $algorithm;
-my $pucs_p = "";
-my $pucs_l = "";
 my $number_of_features;
 my $number_of_classes;
+my $selected_features;
 my $k;
-if ((@ARGV == 6) || (@ARGV == 8))
+if (@ARGV == 5)
 {
   $data_set_file_name = $ARGV[0];
   $number_of_features = $ARGV[1];
   $number_of_classes = $ARGV[2];
-  $cost_function = $ARGV[3];
-  $k = $ARGV[4];
-  $algorithm = $ARGV[5];
-  if ((@ARGV) > 6)
-  {
-    $pucs_p = $ARGV[6];
-    $pucs_l = $ARGV[7];
-  }
+  $k = $ARGV[3];
+  $selected_features = $ARGV[4];
 }
 else
 {
@@ -69,51 +60,15 @@ else
     "    DATA_SET_FILE: file name of data set.\n\n" .
     "    NUMBER_OF_FEATURES: number of features on the data set.\n\n" .
     "    NUMBER_OF_CLASSES: number of classes on the data set.\n\n" .
-    "    COST_FUNCTION_CODE: the cost function used on the feature " .
-    "selection.\n\n" . 
     "    NUMBER_OF_FOLDS: the number k used for a k-fold cross " .
     "validation.\n\n" . 
-    "    FEATSEL_ALGORITHM_CODE: algorithm code used to select " . 
-    "features from the data set.\n\n";
-}
-
-
-# Runs featsel algorithm to get subset of features
-my $selected_features = "";
-print "Starting algorithm $algorithm to select features on the " . 
-  "data set $data_set_file_name... ";
-my $featsel_call_string = "$FEATSEL_BIN " .
-  "-n $number_of_features -l $number_of_classes " .
-  "-c $cost_function -f $data_set_file_name " .
-  "-a $algorithm" .
-  " > $LOG_FILE\n";
-
-my $t0 = [gettimeofday];
-system ($featsel_call_string);
-my $t1 = [gettimeofday];
-my $execution_time = tv_interval ($t0, $t1);
-
-open LOG, $LOG_FILE;
-while (<LOG>)
-{ 
-  if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
-  {
-    $selected_features = $1;
-  }
-}
-close (LOG);
-if ($selected_features eq "")
-{
-  die "Could not perform feature selection!\n";
-}
-else
-{
-  print ("[Done!]\n");
-  print "Selected features: $selected_features \n";
+    "    SELECTED_FEATURES: a binary description of the selected ".
+    "features";
 }
 
 print ("Calculating error with " . $k . "-Cross-validation\n");
 my @selected_features_arr = split ('', $selected_features);
+
 # Parses data file
 my @data_set = ();
 my $i = 0;
@@ -135,7 +90,6 @@ close (DATA);
 # k-fold Cross Validation
 my $cv_error = .0;
 $cv_error = ncm_cross_validation (\@data_set, $k);
-
 print ("Cross-validation error: $cv_error\n");
 print ("Average run-time: $execution_time\n\n");
 

@@ -216,9 +216,9 @@ ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
   if (elm_set->has_extra_element)
   {
     unsigned int real_nof_elements;
-    real_nof_elements = size + this->number_of_labels;
+    real_nof_elements = size + 2 * this->number_of_labels + 1;
     this->list_of_elements = new Element*[real_nof_elements];
-    for (unsigned int i = 0; i < this->number_of_labels; i++)
+    for (unsigned int i = 0; i < 2 * this->number_of_labels + 1; i++)
     {
       unsigned int j = elm_set->number_of_elements + i;
       Element * elm = elm_set->list_of_elements[j];
@@ -227,11 +227,13 @@ ElementSet::ElementSet (ElementSet * elm_set, unsigned int * map,
   }
   else
     this->list_of_elements = new Element*[size];
+
   for (unsigned int i = 0; i < size; i++)
   {
     Element * elm = elm_set->list_of_elements[map[i]];
     this->list_of_elements[i] = new Element (elm);
   }
+  
   this->name = elm_set->name;
   this->has_extra_element = elm_set->has_extra_element;
 }

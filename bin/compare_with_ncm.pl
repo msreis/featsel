@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
 #
-# compare_with_ncm.pl : this program compares solutions given by 
+# compare_with_linear_svm.pl : this program compares solutions given by 
 # feature selection algorithms by performing a cross-validation method
-# with NCMs modeled with those features.
+# with SVMs modeled with those features.
 #
 #    This file is part of the featsel program
 #    Copyright (C) 2017  Marcelo S. Reis, Gustavo Estrela
@@ -30,16 +30,18 @@ my $FEATSEL_BIN    = "./bin/featsel";
 my $LOG_FILE       = "output/result.log";
 my $INPUT_DIR      = "input/";
 # Number of repetitions on runs over a dataset
-my $m = 2;
+my $m = 10;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 my @ALGORITHMS = ("pucs",
+  "es",
   "sffs",
   "spec_cmi");
 my %cost_function = ("pucs" => "mce",
+  "es" => "mce",
   "sffs" => "mce",
   "spec_cmi" => "cmi");
-my @DATA_SETS = ("Iris", "Car", "Wine", "Zoo");
+my @DATA_SETS = ("Iris", "Car", "Wine", "Zoo", "Waveform");
 my %labels    = ("Iris" => 3, "Car" => 4, "Zoo" => 7,  "Wine" => 3,
   "Waveform" => 3);
 my %features =  ("Iris" => 4, "Car" => 6, "Zoo" => 15, "Wine" => 13,
@@ -59,7 +61,7 @@ foreach my $data_set (@DATA_SETS)
   foreach my $algorithm (@ALGORITHMS)
   {
     my $cv_error = -1;
-    my $execution_time;
+    my $execution_time = 0;
     foreach my $i (1..$m)
     {
       my $k;
@@ -71,36 +73,53 @@ foreach my $data_set (@DATA_SETS)
       {
         $k = $data_size{$data_set};
       }
-      system ("./bin/svm_cross_validation.pl " .
-              "$dat_file{$data_set} $features{$data_set} " .
-              "$labels{$data_set} $cost_function{$algorithm} " .
-              "$k $algorithm > $LOG_FILE");
 
-      # Cross-validation error: 0.2418
-      # Average run-time: 44.557726
-      open LOG, $LOG_FILE;
-      while (<LOG>)
+      if ($algorithm ne "es" or $features{$data_set} < 21)
       {
-        if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
+        # Performs feature selection
+        my $selected_features;
+        my ($t0, $t1);
+        $t0 = [gettimeofday];
+        system ("bin/perform_feature_selection.pl " .
+          "$dat_file{$data_set} $features{$data_set} " .
+          "$labels{$data_set} $cost_function{$algorithm} " .
+          " $algorithm > $LOG_FILE");
+        $t1 = [gettimeofday];
+        $execution_time = tv_interval ($t0, $t1);
+        open LOG, $LOG_FILE;
+        while (<LOG>)
         {
-          $cv_error = $1;
+          if ($_ =~ /\<(\d+)\>\s+\:\s+(\S+)/)
+          {
+            $selected_features = $1;
+          }
         }
-        elsif ($_ =~ /Average\srun-time:\s(\d+\.\d+)/)
-        {
-          $execution_time = $1;
-        }
-      }
-      close (LOG);
+        close (LOG);
 
-      if ($cv_error == -1)
-      {
-        die "\nCould not perform cross validation on $data_set with " . 
-        "model with features selected by $algorithm\n\n";
+        # Performs cross-validation
+        system ("./bin/ncm_cross_validation.pl " .
+          "$dat_file{$data_set} $features{$data_set} " .
+          "$labels{$data_set} $k $selected_features > $LOG_FILE");
+        open LOG, $LOG_FILE;
+        while (<LOG>)
+        {
+          if ($_ =~ /Cross-validation\serror:\s(0.\d+)/)
+          {
+            $cv_error = $1;
+          }
+        }
+        close (LOG);
+
+        if ($cv_error == -1)
+        {
+          die "\nCould not perform cross validation on $data_set with " . 
+          "model with features selected by $algorithm\n\n";
+        }
       }
 
       printf DATA "\n%2d-run on %8s with %8s takes " .
-        "%6.3f and has cross-validation error of %4.3f ",
-        $i, $data_set, $algorithm, $execution_time, $cv_error;
+      "%6.3f and has cross-validation error of %4.3f ",
+      $i, $data_set, $algorithm, $execution_time, $cv_error;
 
       printf "\n%2d-run on %8s with %8s takes " .
       "%6.3f and has cross-validation error of %4.3f ",

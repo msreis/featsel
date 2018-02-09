@@ -10,3 +10,4 @@
                  sbs SBS
                  bfs BFS
                 ucsr UCSR
+                 ruc RandomUChain

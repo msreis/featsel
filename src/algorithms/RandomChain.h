@@ -30,7 +30,7 @@
 // Set this to true in order to sort the chain elements by cost in the
 // featsel output.
 //
-#define SORT_AND_CROP_RESULTS false
+#define SORT_AND_CROP_RESULTS true
 
 class RandomChain : public Solver
 {

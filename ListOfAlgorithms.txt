@@ -11,3 +11,4 @@
                  bfs BFS
                 ucsr UCSR
                  ruc RandomUChain
+                kruc KRandomUChain

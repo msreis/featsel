@@ -110,7 +110,7 @@ close (DATA);
 
 # Validation
 my $v_error = .0;
-$v_error = ncm_cross_validation (\@trn_data_set, \@tst_data_set);
+$v_error = ncm_validation (\@trn_data_set, \@tst_data_set);
 print ("validation error: $v_error\n");
 
 

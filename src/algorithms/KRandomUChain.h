@@ -28,7 +28,7 @@
 #include "../Solver.h"
 #include "../ElementSubset.h"
 
-#define K_REPETITIONS 7
+#define K_REPETITIONS 8
 
 class KRandomUChain : public Solver
 {

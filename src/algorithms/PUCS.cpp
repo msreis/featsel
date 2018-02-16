@@ -23,6 +23,7 @@
 
 #include "PUCS.h"
 #include "RandomUChain.h"
+#include "KRandomUChain.h"
 
 PUCS::PUCS ()
 {
@@ -239,7 +240,7 @@ Collection * PUCS::part_minimum (PartitionNode * P,
     if (p_elm_set->get_set_cardinality () <= ES_CUTOFF)
         sub_solver = new ExhaustiveSearch ();
     else if (l <= 1)
-      sub_solver = new RandomUChain ();
+      sub_solver = new KRandomUChain ();
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);

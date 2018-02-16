@@ -55,8 +55,8 @@ if (@ARGV == 5)
 else
 {
   die "\nSyntax: $0 " . 
-    "DATA_SET_FILE NUMBER_OF_FEATURES NUMBER_OF_CLASSES " .
-    "COST_FUNCTION_CODE NUMBER_OF_FOLDS FEATSEL_ALGORITHM_CODE \n\n" .
+    "TRAINING_DATA_SET_FILE TESTING_DATA_SET_FILE NUMBER_OF_FEATURES ".
+    "NUMBER_OF_CLASSES SELECTED_FEATURES\n\n" .
     "Where:\n\n" .
     "    TRAINING_DATA_SET_FILE: file name of data set used for ".  
     "training.\n\n" .
@@ -91,7 +91,7 @@ close (DATA);
 
 # Parses testing data file
 my @tst_data_set = ();
-my $i = 0;
+$i = 0;
 open DATA, $tst_data_set_file_name;
 while (<DATA>)
 {
@@ -108,37 +108,10 @@ while (<DATA>)
 close (DATA);
 
 
-# k-fold Cross Validation
+# Validation
 my $v_error = .0;
-$v_error = ncm_cross_validation (\@data_set, $k);
-print ("Cross-validation error: $cv_error\n");
-
-sub fold_data 
-{
-  my @data = @{$_[0]};
-  my $k = $_[1];
-  my @folds;
-  
-  my $n = int (scalar @data / $k);
-  my $remainder = scalar @data % $k;
-  @data = shuffle (@data);
-  for (my $i = 0; $i < $k; $i++)
-  {
-    my $a = $i * $n;
-    my $b = ($i + 1) * $n - 1;
-    my @fold = @data[$a .. $b];
-    $folds[$i] = \@fold;
-  }
-  for (my $i = 0; $i < $remainder; $i++) 
-  {
-    my @fold = @{$folds[$i]};
-    push @fold, $data[$n * $k + $i];
-    $folds[$i] = \@fold;
-  }
-  my $i = 0;
-
-  return @folds;
-}
+$v_error = ncm_cross_validation (\@trn_data_set, \@tst_data_set);
+print ("validation error: $v_error\n");
 
 
 sub mask_on_selected_features
@@ -167,32 +140,14 @@ sub class_arr_to_int
 
 sub ncm_validation
 {
-  my @trn_data = @{$_[0]};
-  my @tst_data = @{$_[0]};
-  my $k = $_[1];
-  my @folds = fold_data (\@data, $k);
-  my $cv_err = 0.0;
-  for (my $fold_idx = 0; $fold_idx < $k; $fold_idx++)
-  {
-    my ($training_set_r, $test_set_r) = split_on_fold (\@folds, 
-      $fold_idx);
-    my $v_err = ncm_validation ($training_set_r, $test_set_r);
-    $cv_err += $v_err;
-  }
-  return $cv_err / $k;
-}
-
-
-sub ncm_validation
-{
-  my @training_set = @{$_[0]};
-  my @test_set = @{$_[1]};
+  my @trn_set = @{$_[0]};
+  my @tst_set = @{$_[1]};
   my %class_mean;
   my %class_n;
   my $validation_err = 0.0;
 
   # Creates model
-  for my $sample (@training_set)
+  for my $sample (@trn_set)
   {
     my @features = @{$sample->{FEATURES}};
     my @class = @{$sample->{CLASS}};
@@ -219,7 +174,7 @@ sub ncm_validation
   }
 
   # Validate data
-  for my $test (@test_set)
+  for my $test (@tst_set)
   {
     my $min_d = -1;
     my $classification_str;
@@ -240,7 +195,7 @@ sub ncm_validation
     }
   }
 
-  return $validation_err / scalar @test_set;
+  return $validation_err / scalar @tst_set;
 }
 
 sub array_dist2
@@ -263,27 +218,4 @@ sub array_sum
   {
     $arr1->[$i] = $arr1->[$i] + $arr2->[$i];
   }
-}
-
-
-sub split_on_fold
-{
-  my @training_set;
-  my @test_set;
-  my @folds = @{$_[0]};
-  my $fold_idx = $_[1];
-  my $k = scalar @folds;
-
-  for (my $i = 0; $i < $k; $i++)
-  {
-    if ($fold_idx == $i)
-    {
-      push @test_set, @{$folds[$i]};
-    }
-    else
-    {
-      push @training_set, @{$folds[$i]};
-    }
-  }
-  return (\@training_set, \@test_set);
 }

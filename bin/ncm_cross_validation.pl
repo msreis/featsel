@@ -91,7 +91,6 @@ close (DATA);
 my $cv_error = .0;
 $cv_error = ncm_cross_validation (\@data_set, $k);
 print ("Cross-validation error: $cv_error\n");
-print ("Average run-time: $execution_time\n\n");
 
 sub fold_data 
 {

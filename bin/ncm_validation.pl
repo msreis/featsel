@@ -89,6 +89,14 @@ while (<DATA>)
 }
 close (DATA);
 
+# The learning model is a NCM classifier. It's implemented as a hash 
+# that stores the mean of featues of objects of the same class.
+my $model_ref;
+$model_ref = create_model (\@trn_data_set);
+
+# Now we can free the @trn_data_set
+undef (@trn_data_set);
+
 # Parses testing data file
 my @tst_data_set = ();
 $i = 0;
@@ -107,10 +115,9 @@ while (<DATA>)
 }
 close (DATA);
 
-
 # Validation
 my $v_error = .0;
-$v_error = ncm_validation (\@trn_data_set, \@tst_data_set);
+$v_error = ncm_validation (\@tst_data_set, $model_ref);
 print ("validation error: $v_error\n");
 
 
@@ -138,40 +145,48 @@ sub class_arr_to_int
 }
 
 
-sub ncm_validation
+sub create_model
 {
   my @trn_set = @{$_[0]};
-  my @tst_set = @{$_[1]};
-  my %class_mean;
+  my %model;
   my %class_n;
-  my $validation_err = 0.0;
 
-  # Creates model
   for my $sample (@trn_set)
   {
     my @features = @{$sample->{FEATURES}};
     my @class = @{$sample->{CLASS}};
     my $class_str = join ("", @class);
-    if (!exists $class_mean{$class_str})
+    if (!exists $model{$class_str})
     {
       my @feature_arr = @features;
-      $class_mean{$class_str} = \@feature_arr;
+      $model{$class_str} = \@feature_arr;
       $class_n{$class_str} = 1;
     }
     else
     {
-      array_sum ($class_mean{$class_str}, \@features);
+      array_sum ($model{$class_str}, \@features);
       $class_n{$class_str} += 1;
     }
   }
-  foreach my $class (keys %class_mean)
+
+  foreach my $class (keys %model)
   {
-    my $mean_arr_ref = $class_mean{$class};
+    my $mean_arr_ref = $model{$class};
     for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
     {
       $mean_arr_ref->[$i] /= $class_n{$class} * 1.0;
     }
   }
+
+  return \%model;
+}
+
+
+sub ncm_validation
+{
+  my @tst_set = @{$_[0]};
+  my %model = %{$_[1]};
+  my $validation_err = 0.0;
 
   # Validate data
   for my $test (@tst_set)
@@ -179,9 +194,9 @@ sub ncm_validation
     my $min_d = -1;
     my $classification_str;
     my $test_class_str = join ("", @{$test->{CLASS}});
-    for my $class_str (keys %class_mean)
+    for my $class_str (keys %model)
     {
-      my $d2 = array_dist2 ($class_mean{$class_str}, $test->{FEATURES});
+      my $d2 = array_dist2 ($model{$class_str}, $test->{FEATURES});
       if ($d2 < $min_d || $min_d  == -1)
       {
         $min_d = $d2;

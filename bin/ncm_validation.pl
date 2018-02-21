@@ -148,70 +148,79 @@ sub class_arr_to_int
 sub create_model
 {
   my @trn_set = @{$_[0]};
-  my %model;
-  my %class_n;
+  my @model;
+  my @class_n;
 
   for my $sample (@trn_set)
   {
     my @features = @{$sample->{FEATURES}};
     my @class = @{$sample->{CLASS}};
-    my $class_str = join ("", @class);
-    if (!exists $model{$class_str})
+    
+    for my $l (0 .. (scalar @class - 1))
     {
-      my @feature_arr = @features;
-      $model{$class_str} = \@feature_arr;
-      $class_n{$class_str} = 1;
-    }
-    else
-    {
-      array_sum ($model{$class_str}, \@features);
-      $class_n{$class_str} += 1;
+      if ($class[$l] != 0)
+      {
+        if (!defined $model[$l])
+        {
+          weigh_array (\@features, $class[$l]);
+          $model[$l] = \@features;
+          $class_n[$l] = $class[$l];
+        }
+        else
+        {
+          weigh_array (\@features, $class[$l]);
+          array_sum ($model[$l], \@features);
+          $class_n[$l] += $class[$l];
+        }
+      }
     }
   }
 
-  foreach my $class (keys %model)
+  foreach my $l (0 .. (scalar @model - 1))
   {
-    my $mean_arr_ref = $model{$class};
+    my $mean_arr_ref = $model[$l];
     for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
     {
-      $mean_arr_ref->[$i] /= $class_n{$class} * 1.0;
+      $mean_arr_ref->[$i] /= $class_n[$l] * 1.0;
     }
   }
 
-  return \%model;
+  return \@model;
 }
 
 
 sub ncm_validation
 {
   my @tst_set = @{$_[0]};
-  my %model = %{$_[1]};
+  my $test_set_card = 0;
+  my @model = @{$_[1]};
   my $validation_err = 0.0;
 
   # Validate data
   for my $test (@tst_set)
   {
     my $min_d = -1;
-    my $classification_str;
-    my $test_class_str = join ("", @{$test->{CLASS}});
-    for my $class_str (keys %model)
+    my $classification_l;
+    my $test_card = array_elm_sum ($test->{CLASS});
+    my @test_label_arr = @{$test->{CLASS}};
+
+    for my $l (0 .. (scalar @model - 1))
     {
-      my $d2 = array_dist2 ($model{$class_str}, $test->{FEATURES});
+      my $d2 = array_dist2 ($model[$l], $test->{FEATURES});
       if ($d2 < $min_d || $min_d  == -1)
       {
         $min_d = $d2;
-        $classification_str = $class_str;
+        $classification_l = $l;
       }
     }
-
-    if ($test_class_str ne $classification_str)
-    {
-      $validation_err += 1.0;
-    }
+    
+    $validation_err += $test_card - $test_label_arr[$classification_l];
+    $test_set_card += $test_card;
   }
 
-  return $validation_err / scalar @tst_set;
+  return $validation_err / $test_set_card;
 }
+
 
 sub array_dist2
 {
@@ -225,6 +234,7 @@ sub array_dist2
   return $d;
 }
 
+
 sub array_sum
 {
   my $arr1 = $_[0];
@@ -232,5 +242,28 @@ sub array_sum
   for (my $i = 0; $i < scalar @$arr1; $i++)
   {
     $arr1->[$i] = $arr1->[$i] + $arr2->[$i];
+  }
+}
+
+
+sub array_elm_sum
+{
+  my $arr = $_[0];
+  my $acc = 0;
+  for (my $i = 0; $i < scalar @$arr; $i++)
+  {
+    $acc += $arr->[$i];
+  }
+  return $acc;
+}
+
+
+sub weigh_array
+{
+  my $arr = $_[0];
+  my $const = $_[1];
+  for (my $i = 0; $i < scalar @$arr; $i++)
+  {
+    $arr->[$i] *= $const;
   }
 }

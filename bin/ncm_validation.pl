@@ -152,7 +152,6 @@ while (<DATA>)
     print "$i testing samples read.\n";
   }
 
-
 }
 close (DATA);
 $v_error /= $test_card;
@@ -202,13 +201,8 @@ sub ncm_validate_sample
       my $d2 = array_dist2 ($model[$l], \@test_feature);
       if ($d2 < $min_d || $min_d  == -1)
       {
-        my $d2 = array_dist2 ($model[$l], \@test_feature);
-        if ($d2 < $min_d || $min_d  == -1)
-        {
-          $min_d = $d2;
-          $classification_l = $l;
-        }
-
+        $min_d = $d2;
+        $classification_l = $l;
       }
     }
   }

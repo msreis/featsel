@@ -68,7 +68,7 @@ else
     "features";
 }
 
-print ("Calculating error...\n");
+print "Reading training data...";
 my @selected_features_arr = split ('', $selected_features);
 
 # Parses training data file
@@ -86,18 +86,31 @@ while (<DATA>)
   $trn_data_set[$i]->{FEATURES} = \@features;
   $trn_data_set[$i]->{CLASS} = \@class;
   $i++;
+  if ($i % 1000 == 0)
+  {
+    print "$i training samples read.\n";
+  }
+    
+  #if ($i >= 20) 
+  #{
+    #last;
+  #}
 }
 close (DATA);
+print "[DONE].\n";
 
 # The learning model is a NCM classifier. It's implemented as a hash 
 # that stores the mean of featues of objects of the same class.
 my $model_ref;
+print "Creating model...";
 $model_ref = create_model (\@trn_data_set);
+print "[DONE].\n";
 
 # Now we can free the @trn_data_set
 undef (@trn_data_set);
 
 # Parses testing data file
+print "Reading testing data...";
 my @tst_data_set = ();
 $i = 0;
 open DATA, $tst_data_set_file_name;
@@ -112,8 +125,18 @@ while (<DATA>)
   $tst_data_set[$i]->{FEATURES} = \@features;
   $tst_data_set[$i]->{CLASS} = \@class;
   $i++;
+  if ($i % 1000 == 0)
+  {
+    print "$i testing samples read.\n";
+  }
+
+  #if ($i >= 20)
+  #{
+    #last;
+  #}
 }
 close (DATA);
+print "[DONE].\n";
 
 # Validation
 my $v_error = .0;
@@ -174,14 +197,19 @@ sub create_model
         }
       }
     }
+    delete $sample->{FEATURES};
+    delete $sample->{CLASS};
   }
 
   foreach my $l (0 .. (scalar @model - 1))
   {
-    my $mean_arr_ref = $model[$l];
-    for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
+    if (defined $model[$l])
     {
-      $mean_arr_ref->[$i] /= $class_n[$l] * 1.0;
+      my $mean_arr_ref = $model[$l];
+      for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
+      {
+        $mean_arr_ref->[$i] /= $class_n[$l] * 1.0;
+      }
     }
   }
 
@@ -206,14 +234,17 @@ sub ncm_validation
 
     for my $l (0 .. (scalar @model - 1))
     {
-      my $d2 = array_dist2 ($model[$l], $test->{FEATURES});
-      if ($d2 < $min_d || $min_d  == -1)
+      if (defined $model[$l])
       {
-        $min_d = $d2;
-        $classification_l = $l;
+        my $d2 = array_dist2 ($model[$l], $test->{FEATURES});
+        if ($d2 < $min_d || $min_d  == -1)
+        {
+          $min_d = $d2;
+          $classification_l = $l;
+        }
+
       }
     }
-    
     $validation_err += $test_card - $test_label_arr[$classification_l];
     $test_set_card += $test_card;
   }

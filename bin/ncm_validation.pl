@@ -68,79 +68,97 @@ else
     "features";
 }
 
-print "Reading training data...";
+
 my @selected_features_arr = split ('', $selected_features);
 
-# Parses training data file
-my @trn_data_set = ();
+# Reads training data file and creates model
+print "Reading training data and creating model...";
+my @model;
+my @class_n;
 my $i = 0;
 open DATA, $trn_data_set_file_name;
 while (<DATA>)
 {
+  # Reads training data sample
   my @line_arr = split (' ', $_);
   my @features = @line_arr[0 .. $number_of_features - 1];
   @features = mask_on_selected_features (\@features,
    \@selected_features_arr);
   my @class = @line_arr[$number_of_features .. $#line_arr];
-  $trn_data_set[$i] = {};
-  $trn_data_set[$i]->{FEATURES} = \@features;
-  $trn_data_set[$i]->{CLASS} = \@class;
-  $i++;
-  if ($i % 1000 == 0)
+  
+  # Updates model
+  for my $l (0 .. (scalar @class - 1))
   {
-    print "$i training samples read.\n";
+    if ($class[$l] != 0)
+    {
+      if (!defined $model[$l])
+      {
+        weigh_array (\@features, $class[$l]);
+        $model[$l] = \@features;
+        $class_n[$l] = $class[$l];
+      }
+      else
+      {
+        weigh_array (\@features, $class[$l]);
+        array_sum ($model[$l], \@features);
+        $class_n[$l] += $class[$l];
+      }
+    }
   }
-    
-  #if ($i >= 20) 
-  #{
-    #last;
-  #}
 }
 close (DATA);
+
+# Divides class array to get an average characteristic vector
+foreach my $l (0 .. (scalar @model - 1))
+{
+  if (defined $model[$l])
+  {
+    my $mean_arr_ref = $model[$l];
+    for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
+    {
+      $mean_arr_ref->[$i] /= $class_n[$l] * 1.0;
+    }
+  }
+}
 print "[DONE].\n";
+undef (@class_n);
 
-# The learning model is a NCM classifier. It's implemented as a hash 
-# that stores the mean of featues of objects of the same class.
-my $model_ref;
-print "Creating model...";
-$model_ref = create_model (\@trn_data_set);
-print "[DONE].\n";
 
-# Now we can free the @trn_data_set
-undef (@trn_data_set);
 
-# Parses testing data file
-print "Reading testing data...";
-my @tst_data_set = ();
+# Parses testing data file and calculates validation error
+print "Reading testing data and validating model...";
 $i = 0;
+my $v_error = .0;
+my $test_card = 0;
 open DATA, $tst_data_set_file_name;
 while (<DATA>)
 {
+  my ($sample_err, $sample_card);
   my @line_arr = split (' ', $_);
   my @features = @line_arr[0 .. $number_of_features - 1];
   @features = mask_on_selected_features (\@features,
    \@selected_features_arr);
   my @class = @line_arr[$number_of_features .. $#line_arr];
-  $tst_data_set[$i] = {};
-  $tst_data_set[$i]->{FEATURES} = \@features;
-  $tst_data_set[$i]->{CLASS} = \@class;
+
+  ($sample_err, $sample_card) = ncm_validate_sample (\@model, 
+    \@features, \@class);
+
+  $v_error += $sample_err;
+  $test_card += $sample_card; 
+
   $i++;
   if ($i % 1000 == 0)
   {
     print "$i testing samples read.\n";
   }
 
-  #if ($i >= 20)
-  #{
-    #last;
-  #}
+
 }
 close (DATA);
+$v_error /= $test_card;
 print "[DONE].\n";
 
 # Validation
-my $v_error = .0;
-$v_error = ncm_validation (\@tst_data_set, $model_ref);
 print ("validation error: $v_error\n");
 
 
@@ -168,75 +186,23 @@ sub class_arr_to_int
 }
 
 
-sub create_model
+sub ncm_validate_sample
 {
-  my @trn_set = @{$_[0]};
-  my @model;
-  my @class_n;
+  my @model = @{$_[0]};
+  my @test_feature = @{$_[1]};
+  my @test_class = @{$_[2]};
 
-  for my $sample (@trn_set)
-  {
-    my @features = @{$sample->{FEATURES}};
-    my @class = @{$sample->{CLASS}};
-    
-    for my $l (0 .. (scalar @class - 1))
-    {
-      if ($class[$l] != 0)
-      {
-        if (!defined $model[$l])
-        {
-          weigh_array (\@features, $class[$l]);
-          $model[$l] = \@features;
-          $class_n[$l] = $class[$l];
-        }
-        else
-        {
-          weigh_array (\@features, $class[$l]);
-          array_sum ($model[$l], \@features);
-          $class_n[$l] += $class[$l];
-        }
-      }
-    }
-    delete $sample->{FEATURES};
-    delete $sample->{CLASS};
-  }
-
-  foreach my $l (0 .. (scalar @model - 1))
+  my $min_d = -1;
+  my $classification_l;
+  my $test_card = array_elm_sum (\@test_class);
+  for my $l (0 .. (scalar @model - 1))
   {
     if (defined $model[$l])
     {
-      my $mean_arr_ref = $model[$l];
-      for (my $i = 0; $i < scalar @$mean_arr_ref; $i++)
+      my $d2 = array_dist2 ($model[$l], \@test_feature);
+      if ($d2 < $min_d || $min_d  == -1)
       {
-        $mean_arr_ref->[$i] /= $class_n[$l] * 1.0;
-      }
-    }
-  }
-
-  return \@model;
-}
-
-
-sub ncm_validation
-{
-  my @tst_set = @{$_[0]};
-  my $test_set_card = 0;
-  my @model = @{$_[1]};
-  my $validation_err = 0.0;
-
-  # Validate data
-  for my $test (@tst_set)
-  {
-    my $min_d = -1;
-    my $classification_l;
-    my $test_card = array_elm_sum ($test->{CLASS});
-    my @test_label_arr = @{$test->{CLASS}};
-
-    for my $l (0 .. (scalar @model - 1))
-    {
-      if (defined $model[$l])
-      {
-        my $d2 = array_dist2 ($model[$l], $test->{FEATURES});
+        my $d2 = array_dist2 ($model[$l], \@test_feature);
         if ($d2 < $min_d || $min_d  == -1)
         {
           $min_d = $d2;
@@ -245,11 +211,8 @@ sub ncm_validation
 
       }
     }
-    $validation_err += $test_card - $test_label_arr[$classification_l];
-    $test_set_card += $test_card;
   }
-
-  return $validation_err / $test_set_card;
+  return ($test_card - $test_class[$classification_l], $test_card);
 }
 
 

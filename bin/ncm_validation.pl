@@ -187,37 +187,62 @@ sub class_arr_to_int
 
 sub ncm_validate_sample
 {
-  my @model = @{$_[0]};
-  my @test_feature = @{$_[1]};
-  my @test_class = @{$_[2]};
-
-  my $min_d = -1;
+  my $model_ref = $_[0];
+  my $test_feature_ref = $_[1];
+  my $test_class_ref = $_[2];
+  my $min_d;
   my $classification_l;
-  my $test_card = array_elm_sum (\@test_class);
-  for my $l (0 .. (scalar @model - 1))
+  my $test_card = array_elm_sum ($test_class_ref);
+  
+  my $l = 0;
+  $l += 1 while (not defined $model_ref->[$l]);
+  $min_d = array_dist2 ($model_ref->[$l], $test_feature_ref);
+  $classification_l = $l;
+
+  for $l ($classification_l .. (scalar @{$model_ref} - 1))
   {
-    if (defined $model[$l])
+    if (defined $model_ref->[$l])
     {
-      my $d2 = array_dist2 ($model[$l], \@test_feature);
-      if ($d2 < $min_d || $min_d  == -1)
+      my $d2 = bounded_array_dist2 ($model_ref->[$l], $test_feature_ref,
+        $min_d);
+      if ($d2 < $min_d)
       {
         $min_d = $d2;
         $classification_l = $l;
       }
     }
   }
-  return ($test_card - $test_class[$classification_l], $test_card);
+  return ($test_card - $test_class_ref->[$classification_l], 
+      $test_card);
 }
 
 
 sub array_dist2
 {
-  my @arr1 = @{$_[0]};
-  my @arr2 = @{$_[1]};
+  my $arr1 = $_[0];
+  my $arr2 = $_[1];
   my $d = 0.0;
-  for (my $i = 0; $i < scalar @arr1; $i++)
+  for (my $i = 0; $i < scalar @{$arr1}; $i++)
   {
-    $d += ($arr1[$i] - $arr2[$i]) ** 2;
+    $d += ($arr1->[$i] - $arr2->[$i]) ** 2;
+  }
+  return $d;
+}
+
+
+sub bounded_array_dist2
+{
+  my $arr1 = $_[0];
+  my $arr2 = $_[1];
+  my $bound = $_[2];
+  my $d = 0.0;
+  for (my $i = 0; $i < scalar @{$arr1}; $i++)
+  {
+    $d += ($arr1->[$i] - $arr2->[$i]) ** 2;
+    if ($d > $bound)
+    {
+      last;
+    }
   }
   return $d;
 }

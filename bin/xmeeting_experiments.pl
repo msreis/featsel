@@ -30,14 +30,15 @@ my $FEATSEL_BIN    = "./bin/featsel";
 my $LOG_FILE       = "output/result.log";
 my $INPUT_DIR      = "input/";
 # Number of repetitions on runs over a dataset
-my $m = 1;
+my $m = 3;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
 my @ALGORITHMS = (
   "pucs", 
-  # "sffs",
+  "sffs",
+  "spec_cmi",
   "all");
-my %cost_function = ("pucs" => "mce", "sffs" => "mce");
+my %cost_function = ("pucs" => "mce", "sffs" => "mce", "spec_cmi" => "cmi");
 my @DATA_SETS = (
                  "Iris", 
                  "Thoracic",
@@ -169,7 +170,7 @@ foreach my $data_set (@DATA_SETS)
 
       printf "\n%2d-run on %14s with %8s takes " .
       "%6.3f and has cross-validation error of %4.3f and selected %2d ". 
-      "features",
+      "features\n",
       $i, $data_set, $algorithm, $execution_time, $cv_error, 
       $nof_selected_features;
     }

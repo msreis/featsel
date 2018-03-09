@@ -12,3 +12,4 @@
                 ucsr UCSR
                  ruc RandomUChain
                 kruc KRandomUChain
+    nystrom_spec_cmi NystromSpecCMI

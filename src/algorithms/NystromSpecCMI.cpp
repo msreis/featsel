@@ -24,6 +24,7 @@
 #include "NystromSpecCMI.h"
 #include <oct.h>
 #include <builtin-defun-decls.h>
+#include <omp.h>
 
 NystromSpecCMI::NystromSpecCMI ()
 {
@@ -110,18 +111,29 @@ void NystromSpecCMI::sample_Q ()
 {
   unsigned int set_card = set->get_set_cardinality ();
   unsigned int n;
+  unsigned int chunk;
   n = set_card;
   p = n * nystrom_sampling_rate;
 
   create_A ();
   create_B ();
-
+  
+  #pragma omp parallel for schedule (dynamic, 2)
   for (unsigned int i = 0; i < p; i++)
-    for (unsigned int j = 0; j < n; j++)
-      if (j < p)
+    for (unsigned int j = 0; j <= i; j++)
+    {
         A[i][j] = compute_Q_entry (i, j);
-      else
-        B[i][j - p] = compute_Q_entry (i, j);
+        A[j][i] = A[i][j];
+    }
+        
+  chunk = (p * (n - p)) / omp_get_max_threads () + 1;
+  # pragma omp parallel for schedule (static, chunk)
+  for (unsigned int k = 0; k < p * (n - p); k++)
+  {
+    unsigned int i = k / (n - p);
+    unsigned int j = k % (n - p);
+    B[i][j] = compute_Q_entry (i, j + p);
+  }
 }
 
 

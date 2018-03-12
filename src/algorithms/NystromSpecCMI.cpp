@@ -115,12 +115,17 @@ void NystromSpecCMI::sample_Q ()
 
   create_A ();
   create_B ();
+    
 
   for (unsigned int i = 0; i < p; i++)
-    for (unsigned int j = 0; j < n; j++)
-      if (j < p)
+    for (unsigned int j = 0; j <= i; j++)
+    {
         A[i][j] = compute_Q_entry (i, j);
-      else
+        A[j][i] = A[i][j];
+    }
+        
+  for (unsigned int i = 0; i < p; i++)
+      for (unsigned int j = p; j < n; j++)
         B[i][j - p] = compute_Q_entry (i, j);
 }
 

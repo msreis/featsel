@@ -145,9 +145,19 @@ double NystromSpecCMI::compute_Q_entry (unsigned int i, unsigned int j)
   if (cmi == NULL)
     cmi = new ConditionalMutualInformation (set);
 
+  
+  timeval begin_calc, end_calc;
+  gettimeofday (&begin_calc, NULL);
+  cout << "Entry (" << i << ", " << j << ") took ";
+
+
   X.add_element (i);
   X.add_element (j);
   value = cmi->cost (&X);
+
+  gettimeofday (&end_calc, NULL);
+  elapsed_time_of_the_algorithm = diff_us (end_calc, begin_calc);
+  cout << elapsed_time_of_the_algorithm / 1e6 << "." << endl;
   return value;
 }
 

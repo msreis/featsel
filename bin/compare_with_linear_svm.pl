@@ -30,29 +30,43 @@ my $FEATSEL_BIN    = "./bin/featsel";
 my $LOG_FILE       = "output/result.log";
 my $INPUT_DIR      = "input/";
 # Number of repetitions on runs over a dataset
-my $m = 10;
+my $m = 3;
 my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 
-my @ALGORITHMS = ("pucs",
-  "es",
-  "sffs",
+my @ALGORITHMS = (
+  "pucs",
+  "ubb",
+  #"sffs",
   "spec_cmi");
 my %cost_function = ("pucs" => "mi",
-  "es" => "mi",
+  "ubb" => "mce",
   "sffs" => "mi",
   "spec_cmi" => "cmi");
-my @DATA_SETS = ("Iris", "Car", "Wine", "Zoo", "Waveform");
+my @DATA_SETS = (
+    #"Iris", 
+    #"Car", 
+    #"Wine", 
+    #"Zoo", 
+    #"Waveform", 
+    "Parity1", 
+    "Parity2", 
+    "Parity3");
 my %labels    = ("Iris" => 3, "Car" => 4, "Zoo" => 7,  "Wine" => 3,
-  "Waveform" => 3);
+  "Waveform" => 3, "Parity1" => 2, "Parity2" => 2, "Parity3" => 2);
 my %features =  ("Iris" => 4, "Car" => 6, "Zoo" => 15, "Wine" => 13,
-  "Waveform" => 21);
+  "Waveform" => 21, "Parity1" => 12, "Parity2" => 12, "Parity3" => 12);
 my %data_size = ("Iris" => 150, "Car" => 1728, "Wine" => 178, 
-  "Zoo" => 101, "Waveform" => 5000);
+  "Zoo" => 101, "Waveform" => 5000, "Parity1" => 1000, "Parity2" => 1000, 
+  "Parity3" => 1000);
 my %dat_file =  ("Iris" => "input/Iris/Test_01_A.dat",
   "Car" => "input/Car/Test_01_A.dat",
   "Wine" => "input/Wine/Test_01_A.dat",
   "Zoo" => "input/Zoo/Test_15_3.dat",
-  "Waveform" => "input/Waveform/Test_01_A.dat");
+  "Waveform" => "input/Waveform/Test_01_A.dat",
+  "Parity2" => "input/Parity/Test_parity_12_4_1000.dat", 
+  "Parity1" => "input/Parity/Test_parity_12_6_1000.dat", 
+  "Parity3" => "input/Parity/Test_parity_12_8_1000.dat"
+);
 
 my $DATA_FILE = "output/dat.temp";
 open (DATA, ">$DATA_FILE");

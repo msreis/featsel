@@ -13,3 +13,4 @@
                  ruc RandomUChain
                 kruc KRandomUChain
     nystrom_spec_cmi NystromSpecCMI
+                 pfs PosetForestSearch

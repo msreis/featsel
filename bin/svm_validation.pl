@@ -44,28 +44,25 @@ my $TRN_OUTPUT_FILE = $OUTPUT_DIR . "/trn_result.txt";
 my $trn_data_set_file_name;
 my $tst_data_set_file_name;
 my $number_of_features;
-my $number_of_classes;
 my $selected_features;
-if (@ARGV == 5)
+if (@ARGV == 4)
 {
   $trn_data_set_file_name = $ARGV[0];
   $tst_data_set_file_name = $ARGV[1];
   $number_of_features = $ARGV[2];
-  $number_of_classes = $ARGV[3];
-  $selected_features = $ARGV[4];
+  $selected_features = $ARGV[3];
 }
 else
 {
   die "\nSyntax: $0 " . 
     "TRAINING_DATA_SET_FILE TESTING_DATA_SET_FILE NUMBER_OF_FEATURES ".
-    "NUMBER_OF_CLASSES SELECTED_FEATURES\n\n" .
+    "SELECTED_FEATURES\n\n" .
     "Where:\n\n" .
     "    TRAINING_DATA_SET_FILE: file name of data set used for ".  
     "training.\n\n" .
     "    TESTING_DATA_SET_FILE: file name of data set used for testing". 
     " \n\n" .
     "    NUMBER_OF_FEATURES: number of features on the data set.\n\n" .
-    "    NUMBER_OF_CLASSES: number of classes on the data set.\n\n" .
     "    SELECTED_FEATURES: a binary description of the selected ".
     "features";
 }
@@ -120,7 +117,7 @@ while (<DATA>)
 {
   if ($_ =~ /\S+\s+=\s+(\d+\.?\d*)%.*/)
   {
-    $v_error = $1;
+    $v_error = 1 - $1 / 100;
   }
 }
 close (DATA);

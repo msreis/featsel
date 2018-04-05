@@ -36,36 +36,91 @@ my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 my @ALGORITHMS = (
   "pucs",
   "ubb",
+  "es",
   #"sffs",
   "spec_cmi");
-my %cost_function = ("pucs" => "mi",
+
+my %cost_function = ("pucs" => "mce",
+  "es" => "mce",
   "ubb" => "mce",
   "sffs" => "mi",
   "spec_cmi" => "cmi");
+
 my @DATA_SETS = (
     #"Iris", 
     #"Car", 
     #"Wine", 
     #"Zoo", 
     #"Waveform", 
-    "Parity1", 
-    "Parity2", 
-    "Parity3");
-my %labels    = ("Iris" => 3, "Car" => 4, "Zoo" => 7,  "Wine" => 3,
-  "Waveform" => 3, "Parity1" => 2, "Parity2" => 2, "Parity3" => 2);
-my %features =  ("Iris" => 4, "Car" => 6, "Zoo" => 15, "Wine" => 13,
-  "Waveform" => 21, "Parity1" => 12, "Parity2" => 12, "Parity3" => 12);
-my %data_size = ("Iris" => 150, "Car" => 1728, "Wine" => 178, 
-  "Zoo" => 101, "Waveform" => 5000, "Parity1" => 1000, "Parity2" => 1000, 
-  "Parity3" => 1000);
+    "Parity_5_2_1000", 
+    "Parity_5_3_1000", 
+    "Parity_5_4_1000",
+    "Parity_7_3_1000",
+    "Parity_7_4_1000",
+    "Parity_7_5_1000",
+    "Parity_7_3_5000",
+    "Parity_7_4_5000",
+    "Parity_7_5_5000");
+
+my %labels = (
+  "Iris" => 3, 
+  "Car" => 4, 
+  "Zoo" => 7,  "Wine" => 3,
+  "Waveform" => 3, 
+  "Parity_5_2_1000" => 2, 
+  "Parity_5_3_1000" => 2, 
+  "Parity_5_4_1000" => 2,
+  "Parity_7_3_1000" => 2,
+  "Parity_7_4_1000" => 2,
+  "Parity_7_5_1000" => 2,
+  "Parity_7_3_5000" => 2,
+  "Parity_7_4_5000" => 2,
+  "Parity_7_5_5000" => 2);
+
+my %features =  ("Iris" => 4, 
+  "Car" => 6, 
+  "Zoo" => 15, 
+  "Wine" => 13,
+  "Waveform" => 21, 
+  "Parity_5_2_1000" => 5, 
+  "Parity_5_3_1000" => 5, 
+  "Parity_5_4_1000" => 5,
+  "Parity_7_3_1000" => 7,
+  "Parity_7_4_1000" => 7,
+  "Parity_7_5_1000" => 7,
+  "Parity_7_3_5000" => 7,
+  "Parity_7_4_5000" => 7,
+  "Parity_7_5_5000" => 7);
+
+my %data_size = ("Iris" => 150, 
+  "Car" => 1728, 
+  "Wine" => 178, 
+  "Zoo" => 101, 
+  "Waveform" => 5000, 
+  "Parity_5_2_1000" => 1000, 
+  "Parity_5_3_1000" => 1000, 
+  "Parity_5_4_1000" => 1000,
+  "Parity_7_3_1000" => 1000,
+  "Parity_7_4_1000" => 1000,
+  "Parity_7_5_1000" => 1000,
+  "Parity_7_3_5000" => 5000,
+  "Parity_7_4_5000" => 5000,
+  "Parity_7_5_5000" => 5000);
+
 my %dat_file =  ("Iris" => "input/Iris/Test_01_A.dat",
   "Car" => "input/Car/Test_01_A.dat",
   "Wine" => "input/Wine/Test_01_A.dat",
   "Zoo" => "input/Zoo/Test_15_3.dat",
   "Waveform" => "input/Waveform/Test_01_A.dat",
-  "Parity2" => "input/Parity/Test_parity_12_4_1000.dat", 
-  "Parity1" => "input/Parity/Test_parity_12_6_1000.dat", 
-  "Parity3" => "input/Parity/Test_parity_12_8_1000.dat"
+  "Parity_5_2_1000" => "input/Parity/Test_parity_5_2_1000.dat", 
+  "Parity_5_3_1000" => "input/Parity/Test_parity_5_3_1000.dat", 
+  "Parity_5_4_1000" => "input/Parity/Test_parity_5_4_1000.dat",
+  "Parity_7_3_1000" => "input/Parity/Test_parity_7_3_1000.dat",
+  "Parity_7_4_1000" => "input/Parity/Test_parity_7_4_1000.dat",
+  "Parity_7_5_1000" => "input/Parity/Test_parity_7_5_1000.dat",
+  "Parity_7_3_5000" => "input/Parity/Test_parity_7_3_5000.dat",
+  "Parity_7_4_5000" => "input/Parity/Test_parity_7_4_5000.dat",
+  "Parity_7_5_5000" => "input/Parity/Test_parity_7_5_5000.dat"
 );
 
 my $DATA_FILE = "output/dat.temp";
@@ -140,5 +195,6 @@ foreach my $data_set (@DATA_SETS)
       $i, $data_set, $algorithm, $execution_time, $cv_error;
     }
   }
+  print "\n";
 }
 close (DATA);

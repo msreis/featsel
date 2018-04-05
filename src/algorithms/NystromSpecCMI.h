@@ -31,7 +31,7 @@
 
 // Default Nystrom sampling rate
 //
-#define NYSTROM_SAMPLING_RATE 0.8
+#define NYSTROM_SAMPLING_RATE 0.2
 
 // If true, print for each feature index its respective ranking.
 //

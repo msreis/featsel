@@ -24,6 +24,7 @@
 
 use warnings;
 use strict;
+#use local::lib;
 use Time::HiRes qw (gettimeofday tv_interval);
 use List::MoreUtils 'pairwise';
 use List::Util qw/shuffle/;
@@ -69,6 +70,7 @@ else
     "features";
 }
 
+$| = 1; # auto-flush
 
 my @selected_features_arr = split ('', $selected_features);
 
@@ -121,13 +123,12 @@ foreach my $l (0 .. (scalar @model - 1))
     }
   }
 }
-print "[DONE].\n";
+print "[DONE].\n\n";
 undef (@class_n);
 
 
-
 # Parses testing data file and calculates validation error
-print "Reading testing data and validating model...";
+print "Reading testing data and validating model...\n";
 my ($sample_err, $sample_card);
 my $k;
 my $v_error = .0;
@@ -149,12 +150,11 @@ while (<DATA>)
   $i += 1;
   
   
-  if ($i % 500 == 0)
+  if ($i % 5000 == 0)
   {
-    print "\n$i testing samples read; now testing it...";
-    
-    my $pl = Parallel::Loops->new (16);
-    my @processing_blocks = (0 .. 4);
+    print "\n$i testing samples read; now testing it...\n";
+    my $pl = Parallel::Loops->new (18);
+    my @processing_blocks = (0 .. 49);
     my %return_values;
     $pl->share (\%return_values);
     $pl->foreach (\@processing_blocks, sub 
@@ -186,7 +186,11 @@ while (<DATA>)
   }
 }
 close (DATA);
-print "\n$i testing samples read; now testing it...";
+
+if ($i % 1000 != 0)
+{
+  print "\n$i testing samples read; now testing it...";
+}
 
 for my $j (1 .. scalar @{$data_buffer[0]})
 {
@@ -256,7 +260,6 @@ sub ncm_validate_sample
       }
     }
   }
-
   return ($test_card - $test_class_ref->[$classification_l], 
       $test_card);
 }

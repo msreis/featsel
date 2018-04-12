@@ -32,13 +32,14 @@ use Data::Dumper;
 
 # Set constants
 my $OUTPUT_DIR = "output";
-my $LIBSVM_DIR = "/home/gustavo/cs/libsvm/libsvm-3.22/";
+my $LIBSVM_DIR = "/home/gestrela/projects/libsvm-3.22/";
 my $FEATSEL_BIN = "./bin/featsel";
-my $TRN_TMP_FILE = $OUTPUT_DIR . "/trn_tmp.dat";
-my $TST_TMP_FILE = $OUTPUT_DIR . "/tst_tmp.dat";
-my $MODEL_TMP_FILE = $OUTPUT_DIR . "/model_tmp.dat";
-my $TRN_LOG_FILE = $OUTPUT_DIR . "/trn_log.txt";
-my $TRN_OUTPUT_FILE = $OUTPUT_DIR . "/trn_result.txt";
+my $PROCESS_PID = $$;
+my $TRN_TMP_FILE = $OUTPUT_DIR . "/trn_tmp_" . $PROCESS_PID . ".dat";
+my $TST_TMP_FILE = $OUTPUT_DIR . "/tst_tmp_" . $PROCESS_PID . ".dat";
+my $MODEL_TMP_FILE = $OUTPUT_DIR . "/model_tmp_" . $PROCESS_PID . ".dat";
+my $TRN_LOG_FILE = $OUTPUT_DIR . "/trn_log_" . $PROCESS_PID . ".txt";
+my $TRN_OUTPUT_FILE = $OUTPUT_DIR . "/trn_result_" . $PROCESS_PID . ".txt";
 
 # Arguments parsing
 my $trn_data_set_file_name;
@@ -122,6 +123,13 @@ while (<DATA>)
 }
 close (DATA);
 print ("validation error: $v_error\n");
+
+# Remove temporary files
+system ("rm $TRN_TMP_FILE");
+system ("rm $TST_TMP_FILE");
+system ("rm $MODEL_TMP_FILE");
+system ("rm $TRN_LOG_FILE");
+system ("rm $TRN_OUTPUT_FILE");
 
 
 ## Functions 

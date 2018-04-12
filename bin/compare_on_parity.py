@@ -15,7 +15,7 @@ algorithms = ["pucs", "spec_cmi"]
 alg_color = {"pucs" : "red", "spec_cmi" : "blue"}
 z_order = {"pucs" : 1, "spec_cmi" : 2}
 cost_functions = {"pucs" : "mce", "spec_cmi" : "mce"}
-gen_parity_path = "/home/gustavo/cs/machine_learning_data/" + \
+gen_parity_path = "/home/gestrela/projects/machine_learning_data/" + \
         "parity_problem/gen_parity_instance.py"
 
 
@@ -52,8 +52,10 @@ x = np.arange (min_n, max_n + 1, n_step)
 y = np.arange (min_k, max_k + 1, k_step)
 X, Y = np.meshgrid (x, y)
 alg_Z = {}
+min_err = {}
 for alg in algorithms:
     alg_Z[alg] = np.zeros ((len (y), len (x)))
+    min_err[alg] = 1
 
 n_i = 0
 k_i = 0
@@ -61,6 +63,9 @@ for n in range (min_n, max_n + 1, n_step):
     for k in range (min_k, max_k + 1, k_step):
 
         if (k >= n):
+            for alg in algorithms:
+                alg_Z[alg][k_i][n_i] = min_err[alg]
+            k_i += 1
             continue
 
         print ("n = " + str (n) + " and k = " + str (k))
@@ -107,12 +112,20 @@ for n in range (min_n, max_n + 1, n_step):
                 v_error = float (matching.group (1))
                 avg_error[alg] += v_error
 
+            # delete data 
+            os.system ("rm -f " + tst_dataset_file)
+            os.system ("rm -f " + trn_dataset_file)
+            os.system ("rm -f " + dataset_file)
+
+
         for alg in algorithms:
             print ("For n = " + str (n) + ", k = " + str (k) + " and alg = " + alg)
             avg_error[alg] /= m
             print (avg_error[alg])
             print ("\n")
             alg_Z[alg][k_i][n_i] = avg_error[alg]
+            if (avg_error[alg] < min_err[alg]):
+                min_err[alg] = avg_error[alg]
 
         k_i = k_i + 1
     k_i = 0
@@ -134,17 +147,19 @@ for n in range (min_n, max_n + 1, n_step):
 surf_data1 = [
     go.Surface(x=X, y=Y, z=alg_Z["pucs"], 
         autocolorscale=False,
-        colorscale=[[0, 'rgba(0, 0,0, 0)'], [1, 'rgba(255,0,0, .4)']],
+        colorscale=[[0, 'rgba(200, 50,50, .2)'], [1, 'rgba(200,50,50, .2)']],
         cmin=-1 ,
         cmax=-1,
         ids=["Number of features", "Number of relevant features", "Average error"],
-        showscale=False),
+        showscale=False,
+        opacity=.7),
     go.Surface(x=X, y=Y, z=alg_Z["spec_cmi"], 
         autocolorscale=False,
-        colorscale=[[0, 'rgba(0,0,0,0)'], [1, 'rgba(50,50,200, .4)']],
+        colorscale=[[0, 'rgba(50,50,200,.2)'], [1, 'rgba(50,50,200, .2)']],
         cmin=-1,
         cmax=-1,
-        showscale=False)
+        showscale=False,
+        )
 ]
 
 layout = go.Layout (
@@ -164,4 +179,6 @@ layout = go.Layout (
 )
 
 fig1 = go.Figure (data=surf_data1, layout=layout)
-plotly.offline.plot(fig1)
+plotly.offline.plot(fig1, 
+        filename='output/parity_plot_m' + str (sample_size) + '.html', 
+        auto_open=False)

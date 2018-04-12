@@ -32,7 +32,7 @@ use Data::Dumper;
 
 # Set constants
 my $OUTPUT_DIR = "output";
-my $LIBSVM_DIR = "/home/gestrela/projects/libsvm-3.22/";
+my $LIBSVM_DIR = "/home/gustavo/cs/libsvm/libsvm-3.22/";
 my $FEATSEL_BIN = "./bin/featsel";
 my $PROCESS_PID = $$;
 my $TRN_TMP_FILE = $OUTPUT_DIR . "/trn_tmp_" . $PROCESS_PID . ".dat";

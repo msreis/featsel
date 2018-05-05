@@ -31,7 +31,20 @@ CHCGAPopulation::CHCGAPopulation (ElementSet * set, CostFunction * c)
 
 CHCGAPopulation::~CHCGAPopulation ()
 {
+  Population::iterator pop_it = population.begin ();
+  while (pop_it != population.end ())
+  {
+    delete pop_it->second;
+    pop_it++;
+  }
+
   population.clear ();
+}
+
+void CHCGAPopulation::kill_individual (Population::iterator i)
+{
+  delete i->second;
+  population.erase (i);
 }
 
 
@@ -131,8 +144,8 @@ list<ElementSubset *> CHCGAPopulation::recombine ()
     }
     else
     {
-      population.erase (*f_it);
-      population.erase (*m_it);
+      kill_individual (*f_it);
+      kill_individual (*m_it);
       // obs: this is ok; map iterators are not affected by erase
       // on other elements
     }
@@ -182,38 +195,27 @@ bool CHCGAPopulation::fittest_survival (list<ElementSubset *>
 {
   list<Individual *>::iterator children_it = children.begin ();
   unsigned int children_alive = children.size ();
+  Functor f;
+  children.sort (f);
 
-  // cout << "Population to survive: " << endl;
-  // Population::iterator pop_it;
-  // for (pop_it = population.begin (); pop_it != population.end (); pop_it++)
-  // {
-  //   cout << pop_it->second->print_subset () << endl;
-  // }
-  // cout << "Children to enter population: " << endl;
-  // for (children_it = children.begin (); children_it != children.end (); children_it++)
-  // {
-  //   cout << (*children_it)->print_subset () << endl;
-  // }
-  // children_it = children.begin ();
-
-  Population::iterator least_fit = --population.end ();
+  children_it = children.begin ();
+  Population::iterator least_fit;
   while (children_it != children.end ())
   {
     Individual * child = *children_it;
     child->cost = c->cost (child);
+    least_fit = --population.end ();
 
     if (least_fit != population.end () && 
-      child->cost >= least_fit->first)
-    {
+      child->cost > least_fit->first)
       children_alive--;
-      children_it = children.erase (children_it);
-    }
     else
     {
-      population.insert (make_pair (child->cost, child));
-      population.erase (least_fit--);
+      population.insert (make_pair (child->cost,
+       new ElementSubset (child)));
+      kill_individual (least_fit);
     }
-    children_it++;
+    children_it = children.erase (children_it);
   }
 
   if (children_alive == 0)

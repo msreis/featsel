@@ -36,6 +36,7 @@
 #include "CostFunction.h"
 #include <vector>
 
+
 class CHCGAPopulation
 {
 
@@ -79,6 +80,23 @@ private:
   // Performs a cataclysm on the population.
   //
   void cataclysm ();
+
+  // Removes and destroy a population entry
+  //
+  void kill_individual (Population::iterator);
+
+  // Functor with operator () as a comparison function.
+  //
+  struct Functor
+  {
+    bool operator () (ElementSubset * first, ElementSubset * second)
+    {
+      if (first->cost < second->cost)
+        return true;
+      else
+        return false;
+    }
+  };
 
 public:
 

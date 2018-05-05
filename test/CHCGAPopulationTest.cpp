@@ -70,19 +70,43 @@ namespace CHCGAPopulationTest
     bool answ = true;
     ElementSet elm_set ("", 4, 1000);
     SubsetSum c (&elm_set);
-    CHCGAPopulation pop (&elm_set, &c);
-    ElementSubset * child;
+    CHCGAPopulation * pop = new CHCGAPopulation (&elm_set, &c);
     list<ElementSubset *> pop_indviduals; 
     list<ElementSubset *> pop_offspring;
 
-    pop.start_population (2);
-    pop_offspring = pop.recombine ();
-    child = pop_offspring.back ();
-    pop_indviduals = pop.get_population ();
+    // 10 is big enough so we don't have a cataclysm on these
+    // two first generations
+    pop->start_population (10);
+    pop_offspring = pop->recombine ();
+    while (pop_offspring.size () < 1)
+    {
+      delete pop;
+      pop = new CHCGAPopulation (&elm_set, &c);
+      pop->start_population (10);
+      pop_offspring = pop->recombine ();
+    }
+    
+    ElementSubset * worst_fit = pop_offspring.back ();
+    worst_fit->cost = c.cost (worst_fit);
+
+    list<ElementSubset *>::iterator offspring_it = 
+      pop_offspring.begin ();
+    list<ElementSubset *>::iterator offspring_it_end = 
+      pop_offspring.end ();
+    while (offspring_it != offspring_it_end)
+    {
+      ElementSubset * child = (*offspring_it);
+      child->cost = c.cost (child);
+      if (worst_fit->cost < child->cost)
+      {
+        worst_fit = child;
+      }
+      offspring_it++;
+    }
+    pop_indviduals = pop->get_population ();
     
     list<ElementSubset *>::iterator pop_it = pop_indviduals.begin ();
     list<ElementSubset *>::iterator pop_it_end = pop_indviduals.end ();
-    ElementSubset * worst_fit = child;
     while (pop_it != pop_it_end)
     {
       if (worst_fit->cost < (*pop_it)->cost)
@@ -90,16 +114,17 @@ namespace CHCGAPopulationTest
       pop_it++;
     }
     worst_fit = new ElementSubset (worst_fit);
+    pop->fittest_survival (pop_offspring);
 
-    pop.fittest_survival (pop_offspring);
-
-    pop_indviduals = pop.get_population ();
+    pop_indviduals = pop->get_population ();
     pop_it = pop_indviduals.begin ();
     pop_it_end = pop_indviduals.end ();
     while (pop_it != pop_it_end)
     {
       if ((*pop_it)->cost > worst_fit->cost)
+      {
         answ = false;
+      }
       pop_it++;
     }
 

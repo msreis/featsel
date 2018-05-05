@@ -244,325 +244,325 @@ int main (void)
 
   // Testing Class CHCGAPopulation
   current_class = "CHCGAPopulationTest";
-  result ("it_should_create_a_starting_population", 
-    CHCGAPopulationTest::it_should_create_a_starting_population ());
-  result ("it_should_combine_individuals", 
-    CHCGAPopulationTest::it_should_combine_individuals ());
+  // result ("it_should_create_a_starting_population", 
+  //   CHCGAPopulationTest::it_should_create_a_starting_population ());
+  // result ("it_should_combine_individuals", 
+  //   CHCGAPopulationTest::it_should_combine_individuals ());
   result ("only_the_fittest_should_survive", 
     CHCGAPopulationTest::only_the_fittest_should_survive ());
   cout << endl;
 
-  //Testing class "Explicit"
-  //
-  current_class = "ExplicitTest";
-  result ("an_empty_set_should_have_cost_zero",
-    ExplicitTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    ExplicitTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_works_with_an_explicitly_declared_cost_function",
-    ExplicitTest::it_should_works_with_an_explicitly_declared_cost_function ());
-  cout << endl;
+  // //Testing class "Explicit"
+  // //
+  // current_class = "ExplicitTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   ExplicitTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   ExplicitTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_works_with_an_explicitly_declared_cost_function",
+  //   ExplicitTest::it_should_works_with_an_explicitly_declared_cost_function ());
+  // cout << endl;
 
-  //Testing class "MeanConditionalEntropy"
-  //
-  current_class = "MeanConditionalEntropyTest";
-  result ("an_empty_set_should_have_cost_zero",
-    MeanConditionalEntropyTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    MeanConditionalEntropyTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_store_the_frequencies_of_the_samples",
-    MeanConditionalEntropyTest::it_should_store_the_frequencies_of_the_samples ());
-  result ("it_should_store_the_label_frequencies_of_the_samples",
-    MeanConditionalEntropyTest::it_should_store_the_label_frequencies_of_the_samples ());
-  result ("it_should_calculate_the_conditional_entropy",
-    MeanConditionalEntropyTest::it_should_calculate_the_conditional_entropy ());
-  result ("it_should_calculate_the_mean_conditional_entropy",
-    MeanConditionalEntropyTest::it_should_calculate_the_mean_conditional_entropy ());
-  cout << endl;
+  // //Testing class "MeanConditionalEntropy"
+  // //
+  // current_class = "MeanConditionalEntropyTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   MeanConditionalEntropyTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   MeanConditionalEntropyTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_store_the_frequencies_of_the_samples",
+  //   MeanConditionalEntropyTest::it_should_store_the_frequencies_of_the_samples ());
+  // result ("it_should_store_the_label_frequencies_of_the_samples",
+  //   MeanConditionalEntropyTest::it_should_store_the_label_frequencies_of_the_samples ());
+  // result ("it_should_calculate_the_conditional_entropy",
+  //   MeanConditionalEntropyTest::it_should_calculate_the_conditional_entropy ());
+  // result ("it_should_calculate_the_mean_conditional_entropy",
+  //   MeanConditionalEntropyTest::it_should_calculate_the_mean_conditional_entropy ());
+  // cout << endl;
 
-  //Testing class "HammingDistance"
-  //
-  current_class = "HammingDistanceTest";
-  result ("an_empty_set_should_have_cost_zero",
-    HammingDistanceTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    HammingDistanceTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_give_the_hamming_distance_cost_of_a_subset",
-    HammingDistanceTest::it_should_give_the_hamming_distance_cost_of_a_subset ());
-  cout << endl;
+  // //Testing class "HammingDistance"
+  // //
+  // current_class = "HammingDistanceTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   HammingDistanceTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   HammingDistanceTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_give_the_hamming_distance_cost_of_a_subset",
+  //   HammingDistanceTest::it_should_give_the_hamming_distance_cost_of_a_subset ());
+  // cout << endl;
 
-  //Testing class "SubsetSum"
-  //
-  current_class = "SubsetSumTest";
-  result ("an_empty_set_should_have_cost_zero",
-    SubsetSumTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    SubsetSumTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_give_the_subset_sum_cost_of_a_subset",
-    SubsetSumTest::it_should_give_the_subset_sum_cost_of_a_subset ());
-  cout << endl;
+  // //Testing class "SubsetSum"
+  // //
+  // current_class = "SubsetSumTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   SubsetSumTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   SubsetSumTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_give_the_subset_sum_cost_of_a_subset",
+  //   SubsetSumTest::it_should_give_the_subset_sum_cost_of_a_subset ());
+  // cout << endl;
 
-  //Testing class "MutualInformation"
-  //
-  current_class = "MutualInformationTest";
-  result ("an_empty_set_should_have_cost_zero",
-    MutualInformationTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    MutualInformationTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_work_when_theres_no_sample_of_a_label",
-    MutualInformationTest::it_should_work_when_theres_no_sample_of_a_label ());
-  cout << endl;
+  // //Testing class "MutualInformation"
+  // //
+  // current_class = "MutualInformationTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   MutualInformationTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   MutualInformationTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_work_when_theres_no_sample_of_a_label",
+  //   MutualInformationTest::it_should_work_when_theres_no_sample_of_a_label ());
+  // cout << endl;
 
-  //Testing class "ConditionalMutualInformation"
-  //
-  current_class = "ConditionalMutualInformationTest";
-  result ("an_empty_set_should_have_cost_zero",
-    ConditionalMutualInformationTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    ConditionalMutualInformationTest::it_should_add_and_retrieve_the_elapsed_time ());
-  cout << endl;
+  // //Testing class "ConditionalMutualInformation"
+  // //
+  // current_class = "ConditionalMutualInformationTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   ConditionalMutualInformationTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   ConditionalMutualInformationTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // cout << endl;
 
-  //Testing class "Point"
-  //
-  current_class = "PointTest";
-  result ("an_empty_set_should_have_cost_zero",
-    PointTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    PointTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_compute_the_cost_of_a_point",
-    PointTest::it_should_compute_the_cost_of_a_point ());
-  cout << endl;
+  // //Testing class "Point"
+  // //
+  // current_class = "PointTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   PointTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   PointTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_compute_the_cost_of_a_point",
+  //   PointTest::it_should_compute_the_cost_of_a_point ());
+  // cout << endl;
 
-  //Testing class "TailorConvexHull"
-  //
-  current_class = "TailorConvexHullTest";
-  result ("an_empty_set_should_have_cost_zero",
-    TailorConvexHullTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    TailorConvexHullTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_fit_pieces_into_the_cloth",
-    TailorConvexHullTest::it_should_fit_pieces_into_the_cloth ());
-  cout << endl;
+  // //Testing class "TailorConvexHull"
+  // //
+  // current_class = "TailorConvexHullTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   TailorConvexHullTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   TailorConvexHullTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_fit_pieces_into_the_cloth",
+  //   TailorConvexHullTest::it_should_fit_pieces_into_the_cloth ());
+  // cout << endl;
 
-  //Testing class "CFS"
-  //
-  current_class = "CFSTest";
-  result ("an_empty_set_should_have_cost_zero",
-    CFSTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    CFSTest::it_should_add_and_retrieve_the_elapsed_time ());
-  result ("it_should_compute_the_correlation_based_feature_selection",
-    CFSTest::it_should_compute_the_correlation_based_feature_selection ());
-  cout << endl;
+  // //Testing class "CFS"
+  // //
+  // current_class = "CFSTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   CFSTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   CFSTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // result ("it_should_compute_the_correlation_based_feature_selection",
+  //   CFSTest::it_should_compute_the_correlation_based_feature_selection ());
+  // cout << endl;
 
-  //Testing class "ABD"
-  //
-  current_class = "ABDTest";
-  result ("an_empty_set_should_have_cost_zero",
-    ABDTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    ABDTest::it_should_add_and_retrieve_the_elapsed_time ());
-  cout << endl;
+  // //Testing class "ABD"
+  // //
+  // current_class = "ABDTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   ABDTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   ABDTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // cout << endl;
 
-  //Testing class "SigNetSim"
-  //
-  current_class = "SigNetSimTest";
-  result ("an_empty_set_should_have_cost_zero",
-    SigNetSimTest::an_empty_set_should_have_cost_zero ());
-  result ("it_should_add_and_retrieve_the_elapsed_time",
-    SigNetSimTest::it_should_add_and_retrieve_the_elapsed_time ());
-  cout << endl;
+  // //Testing class "SigNetSim"
+  // //
+  // current_class = "SigNetSimTest";
+  // result ("an_empty_set_should_have_cost_zero",
+  //   SigNetSimTest::an_empty_set_should_have_cost_zero ());
+  // result ("it_should_add_and_retrieve_the_elapsed_time",
+  //   SigNetSimTest::it_should_add_and_retrieve_the_elapsed_time ());
+  // cout << endl;
 
 
-  // Testing Class UCurveToolBox
-  current_class = "UCurveToolBoxTest";
-  result ("it_should_not_update_lower_restriction_set_with_a_covered_subset",
-    UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset ());
-  result ("it_should_update_lower_restriction_set_with_an_outer_subset", 
-    UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset ());
-  result ("it_should_not_update_upper_restriction_set_with_a_covered_subset", 
-    UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset ());
-  result ("it_should_update_upper_restriction_set_with_an_outer_subset", 
-    UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset ());
-  result ("it_should_get_a_maximal_subset", 
-    UCurveToolBoxTest::it_should_get_a_maximal_subset ());
-  cout << endl;
+  // // Testing Class UCurveToolBox
+  // current_class = "UCurveToolBoxTest";
+  // result ("it_should_not_update_lower_restriction_set_with_a_covered_subset",
+  //   UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset ());
+  // result ("it_should_update_lower_restriction_set_with_an_outer_subset", 
+  //   UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset ());
+  // result ("it_should_not_update_upper_restriction_set_with_a_covered_subset", 
+  //   UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset ());
+  // result ("it_should_update_upper_restriction_set_with_an_outer_subset", 
+  //   UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset ());
+  // result ("it_should_get_a_maximal_subset", 
+  //   UCurveToolBoxTest::it_should_get_a_maximal_subset ());
+  // cout << endl;
 
-  //Testing class "UcurveBranchandBound"
-  //
-  current_class = "UcurveBranchandBoundTest";
-  result ("a_lattice_with_constant_cost_should_be_totally_exausted",
-    UcurveBranchandBoundTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
-  result ("it_should_find_a_global_minimum",
-    UcurveBranchandBoundTest::it_should_find_a_global_minimum ());
-  result ("it_should_converge_for_large_hamming_sets",
-    UcurveBranchandBoundTest::it_should_converge_for_large_hamming_sets ());
-  result ("it_should_converge_for_large_subset_sum_sets",
-    UcurveBranchandBoundTest::it_should_converge_for_large_subset_sum_sets ());
-  result ("it_should_store_all_the_visited_subsets",
-    UcurveBranchandBoundTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    UcurveBranchandBoundTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_always_give_the_correct_answer",
-    UcurveBranchandBoundTest::it_should_always_give_the_correct_answer ());
-  cout << endl;
+  // //Testing class "UcurveBranchandBound"
+  // //
+  // current_class = "UcurveBranchandBoundTest";
+  // result ("a_lattice_with_constant_cost_should_be_totally_exausted",
+  //   UcurveBranchandBoundTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
+  // result ("it_should_find_a_global_minimum",
+  //   UcurveBranchandBoundTest::it_should_find_a_global_minimum ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   UcurveBranchandBoundTest::it_should_converge_for_large_hamming_sets ());
+  // result ("it_should_converge_for_large_subset_sum_sets",
+  //   UcurveBranchandBoundTest::it_should_converge_for_large_subset_sum_sets ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   UcurveBranchandBoundTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   UcurveBranchandBoundTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_always_give_the_correct_answer",
+  //   UcurveBranchandBoundTest::it_should_always_give_the_correct_answer ());
+  // cout << endl;
 
-  //Testing class "ExhaustiveSearch"
-  //
-  current_class = "ExhaustiveSearchTest";
-  result ("a_lattice_with_constant_cost_should_be_totally_exausted",
-    ExhaustiveSearchTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
-  result ("it_should_find_a_global_minimum",
-    ExhaustiveSearchTest::it_should_find_a_global_minimum ());
-  result ("it_should_store_all_the_visited_subsets",
-    ExhaustiveSearchTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    ExhaustiveSearchTest::it_should_give_the_number_of_the_visited_subsets ());
-  cout << endl;
+  // //Testing class "ExhaustiveSearch"
+  // //
+  // current_class = "ExhaustiveSearchTest";
+  // result ("a_lattice_with_constant_cost_should_be_totally_exausted",
+  //   ExhaustiveSearchTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
+  // result ("it_should_find_a_global_minimum",
+  //   ExhaustiveSearchTest::it_should_find_a_global_minimum ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   ExhaustiveSearchTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   ExhaustiveSearchTest::it_should_give_the_number_of_the_visited_subsets ());
+  // cout << endl;
 
-  //Testing class "SFS"
-  //
-  current_class = "SFSTest";
-  result ("it_should_find_a_local_minimum",
-    SFSTest::it_should_find_a_local_minimum ());
-  result ("it_should_store_all_the_visited_subsets",
-    SFSTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    SFSTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_converge_for_large_hamming_sets",
-    SFSTest::it_should_converge_for_large_hamming_sets ());
-  cout << endl;
+  // //Testing class "SFS"
+  // //
+  // current_class = "SFSTest";
+  // result ("it_should_find_a_local_minimum",
+  //   SFSTest::it_should_find_a_local_minimum ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   SFSTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   SFSTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   SFSTest::it_should_converge_for_large_hamming_sets ());
+  // cout << endl;
 
-  //Testing class "SFFS"
-  //
-  current_class = "SFFSTest";
-  result ("it_should_add_the_best_element",
-    SFFSTest::it_should_add_the_best_element ());
-  result ("it_should_remove_the_worst_element",
-    SFFSTest::it_should_remove_the_worst_element ());
-  result ("it_should_find_a_local_minimum",
-    SFFSTest::it_should_find_a_local_minimum ());
-  result ("it_should_store_all_the_visited_subsets",
-    SFFSTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    SFFSTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_converge_for_large_hamming_sets",
-    SFFSTest::it_should_converge_for_large_hamming_sets ());
-  cout << endl;
+  // //Testing class "SFFS"
+  // //
+  // current_class = "SFFSTest";
+  // result ("it_should_add_the_best_element",
+  //   SFFSTest::it_should_add_the_best_element ());
+  // result ("it_should_remove_the_worst_element",
+  //   SFFSTest::it_should_remove_the_worst_element ());
+  // result ("it_should_find_a_local_minimum",
+  //   SFFSTest::it_should_find_a_local_minimum ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   SFFSTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   SFFSTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   SFFSTest::it_should_converge_for_large_hamming_sets ());
+  // cout << endl;
 
-  //Testing class "UCurveSearch"
-  //
-  current_class = "UCurveSearchTest";
-  result ("a_lattice_with_constant_cost_should_be_totally_exausted",
-    UCurveSearchTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
-  result ("it_should_find_a_global_minimum",
-    UCurveSearchTest::it_should_find_a_global_minimum ());
-  result ("it_should_converge_for_large_hamming_sets",
-    UCurveSearchTest::it_should_converge_for_large_hamming_sets ());
-  result ("it_should_converge_for_large_subset_sum_sets",
-    UCurveSearchTest::it_should_converge_for_large_subset_sum_sets ());
-  result ("it_should_store_all_the_visited_subsets",
-    UCurveSearchTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    UCurveSearchTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_always_give_the_correct_answer",
-    UCurveSearchTest::it_should_always_give_the_correct_answer ());
-  cout << endl;
+  // //Testing class "UCurveSearch"
+  // //
+  // current_class = "UCurveSearchTest";
+  // result ("a_lattice_with_constant_cost_should_be_totally_exausted",
+  //   UCurveSearchTest::a_lattice_with_constant_cost_should_be_totally_exausted ());
+  // result ("it_should_find_a_global_minimum",
+  //   UCurveSearchTest::it_should_find_a_global_minimum ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   UCurveSearchTest::it_should_converge_for_large_hamming_sets ());
+  // result ("it_should_converge_for_large_subset_sum_sets",
+  //   UCurveSearchTest::it_should_converge_for_large_subset_sum_sets ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   UCurveSearchTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   UCurveSearchTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_always_give_the_correct_answer",
+  //   UCurveSearchTest::it_should_always_give_the_correct_answer ());
+  // cout << endl;
 
-  //Testing class "SpecCMI"
-  //
-  current_class = "SpecCMITest";
-  result ("it_should_compute_the_Q_matrix",
-    SpecCMITest::it_should_compute_the_Q_matrix ());
-  result ("it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al",
-    SpecCMITest::it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ());
-  cout << endl;
+  // //Testing class "SpecCMI"
+  // //
+  // current_class = "SpecCMITest";
+  // result ("it_should_compute_the_Q_matrix",
+  //   SpecCMITest::it_should_compute_the_Q_matrix ());
+  // result ("it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al",
+  //   SpecCMITest::it_should_return_a_correct_solution_for_the_example_in_NX_Vinh_et_al ());
+  // cout << endl;
 
-  //Testing class "RandomChain"
-  //
-  current_class = "RandomChainTest";
-  result ("it_should_store_all_the_visited_subsets",
-    RandomChainTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    RandomChainTest::it_should_give_the_number_of_the_visited_subsets ());
-  cout << endl;
+  // //Testing class "RandomChain"
+  // //
+  // current_class = "RandomChainTest";
+  // result ("it_should_store_all_the_visited_subsets",
+  //   RandomChainTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   RandomChainTest::it_should_give_the_number_of_the_visited_subsets ());
+  // cout << endl;
 
-  //Testing class "SBFS"
-  //
-  current_class = "SBFSTest";
-  result ("it_should_store_all_the_visited_subsets",
-    SBFSTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    SBFSTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_add_the_best_element",
-    SBFSTest::it_should_add_the_best_element ());
-  result ("it_should_remove_the_worst_element",
-    SBFSTest::it_should_remove_the_worst_element ());
-  result ("it_should_find_a_local_minimum",
-    SBFSTest::it_should_find_a_local_minimum ());
-  result ("it_should_converge_for_large_hamming_sets",
-    SBFSTest::it_should_converge_for_large_hamming_sets ());
-  cout << endl;
+  // //Testing class "SBFS"
+  // //
+  // current_class = "SBFSTest";
+  // result ("it_should_store_all_the_visited_subsets",
+  //   SBFSTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   SBFSTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_add_the_best_element",
+  //   SBFSTest::it_should_add_the_best_element ());
+  // result ("it_should_remove_the_worst_element",
+  //   SBFSTest::it_should_remove_the_worst_element ());
+  // result ("it_should_find_a_local_minimum",
+  //   SBFSTest::it_should_find_a_local_minimum ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   SBFSTest::it_should_converge_for_large_hamming_sets ());
+  // cout << endl;
 
-  //Testing class "SBS"
-  //
-  current_class = "SBSTest";
-  result ("it_should_find_a_local_minimum",
-    SBSTest::it_should_find_a_local_minimum ());
-  result ("it_should_store_all_the_visited_subsets",
-    SBSTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    SBSTest::it_should_give_the_number_of_the_visited_subsets ());
-  result ("it_should_converge_for_large_hamming_sets",
-    SBSTest::it_should_converge_for_large_hamming_sets ());
-  cout << endl;
+  // //Testing class "SBS"
+  // //
+  // current_class = "SBSTest";
+  // result ("it_should_find_a_local_minimum",
+  //   SBSTest::it_should_find_a_local_minimum ());
+  // result ("it_should_store_all_the_visited_subsets",
+  //   SBSTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   SBSTest::it_should_give_the_number_of_the_visited_subsets ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   SBSTest::it_should_converge_for_large_hamming_sets ());
+  // cout << endl;
 
-  //Testing class "BFS"
-  //
-  current_class = "BFSTest";
-  result ("it_should_store_all_the_visited_subsets",
-    BFSTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    BFSTest::it_should_give_the_number_of_the_visited_subsets ());
-  cout << endl;
+  // //Testing class "BFS"
+  // //
+  // current_class = "BFSTest";
+  // result ("it_should_store_all_the_visited_subsets",
+  //   BFSTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   BFSTest::it_should_give_the_number_of_the_visited_subsets ());
+  // cout << endl;
 
-  //Testing class "UCSR"
-  //
-  current_class = "UCSRTest";
-  result ("it_should_find_a_global_minimum",
-    UCSRTest::it_should_find_a_global_minimum ());
-  result ("it_should_converge_for_large_hamming_sets",
-    UCSRTest::it_should_converge_for_large_hamming_sets ());
-  result ("it_should_converge_for_large_subset_sum_sets",
-    UCSRTest::it_should_converge_for_large_subset_sum_sets ());
-  result ("it_should_always_give_the_correct_answer",
-    UCSRTest::it_should_always_give_the_correct_answer ());
-  cout << endl;
+  // //Testing class "UCSR"
+  // //
+  // current_class = "UCSRTest";
+  // result ("it_should_find_a_global_minimum",
+  //   UCSRTest::it_should_find_a_global_minimum ());
+  // result ("it_should_converge_for_large_hamming_sets",
+  //   UCSRTest::it_should_converge_for_large_hamming_sets ());
+  // result ("it_should_converge_for_large_subset_sum_sets",
+  //   UCSRTest::it_should_converge_for_large_subset_sum_sets ());
+  // result ("it_should_always_give_the_correct_answer",
+  //   UCSRTest::it_should_always_give_the_correct_answer ());
+  // cout << endl;
 
-  //Testing class "RandomUChain"
-  //
-  current_class = "RandomUChainTest";
-  result ("it_should_store_all_the_visited_subsets",
-    RandomUChainTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    RandomUChainTest::it_should_give_the_number_of_the_visited_subsets ());
-  cout << endl;
+  // //Testing class "RandomUChain"
+  // //
+  // current_class = "RandomUChainTest";
+  // result ("it_should_store_all_the_visited_subsets",
+  //   RandomUChainTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   RandomUChainTest::it_should_give_the_number_of_the_visited_subsets ());
+  // cout << endl;
 
-  //Testing class "KRandomUChain"
-  //
-  current_class = "KRandomUChainTest";
-  result ("it_should_store_all_the_visited_subsets",
-    KRandomUChainTest::it_should_store_all_the_visited_subsets ());
-  result ("it_should_give_the_number_of_the_visited_subsets",
-    KRandomUChainTest::it_should_give_the_number_of_the_visited_subsets ());
-  cout << endl;
+  // //Testing class "KRandomUChain"
+  // //
+  // current_class = "KRandomUChainTest";
+  // result ("it_should_store_all_the_visited_subsets",
+  //   KRandomUChainTest::it_should_store_all_the_visited_subsets ());
+  // result ("it_should_give_the_number_of_the_visited_subsets",
+  //   KRandomUChainTest::it_should_give_the_number_of_the_visited_subsets ());
+  // cout << endl;
 
-  //Testing class "NystromSpecCMI"
-  //
-  current_class = "NystromSpecCMITest";
-  result ("it_should_sample_SpecCMI_Q_matrix",
-    NystromSpecCMITest::it_should_sample_SpecCMI_Q_matrix ());
-  cout << endl;
+  // //Testing class "NystromSpecCMI"
+  // //
+  // current_class = "NystromSpecCMITest";
+  // result ("it_should_sample_SpecCMI_Q_matrix",
+  //   NystromSpecCMITest::it_should_sample_SpecCMI_Q_matrix ());
+  // cout << endl;
 
   //Testing class "CHCGA"
   //

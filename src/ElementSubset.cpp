@@ -225,11 +225,22 @@ bool ElementSubset::is_equal(ElementSubset * Y)
 }
 
 
+unsigned int ElementSubset::hamming_distance (ElementSubset * Y)
+{
+  unsigned int i, d = 0;
+  for (i = 0; i < set->get_set_cardinality (); i++)
+    if ((has_element (i) && !Y->has_element (i)) ||
+        (!has_element (i) && Y->has_element (i)))
+      d++;
+  return d;
+}
+
+
 bool ElementSubset::has_element (unsigned int index)
 {
   if (index >= set->get_set_cardinality ())
   {
-    //cout << "Error in ElementSubset::has_element: index out of range!\n";
+    // cout << "Error in ElementSubset::has_element: index out of range!\n";
     return false;
   }
   else return list_of_elements[index];

@@ -25,12 +25,13 @@ CHCGAPopulation::CHCGAPopulation (ElementSet * set, CostFunction * c)
 {
   this->set = set;
   this->c = c;
+  diff_threshold = set->get_set_cardinality () / 4;
 }
 
 
 CHCGAPopulation::~CHCGAPopulation ()
 {
-  return;
+  population.clear ();
 }
 
 
@@ -51,25 +52,61 @@ void CHCGAPopulation::start_population (unsigned int pop_size)
 }
 
 
+void CHCGAPopulation::cataclysm ()
+{
+  Individual * role_model;
+  unsigned int set_card = set->get_set_cardinality ();
+  if (population.size () > 0)
+    role_model = population.begin ()->second;
+  else
+    role_model = new Individual ("", set);
+
+  population.clear ();
+  population.insert (make_pair (role_model->cost, role_model));
+
+  for (unsigned int i = 0; i < population_max_size; i++)
+  {
+    Individual * X = new Individual (role_model);
+    Individual * kept_gens = new Individual ("", set);
+    kept_gens->set_complete_subset ();
+
+    for (unsigned int j = 0; j < set_card * div_rate; j++)
+      kept_gens->remove_random_element ();
+
+    for (unsigned int e = 0; e < set_card; e++)
+      if (!kept_gens->has_element (e))
+      {
+        if (X->has_element (e))
+          X->remove_element (e);
+        else
+          X->add_element (e);
+      }
+
+    X->cost = c->cost (X);  
+    population.insert (make_pair (X->cost, X));
+  }
+}
+
+
 list<ElementSubset *> CHCGAPopulation::recombine ()
 {
   unsigned int pop_size = population.size ();
-  vector<Individual *> fathers;
-  vector<Individual *> mothers;
-  vector<Individual *>::iterator f_it;
-  vector<Individual *>::iterator m_it;
+  vector<Population::iterator> fathers;
+  vector<Population::iterator> mothers;
+  vector<Population::iterator>::iterator f_it;
+  vector<Population::iterator>::iterator m_it;
   list<Individual *> children;
   Population::iterator pop_it;
 
   pop_it = population.begin ();
   for (unsigned int i = 0; i < pop_size / 2; i++)
   {
-    fathers.push_back (pop_it->second);
+    fathers.push_back (pop_it);
     pop_it++;
   }
   while (pop_it != population.end ())
   {
-    mothers.push_back (pop_it->second);
+    mothers.push_back (pop_it);
     pop_it++;
   }
 
@@ -82,10 +119,23 @@ list<ElementSubset *> CHCGAPopulation::recombine ()
   {
     // cout << "father = " << (*f_it)->print_subset () << endl;
     // cout << "mother = " << (*m_it)->print_subset () << endl;
-    Individual * child = combine_individuals (*f_it, *m_it);
-    // cout << "child = " << child->print_subset () << endl;
-    if (child != NULL)
-      children.push_back (child);
+    Individual * father, * mother;
+    father = (*f_it)->second;
+    mother = (*m_it)->second;
+    if (father->hamming_distance (mother) >= diff_threshold)
+    {
+      Individual * child = combine_individuals (father, mother);
+      // cout << "child = " << child->print_subset () << endl;
+      if (child != NULL)
+          children.push_back (child);
+    }
+    else
+    {
+      population.erase (*f_it);
+      population.erase (*m_it);
+      // obs: this is ok; map iterators are not affected by erase
+      // on other elements
+    }
     f_it++;
     m_it++;
   }
@@ -127,7 +177,7 @@ ElementSubset * CHCGAPopulation::combine_individuals (ElementSubset * f,
 }
 
 
-unsigned int CHCGAPopulation::fittest_survival (list<ElementSubset *> 
+bool CHCGAPopulation::fittest_survival (list<ElementSubset *> 
   children)
 {
   list<Individual *>::iterator children_it = children.begin ();
@@ -166,7 +216,17 @@ unsigned int CHCGAPopulation::fittest_survival (list<ElementSubset *>
     children_it++;
   }
 
-  return children_alive;
+  if (children_alive == 0)
+  {
+    diff_threshold--;
+    if (diff_threshold == 0)
+    {
+      cataclysm ();
+      return false;
+    }
+  }
+
+  return true;
 }
 
   

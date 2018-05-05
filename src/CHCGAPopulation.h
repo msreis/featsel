@@ -21,6 +21,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Algorithm published in:
+//
+// L.J. Eshelman, The CHC adaptive search algorithm: how to safe search 
+// when engaging in non traditional genetic recombination, in: 
+// G.J.E. Rawlins (Ed.), Foundations of Genetic Algorithms, Morgan 
+// Kaufmann, San Mateo, 1991, pp. 265–283
+
 #ifndef CHCGAPopulation_H_
 #define CHCGAPopulation_H_
 
@@ -59,6 +66,20 @@ private:
   //
   unsigned int population_max_size;
 
+  // Minimum Hamming Distance between two parents
+  //
+  unsigned int diff_threshold;
+
+  // Stores the divergence rate
+  // 
+  // L. J. Eshelman uses 35% on his experiments
+  //
+  static const double div_rate = .35;
+
+  // Performs a cataclysm on the population.
+  //
+  void cataclysm ();
+
 public:
 
   // Default constructor.
@@ -73,10 +94,6 @@ public:
   //
   void start_population (unsigned int);
 
-  // Starts a population with a given size containing a given individual
-  //
-  void start_population (unsigned int, ElementSubset *);
-
   // Mates current individuals and return a list of children
   //
   list<ElementSubset *> recombine ();
@@ -86,10 +103,10 @@ public:
   ElementSubset * combine_individuals (ElementSubset *, ElementSubset *);
 
   // Receives a list of children and adds it to the population. Then 
-  // only the fittest individual survive. This method returns the number
-  // of children that survive on the new generation.
+  // only the fittest individual survive. Returns true if a cataclysm 
+  // happened.
   //
-  unsigned int fittest_survival (list<ElementSubset *>);
+  bool fittest_survival (list<ElementSubset *>);
 
   // Returns population size
   //

@@ -57,7 +57,7 @@ private:
 
   // Stores the size of the population
   //
-  unsigned int population_size;
+  unsigned int population_max_size;
 
 public:
 
@@ -85,10 +85,19 @@ public:
   //
   ElementSubset * combine_individuals (ElementSubset *, ElementSubset *);
 
+  // Receives a list of children and adds it to the population. Then 
+  // only the fittest individual survive. This method returns the number
+  // of children that survive on the new generation.
+  //
+  unsigned int fittest_survival (list<ElementSubset *>);
+
   // Returns population size
   //
   unsigned int get_size ();
 
+  // Returns the current population
+  //
+  list<ElementSubset *> get_population ();
 };
 
 #endif /* CHCGAPopulation_H_ */

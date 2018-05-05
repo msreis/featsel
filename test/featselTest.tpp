@@ -221,6 +221,8 @@ int main (void)
     CHCGAPopulationTest::it_should_create_a_starting_population ());
   result ("it_should_combine_individuals", 
     CHCGAPopulationTest::it_should_combine_individuals ());
+  result ("only_the_fittest_should_survive", 
+    CHCGAPopulationTest::only_the_fittest_should_survive ());
   cout << endl;
 
   // <COST FUNCTION TEMPLATE 2>

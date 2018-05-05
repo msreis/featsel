@@ -65,4 +65,46 @@ namespace CHCGAPopulationTest
     return answ;
   }
 
+  bool only_the_fittest_should_survive ()
+  {
+    bool answ = true;
+    ElementSet elm_set ("", 4, 1000);
+    SubsetSum c (&elm_set);
+    CHCGAPopulation pop (&elm_set, &c);
+    ElementSubset * child;
+    list<ElementSubset *> pop_indviduals; 
+    list<ElementSubset *> pop_offspring;
+
+    pop.start_population (2);
+    pop_offspring = pop.recombine ();
+    child = pop_offspring.back ();
+    pop_indviduals = pop.get_population ();
+    
+    list<ElementSubset *>::iterator pop_it = pop_indviduals.begin ();
+    list<ElementSubset *>::iterator pop_it_end = pop_indviduals.end ();
+    ElementSubset * worst_fit = child;
+    while (pop_it != pop_it_end)
+    {
+      if (worst_fit->cost < (*pop_it)->cost)
+        worst_fit = *pop_it;
+      pop_it++;
+    }
+    worst_fit = new ElementSubset (worst_fit);
+
+    pop.fittest_survival (pop_offspring);
+
+    pop_indviduals = pop.get_population ();
+    pop_it = pop_indviduals.begin ();
+    pop_it_end = pop_indviduals.end ();
+    while (pop_it != pop_it_end)
+    {
+      if ((*pop_it)->cost > worst_fit->cost)
+        answ = false;
+      pop_it++;
+    }
+
+    delete worst_fit;
+    return answ;
+  }
+
 }

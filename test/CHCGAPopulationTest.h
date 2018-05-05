@@ -31,6 +31,8 @@ namespace CHCGAPopulationTest
 
   bool it_should_combine_individuals ();
 
+  bool only_the_fittest_should_survive ();
+
 }
 
 #endif /* CHCGA_POPULATION_TEST_H_ */

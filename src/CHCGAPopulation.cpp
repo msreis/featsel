@@ -37,6 +37,7 @@ CHCGAPopulation::~CHCGAPopulation ()
 void CHCGAPopulation::start_population (unsigned int pop_size)
 {
   unsigned int set_card = set->get_set_cardinality ();
+  population_max_size = pop_size;
 
   for (unsigned int i = 0; i < pop_size; i++)
   {
@@ -53,29 +54,43 @@ void CHCGAPopulation::start_population (unsigned int pop_size)
 list<ElementSubset *> CHCGAPopulation::recombine ()
 {
   unsigned int pop_size = population.size ();
-  vector<Individual *> fathers (pop_size + 1, NULL);
-  vector<Individual *> mothers (pop_size + 1, NULL);
-  list<Individual *> children;
-  Population::iterator pop_it;
+  vector<Individual *> fathers;
+  vector<Individual *> mothers;
   vector<Individual *>::iterator f_it;
   vector<Individual *>::iterator m_it;
+  list<Individual *> children;
+  Population::iterator pop_it;
 
   pop_it = population.begin ();
   for (unsigned int i = 0; i < pop_size / 2; i++)
+  {
     fathers.push_back (pop_it->second);
+    pop_it++;
+  }
   while (pop_it != population.end ())
+  {
     mothers.push_back (pop_it->second);
+    pop_it++;
+  }
 
   random_shuffle (fathers.begin (), fathers.end ());
   random_shuffle (mothers.begin (), mothers.end ());
 
+  f_it = fathers.begin ();
+  m_it = mothers.begin ();
   while (f_it != fathers.end () && m_it != mothers.end ())
   {
+    // cout << "father = " << (*f_it)->print_subset () << endl;
+    // cout << "mother = " << (*m_it)->print_subset () << endl;
     Individual * child = combine_individuals (*f_it, *m_it);
-    children.push_back (child);
+    // cout << "child = " << child->print_subset () << endl;
+    if (child != NULL)
+      children.push_back (child);
     f_it++;
     m_it++;
   }
+
+  return children;
 }
 
 
@@ -112,7 +127,65 @@ ElementSubset * CHCGAPopulation::combine_individuals (ElementSubset * f,
 }
 
 
+unsigned int CHCGAPopulation::fittest_survival (list<ElementSubset *> 
+  children)
+{
+  list<Individual *>::iterator children_it = children.begin ();
+  unsigned int children_alive = children.size ();
+
+  // cout << "Population to survive: " << endl;
+  // Population::iterator pop_it;
+  // for (pop_it = population.begin (); pop_it != population.end (); pop_it++)
+  // {
+  //   cout << pop_it->second->print_subset () << endl;
+  // }
+  // cout << "Children to enter population: " << endl;
+  // for (children_it = children.begin (); children_it != children.end (); children_it++)
+  // {
+  //   cout << (*children_it)->print_subset () << endl;
+  // }
+  // children_it = children.begin ();
+
+  Population::iterator least_fit = --population.end ();
+  while (children_it != children.end ())
+  {
+    Individual * child = *children_it;
+    child->cost = c->cost (child);
+
+    if (least_fit != population.end () && 
+      child->cost >= least_fit->first)
+    {
+      children_alive--;
+      children_it = children.erase (children_it);
+    }
+    else
+    {
+      population.insert (make_pair (child->cost, child));
+      population.erase (least_fit--);
+    }
+    children_it++;
+  }
+
+  return children_alive;
+}
+
+  
 unsigned int CHCGAPopulation::get_size ()
 {
   return population.size ();
+}
+
+
+list<ElementSubset *> CHCGAPopulation::get_population ()
+{
+  list<Individual *> population_list;
+  Population::iterator it, p_end;
+
+  for (it = population.begin (), p_end = population.end (); 
+    it != p_end; it++)
+  {
+    population_list.push_back (it->second);
+  }
+
+  return population_list;
 }

@@ -42,17 +42,35 @@ void CHCGA::get_minima_list (unsigned int max_size_of_minima_list)
 {
   timeval begin_program, end_program;
   gettimeofday (& begin_program, NULL);
+  unsigned int cataclysms = 20;
+  list<ElementSubset *> population;
+  list<ElementSubset *> offspring;
+  list<ElementSubset *>::iterator it;
 
   //
+  CHCGAPopulation pop (set, cost_function);
+  pop.start_population (50);
+  population = pop.get_population ();
+  for (it = population.begin (); it != population.end (); it++)
+  {
+    list_of_visited_subsets->add_subset (*it);
+    list_of_minima.push_back (new ElementSubset (*it));
+  }
+  while (cataclysms > 0 && !cost_function->has_reached_threshold ())
+  {
+    offspring = pop.recombine ();
+    if (pop.fittest_survival (offspring))
+      cataclysms--;
 
-  // TODO: [ADD YOUR ALGORITHM CODE HERE!]
-
-  ElementSubset * X;
-  X = new ElementSubset ("X", set);    
-  X->cost = cost_function->cost (X);   // A template algorithm returns the
-  X->set_complete_subset ();           // complete subset as best one, since it
-	list_of_minima.push_back (X);  // does not perform any search yet!
-  //
+   population = pop.get_population ();
+    for (it = population.begin (); it != population.end (); it++)
+    {
+      list_of_visited_subsets->add_subset (*it);
+      list_of_minima.push_back (new ElementSubset (*it));
+    } 
+    clean_list_of_minima (max_size_of_minima_list);
+    cataclysms--;
+  }
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();

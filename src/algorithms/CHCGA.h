@@ -27,6 +27,7 @@
 #include "../global.h"
 #include "../Solver.h"
 #include "../ElementSubset.h"
+#include "../CHCGAPopulation.h"
 
 
 class CHCGA : public Solver

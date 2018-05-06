@@ -124,6 +124,11 @@ public:
   //
   bool is_equal (ElementSubset *);
 
+  // Returns the cardinality of the difference between this subset and
+  // another subset
+  //
+  unsigned int hamming_distance (ElementSubset *);
+
   // Return a string with the list of elements in the format [010...011],
   // where "1" if the element belongs to the subset, "0" otherwise.
   // This method is useful to print the output of the program.

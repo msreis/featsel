@@ -41,6 +41,7 @@
 #include "ROBDDTest.h"
 #include "PartitionTest.h"
 #include "PartitionNodeTest.h"
+#include "CHCGAPopulationTest.h"
 
 // Cost (objective) functions
 //
@@ -171,62 +172,72 @@ int main (void)
   // Testing Class "ROBDD"
   //
   current_class = "ROBDDTest";
-  result ("ROBDDTest::a_new_robdd_has_only_a_terminal_node",
+  result ("a_new_robdd_has_only_a_terminal_node",
     ROBDDTest::a_new_robdd_has_only_a_terminal_node ());
-  result ("ROBDDTest::the_union_of_a_new_robdd_with_itself_should_be_itself",
+  result ("the_union_of_a_new_robdd_with_itself_should_be_itself",
     ROBDDTest::the_union_of_a_new_robdd_with_itself_should_be_itself ());
-  result ("ROBDDTest::the_union_of_all_subsets_must_be_the_function_1",
+  result ("the_union_of_all_subsets_must_be_the_function_1",
     ROBDDTest::the_union_of_all_subsets_must_be_the_function_1 ());
-  result ("ROBDDTest::a_new_robdd_contais_no_subset",
+  result ("a_new_robdd_contais_no_subset",
     ROBDDTest::a_new_robdd_contais_no_subset ());
-  result ("ROBDDTest::an_added_subset_must_be_covered",
+  result ("an_added_subset_must_be_covered",
     ROBDDTest::an_added_subset_must_be_covered ());
-  result ("ROBDDTest::the_function_one_covers_all_subsets",
+  result ("the_function_one_covers_all_subsets",
     ROBDDTest::the_function_one_covers_all_subsets ());
-  result ("ROBDDTest::the_function_one_have_no_subset_evaluated_zero",
+  result ("the_function_one_have_no_subset_evaluated_zero",
     ROBDDTest::the_function_one_have_no_subset_evaluated_zero ());
-  result ("ROBDDTest::its_possible_to_get_a_random_subset_evaluated_zero",
+  result ("its_possible_to_get_a_random_subset_evaluated_zero",
     ROBDDTest::its_possible_to_get_a_random_subset_evaluated_zero ());
-  result ("ROBDDTest::it_should_be_able_to_reduce_an_obdd",
+  result ("it_should_be_able_to_reduce_an_obdd",
     ROBDDTest::it_should_be_able_to_reduce_an_obdd ());
-  result ("ROBDDTest::it_should_be_able_to_add_a_subset",
+  result ("it_should_be_able_to_add_a_subset",
     ROBDDTest::it_should_be_able_to_add_a_subset ());
   cout << endl;
 
   // Testing Class Partition
   //
   current_class = "PartitionTest";
-  result ("PartitionTest::it_should_create_the_fixed_elm_set",
+  result ("it_should_create_the_fixed_elm_set",
     PartitionTest::it_should_create_the_fixed_elm_set ());
-  result ("PartitionTest::it_should_create_the_unfixed_elm_set",
+  result ("it_should_create_the_unfixed_elm_set",
     PartitionTest::it_should_create_the_unfixed_elm_set ());
   cout << endl;
 
   // Testing Class PartitionNode
   current_class = "PartitionNodeTest";
-  result ("PartitionNodeTest::it_map_subsets_correctly",
+  result ("it_map_subsets_correctly",
     PartitionNodeTest::it_map_subsets_correctly ());
-  result ("PartitionNodeTest::it_should_check_upper_adjacent_parts",
+  result ("it_should_check_upper_adjacent_parts",
     PartitionNodeTest::it_should_check_upper_adjacent_parts ());
-  result ("PartitionNodeTest::it_should_return_the_least_subset",
+  result ("it_should_return_the_least_subset",
     PartitionNodeTest::it_should_return_the_least_subset ());
-  result ("PartitionNodeTest::it_should_return_the_greatest_subset",
+  result ("it_should_return_the_greatest_subset",
     PartitionNodeTest::it_should_return_the_greatest_subset ());
+  cout << endl;
+
+  // Testing Class CHCGAPopulation
+  current_class = "CHCGAPopulationTest";
+  result ("it_should_create_a_starting_population", 
+    CHCGAPopulationTest::it_should_create_a_starting_population ());
+  result ("it_should_combine_individuals", 
+    CHCGAPopulationTest::it_should_combine_individuals ());
+  result ("only_the_fittest_should_survive", 
+    CHCGAPopulationTest::only_the_fittest_should_survive ());
   cout << endl;
 
   // <COST FUNCTION TEMPLATE 2>
 
   // Testing Class UCurveToolBox
   current_class = "UCurveToolBoxTest";
-  result ("UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset", 
+  result ("it_should_not_update_lower_restriction_set_with_a_covered_subset",
     UCurveToolBoxTest::it_should_not_update_lower_restriction_set_with_a_covered_subset ());
-  result ("UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset", 
+  result ("it_should_update_lower_restriction_set_with_an_outer_subset", 
     UCurveToolBoxTest::it_should_update_lower_restriction_set_with_an_outer_subset ());
-  result ("UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset", 
+  result ("it_should_not_update_upper_restriction_set_with_a_covered_subset", 
     UCurveToolBoxTest::it_should_not_update_upper_restriction_set_with_a_covered_subset ());
-  result ("UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset", 
+  result ("it_should_update_upper_restriction_set_with_an_outer_subset", 
     UCurveToolBoxTest::it_should_update_upper_restriction_set_with_an_outer_subset ());
-  result ("UCurveToolBoxTest::it_should_get_a_maximal_subset", 
+  result ("it_should_get_a_maximal_subset", 
     UCurveToolBoxTest::it_should_get_a_maximal_subset ());
   cout << endl;
 

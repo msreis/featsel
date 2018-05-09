@@ -66,11 +66,8 @@
 #include "algorithms/RandomUChain.h"
 #include "algorithms/KRandomUChain.h"
 #include "algorithms/NystromSpecCMI.h"
-<<<<<<< HEAD
 #include "algorithms/PosetForestSearch.h"
-=======
 #include "algorithms/CHCGA.h"
->>>>>>> master
 
 
 // Function to parse and verify the correctness of the parameters.
@@ -167,13 +164,10 @@ int main(int argc, char * argv[])
     solver = new KRandomUChain ();
   else if (algorithm.compare ("nystrom_spec_cmi") == 0)
     solver = new NystromSpecCMI ();
-<<<<<<< HEAD
   else if (algorithm.compare ("pfs") == 0)
     solver = new PosetForestSearch ();
-=======
   else if (algorithm.compare ("chcga") == 0)
     solver = new CHCGA ();
->>>>>>> master
   else
     return EXIT_FAILURE;
 
@@ -427,11 +421,8 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
           || (strcmp (argv[i], "ruc") == 0)
           || (strcmp (argv[i], "kruc") == 0)
           || (strcmp (argv[i], "nystrom_spec_cmi") == 0)
-<<<<<<< HEAD
           || (strcmp (argv[i], "pfs") == 0)
-=======
           || (strcmp (argv[i], "chcga") == 0)
->>>>>>> master
          )
       {
         a->clear ();

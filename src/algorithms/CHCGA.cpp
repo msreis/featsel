@@ -56,20 +56,24 @@ void CHCGA::get_minima_list (unsigned int max_size_of_minima_list)
     list_of_visited_subsets->add_subset (*it);
     list_of_minima.push_back (new ElementSubset (*it));
   }
-  while (cataclysms > 0 && !cost_function->has_reached_threshold ())
-  {
-    offspring = pop.recombine ();
-    if (pop.fittest_survival (offspring))
-      cataclysms--;
 
-   population = pop.get_population ();
-    for (it = population.begin (); it != population.end (); it++)
+  if (!cost_function->has_reached_threshold ())
+  {
+    while (cataclysms > 0 && !cost_function->has_reached_threshold ())
     {
-      list_of_visited_subsets->add_subset (*it);
-      list_of_minima.push_back (new ElementSubset (*it));
-    } 
-    clean_list_of_minima (max_size_of_minima_list);
-    cataclysms--;
+      offspring = pop.recombine ();
+      if (pop.fittest_survival (offspring))
+        cataclysms--;
+
+      population = pop.get_population ();
+      for (it = population.begin (); it != population.end (); it++)
+      {
+        list_of_visited_subsets->add_subset (*it);
+        list_of_minima.push_back (new ElementSubset (*it));
+      } 
+      clean_list_of_minima (max_size_of_minima_list);
+      cataclysms--;
+    }
   }
 
   number_of_visited_subsets =

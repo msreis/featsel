@@ -61,6 +61,9 @@ void CHCGAPopulation::start_population (unsigned int pop_size)
         X->add_element (e);
     X->cost = c->cost (X);
     population.insert (make_pair (X->cost, X));
+
+    if (c->has_reached_threshold ())
+      return;
   }
 }
 
@@ -95,8 +98,11 @@ void CHCGAPopulation::cataclysm ()
           X->add_element (e);
       }
 
-    X->cost = c->cost (X);  
+    X->cost = c->cost (X);
     population.insert (make_pair (X->cost, X));
+
+    if (c->has_reached_threshold ())
+      return;
   }
 }
 
@@ -202,21 +208,27 @@ bool CHCGAPopulation::fittest_survival (list<ElementSubset *>
   Population::iterator least_fit;
   while (children_it != children.end ())
   {
-    Individual * child = *children_it;
-    child->cost = c->cost (child);
-    least_fit = --population.end ();
-
-    if (least_fit != population.end () && 
-      child->cost > least_fit->first)
-      children_alive--;
-    else
+    if (!c->has_reached_threshold ())
     {
-      population.insert (make_pair (child->cost,
-       new ElementSubset (child)));
-      kill_individual (least_fit);
+      Individual * child = *children_it;
+      child->cost = c->cost (child);
+      least_fit = --population.end ();
+
+      if (least_fit != population.end () && 
+        child->cost > least_fit->first)
+        children_alive--;
+      else
+      {
+        population.insert (make_pair (child->cost,
+         new ElementSubset (child)));
+        kill_individual (least_fit);
+      }
     }
     children_it = children.erase (children_it);
   }
+
+  if (c->has_reached_threshold ())
+    return true;
 
   if (children_alive == 0)
   {

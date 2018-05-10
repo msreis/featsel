@@ -58,9 +58,14 @@ use SigNetSim;
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
 my @LIST_OF_ALGORITHMS = (
-    # 'ES',
-   'SFS', 'SFFS', 
-   'PUCS', 'BFS'
+   'UCS',
+   'UCSR',
+   'SFFS', 
+   'ES',
+   'BFS',
+   'CHCGA'
+   # 'SFS', 
+   # 'PUCS', 
    );
 
 
@@ -102,13 +107,17 @@ my $FEATSEL_BIN = "./bin/featsel";
 # Number of labels (classes) for cost functions that are directed for classifier
 # design (e.g. mean conditional entropy).
 #
-my $NUMBER_OF_LABELS = 7;
+my $NUMBER_OF_LABELS = 2;
 
 
 # LaTeX font size for the .tex table.
 #
 my $LATEX_FONT_SIZE = "\\footnotesize";
 
+
+# Starting instance size
+#
+my $MIN_INSTANCE_SIZE = 7;
 
 
 
@@ -458,7 +467,7 @@ my $MAX_ELEM_VALUE = 100000;   # Maximum value of an element of S.
 
 if ($instance_mode == 0)
 {
-  foreach my $i (200..$maximum_instance_size)    
+  foreach my $i ($MIN_INSTANCE_SIZE..$maximum_instance_size)    
   {
     # Create files (either .dat or .xml) containing random instances.
     #
@@ -569,6 +578,18 @@ my %cost_function_time;
 my %cost_function_calls;
 my $max_number_of_calls = " ";
 
+my %cost_function_SFFS_CHCGA_limit = (7 => 597,
+                                8 => 413,
+                                9 => 407,
+                                10 => 384,
+                                11 => 392,
+                                12 => 371,
+                                13 => 411,
+                                14 => 386,
+                                15 => 418,
+                                16 => 372,
+                                17 => 364); 
+
 # This variable stores the maximum required time among all algoritms; this is
 # useful in order to generate the graphs later.
 #
@@ -577,7 +598,7 @@ my $MAX_TIME_VALUE = 0;
 print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
-foreach my $i (200..$maximum_instance_size)    
+foreach my $i ($MIN_INSTANCE_SIZE..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 
@@ -612,7 +633,7 @@ foreach my $i (200..$maximum_instance_size)
   #
   if ($search_mode == 1)
   {
-    $max_number_of_calls = " -t $COST_FUNCTION_LIMIT ";
+    $max_number_of_calls = " -t " . $cost_function_SFFS_CHCGA_limit{$i};
   } 
 
   for (my $j = 0; $j < $number_of_algorithms; $j++)
@@ -733,18 +754,27 @@ foreach my $i (200..$maximum_instance_size)
           ($average_time_of_algorithm[$j] - 
            $time_of_algorithm[$j]->[$index])  ** 2;
     } 
-   
-    $deviation_calls_of_cost_function[$j] = 
-      sqrt ($deviation_calls_of_cost_function[$j] /
-            ($number_of_instances_per_size - 1));
+    
+    if ($number_of_instances_per_size == 1)
+    {
+      $deviation_calls_of_cost_function[$j] = 0;
+      $deviation_time_of_cost_function[$j]  = 0;
+      $deviation_time_of_algorithm[$j]      = 0;
+    }
+    else
+    {
+      $deviation_calls_of_cost_function[$j] = 
+        sqrt ($deviation_calls_of_cost_function[$j] /
+              ($number_of_instances_per_size - 1));
 
-    $deviation_time_of_cost_function[$j] = 
-      sqrt ($deviation_time_of_cost_function[$j] /
-            ($number_of_instances_per_size - 1));
+      $deviation_time_of_cost_function[$j] = 
+        sqrt ($deviation_time_of_cost_function[$j] /
+              ($number_of_instances_per_size - 1));
 
-    $deviation_time_of_algorithm[$j] = 
-      sqrt ($deviation_time_of_algorithm[$j] /
-            ($number_of_instances_per_size - 1));
+      $deviation_time_of_algorithm[$j] = 
+        sqrt ($deviation_time_of_algorithm[$j] /
+              ($number_of_instances_per_size - 1));
+    }
 
     $average_time_of_cost_function[$j]   /= 1000000; # convert to seconds
     $deviation_time_of_cost_function[$j] /= 1000000; # convert to seconds
@@ -891,7 +921,7 @@ sub print_time_graphs
   {
     open (DATA, ">$GNUPLOT_DATA_FILE");
 
-    for (my $i = 200; $i <= $maximum_instance_size; $i++)
+    for (my $i = $MIN_INSTANCE_SIZE; $i <= $maximum_instance_size; $i++)
     {
       printf DATA "$i %.4f %.4f\n", $cost_function_calls{$algo}->[$i],
                                     $total_time{$algo}->[$i];

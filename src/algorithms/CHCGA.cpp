@@ -72,7 +72,6 @@ void CHCGA::get_minima_list (unsigned int max_size_of_minima_list)
         list_of_minima.push_back (new ElementSubset (*it));
       } 
       clean_list_of_minima (max_size_of_minima_list);
-      cataclysms--;
     }
   }
 

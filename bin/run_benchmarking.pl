@@ -58,12 +58,12 @@ use SigNetSim;
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
 my @LIST_OF_ALGORITHMS = (
-   'UCS',
-   'UCSR',
+   #'UCS',
+   #'UCSR',
    'SFFS', 
-   'ES',
-   'BFS',
-   'CHCGA'
+   #'ES',
+   #'BFS',
+   #'CHCGA'
    # 'SFS', 
    # 'PUCS', 
    );
@@ -578,17 +578,17 @@ my %cost_function_time;
 my %cost_function_calls;
 my $max_number_of_calls = " ";
 
-my %cost_function_SFFS_CHCGA_limit = (7 => 597,
-                                8 => 413,
-                                9 => 407,
-                                10 => 384,
-                                11 => 392,
-                                12 => 371,
-                                13 => 411,
-                                14 => 386,
-                                15 => 418,
-                                16 => 372,
-                                17 => 364); 
+my %cost_function_SFFS_CHCGA_limit = (7 => 267,
+                                 8 => 246,
+                                 9 => 356,
+                                10 => 400,
+                                11 => 479,
+                                12 => 462,
+                                13 => 564,
+                                14 => 705,
+                                15 => 710,
+                                16 => 804,
+                                17 => 836); 
 
 # This variable stores the maximum required time among all algoritms; this is
 # useful in order to generate the graphs later.

@@ -64,7 +64,6 @@ void CHCGA::get_minima_list (unsigned int max_size_of_minima_list)
       offspring = pop.recombine ();
       if (pop.fittest_survival (offspring))
       {
-        cout << "One less cataclysm" << endl;
         cataclysms--;
       }
 

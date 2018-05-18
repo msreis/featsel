@@ -75,8 +75,11 @@ void CHCGAPopulation::cataclysm ()
   if (population.size () > 0)
     role_model = population.begin ()->second;
   else
+  {
     role_model = new Individual ("", set);
-
+    role_model->cost = c->cost (role_model);
+  }
+  
   population.clear ();
   population.insert (make_pair (role_model->cost, role_model));
 

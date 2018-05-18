@@ -75,8 +75,11 @@ void CHCGAPopulation::cataclysm ()
   if (population.size () > 0)
     role_model = population.begin ()->second;
   else
+  {
     role_model = new Individual ("", set);
-
+    role_model->cost = c->cost (role_model);
+  }
+  
   population.clear ();
   population.insert (make_pair (role_model->cost, role_model));
 
@@ -136,15 +139,12 @@ list<ElementSubset *> CHCGAPopulation::recombine ()
   m_it = mothers.begin ();
   while (f_it != fathers.end () && m_it != mothers.end ())
   {
-    // cout << "father = " << (*f_it)->print_subset () << endl;
-    // cout << "mother = " << (*m_it)->print_subset () << endl;
     Individual * father, * mother;
     father = (*f_it)->second;
     mother = (*m_it)->second;
     if (father->hamming_distance (mother) >= diff_threshold)
     {
       Individual * child = combine_individuals (father, mother);
-      // cout << "child = " << child->print_subset () << endl;
       if (child != NULL)
           children.push_back (child);
     }

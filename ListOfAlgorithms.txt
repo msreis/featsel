@@ -13,3 +13,4 @@
                 kruc KRandomUChain
     nystrom_spec_cmi NystromSpecCMI
                chcga CHCGA
+                 rbm RBM

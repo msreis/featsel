@@ -23,8 +23,9 @@
 
 namespace UCurveToolBox
 {
+
   ElementSubset * get_minimal_subset (Collection * RL, Collection * RU,
-   ElementSet * a_set)
+                                      ElementSet * a_set)
   {
     ElementSubset * A, B ("", a_set);
     unsigned int i;

@@ -130,7 +130,8 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
     //
     clean_list_of_minima (max_size_of_minima_list);
 
-  } while ((!search_space_is_empty) && (!cost_function->has_reached_threshold ()));
+  } while ((!search_space_is_empty) &&
+           (!cost_function->has_reached_threshold ()));
 
   delete L;
   //

@@ -83,7 +83,7 @@ bool RBM::down_up_direction (Collection   * L,
     if (B != NULL)
       B->cost = cost_function->cost (B);
   }
-  while ((B != NULL) && (B->cost > M->cost));
+  while ((B != NULL) && (B->cost <= M->cost));
 
   if (A != NULL)
   {
@@ -97,6 +97,7 @@ bool RBM::down_up_direction (Collection   * L,
     delete B;
   }
           
+  L->add_subset (M);
   RBM::minima_exhausting (L, lower_restriction, 
                           upper_restriction, M, cost_function);
   delete M;
@@ -142,11 +143,10 @@ bool RBM::up_down_direction (Collection   * L,
     M = B;
     L->add_subset (B);
     B = select_lower_adjacent (NULL, lower_restriction, upper_restriction, M);
-    
     if (B != NULL)
       B->cost = cost_function->cost (B);
   }
-  while ((B != NULL) && (B->cost > M->cost));
+  while ((B != NULL) && (B->cost <= M->cost));
 
   if (A != NULL)
   {
@@ -159,7 +159,8 @@ bool RBM::up_down_direction (Collection   * L,
     UCurveToolBox::update_lower_restriction (lower_restriction, B);
     delete B;
   }
-          
+
+  L->add_subset (M);
   RBM::minima_exhausting (L, lower_restriction, 
                           upper_restriction, M, cost_function);
   delete M;
@@ -184,14 +185,18 @@ void RBM::get_minima_list (unsigned int max_size_of_minima_list)
     // at each iteration it is called either minimal_element or maximal_element
     direction = rand () % 2;
     if (direction == 0)
+    {
       search_space_is_empty = down_up_direction (L, lower_restriction,
                                                  upper_restriction,
-                                                 cost_function, set);    
+                                                 cost_function, set);
+    }    
     else
+    {
       search_space_is_empty = up_down_direction (L, lower_restriction,
                                                  upper_restriction,
                                                  cost_function, set);    
-
+    }
+    
     while (L->size() > 0)
     {
       X = L->remove_last_subset ();
@@ -246,14 +251,14 @@ ElementSubset * RBM::select_lower_adjacent (list <ElementSubset *> * L,
   }
   
   C = new ElementSubset ("lower_adj", A->get_set_that_contains_this_subset ());
+  C->copy (A);
 
   B.copy (A);
   
-  while(! B.is_empty ())
+  while (! B.is_empty ())
   {
     i = B.remove_random_element ();
     C->remove_element (i);
-    
     if ( (! is_subset_in_stack (L, C)) && 
          (! RL->lower_covers (C)) && 
          (! RU->upper_covers (C)))
@@ -286,7 +291,7 @@ ElementSubset * RBM::select_upper_adjacent (list <ElementSubset *> * L,
   B.copy (A);
   B.set_complement_subset ();
 
-  while(! B.is_empty ())
+  while (! B.is_empty ())
   {
     i = B.remove_random_element ();
     C->add_element (i);
@@ -312,7 +317,7 @@ ElementSubset * RBM::select_adjacent (list <ElementSubset *> * L,
 
 	direction = rand () % 2;
 
-	if(direction == 0)
+	if (direction == 0)
 	{
     A = RBM::select_lower_adjacent (L, RL, RU, M);
 

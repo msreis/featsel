@@ -18,6 +18,11 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Reis, M.S., Estrela, G., Ferreira, C.E., and Barrera, B. (2018).
+// "Optimal Boolean lattice-based algorithms for the The U-curve
+// optimization problem"
+// Information Sciences, doi.org/10.1016/j.ins.2018.08.060.
+
 
 #ifndef UCSR_H_
 #define UCSR_H_

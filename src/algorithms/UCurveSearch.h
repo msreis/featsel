@@ -20,10 +20,10 @@
 
 // Original algorithm published in:
 //
-// Reis, M.S., Ferreira, C.E., and Barrera, B. (2014).
-// "The U-curve optimization problem: improvements on the original
-// algorithm and time complexity analysis."
-// arXiv preprint arXiv:1407.6067.
+// Reis, M.S., Estrela, G., Ferreira, C.E., and Barrera, B. (2018).
+// "Optimal Boolean lattice-based algorithms for the The U-curve
+// optimization problem"
+// Information Sciences, doi.org/10.1016/j.ins.2018.08.060.
 
 
 #ifndef UCURVESEARCH_H_

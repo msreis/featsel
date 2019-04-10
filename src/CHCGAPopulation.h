@@ -75,7 +75,7 @@ private:
   // 
   // L. J. Eshelman uses 35% on his experiments
   //
-  static const double div_rate = .35;
+  static constexpr double div_rate = .35;
 
   // Performs a cataclysm on the population.
   //

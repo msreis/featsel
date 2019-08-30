@@ -190,7 +190,7 @@ namespace UCSRToolBox
         for (it = List->begin (); it != List->end (); it++)
             if ((*it)->vertex->is_equal (X))
                 return true;
-            return false;
+        return false;
     }
 
 

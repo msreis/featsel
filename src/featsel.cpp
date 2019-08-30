@@ -507,8 +507,8 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
           getline (a_file, a_line);
           cout << a_line << endl;
         }
-        a_file.close ();
-        return EXIT_FAILURE;
+      a_file.close ();
+      return EXIT_FAILURE;
     }
 
     // Unknown option

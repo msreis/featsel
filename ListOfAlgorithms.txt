@@ -3,7 +3,6 @@
                  sfs SFS
                 sffs SFFS
                  ucs UCurveSearch
-            spec_cmi SpecCMI
                   rc RandomChain
                 sbfs SBFS
                  sbs SBS
@@ -11,6 +10,5 @@
                 ucsr UCSR
                  ruc RandomUChain
                 kruc KRandomUChain
-    nystrom_spec_cmi NystromSpecCMI
                chcga CHCGA
                  rbm RBM

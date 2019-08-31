@@ -101,7 +101,7 @@ TOBJS =		test/ElementTest.o test/ElementSetTest.o \
       test/algorithms/SFFSMock.o test/algorithms/SBFSMock.o \
       test/CHCGAPopulationTest.o \
 
-LIBS = -lm -loctave -loctinterp -lpython2.7
+LIBS = -lm -lpython2.7
 
 TARGET =	bin/featsel
 

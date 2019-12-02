@@ -145,16 +145,14 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
 (ElementSubset * X, map<string, SampleLabels *> * samples, 
  unsigned int * m)
 {
-  unsigned int i, j, n;
-  map<string, SampleLabels *>::iterator it;
-  SampleLabels * row;
-  SampleLabels::iterator l_it;
+  unsigned int i, j, k;
 
-  n = set->get_set_cardinality (); 
+  map <string, SampleLabels *>::iterator it;
+
   for (j = 0; j < set->get_element (0)->get_number_of_values (); j++)
   {
     string observation;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < set->get_set_cardinality (); i++)
     {
       if (X->has_element (i))
       {
@@ -174,10 +172,19 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     //
     if ((it == samples->end ()))
     {
-      pair<unsigned int, SampleLabels *> sample_entry;
-      sample_entry = set->get_sample_labels_map (j);
-      *m += sample_entry.first;
-      row = sample_entry.second;
+      SampleLabels * row = new SampleLabels ();
+      for (k = 0; k < set->get_number_of_labels (); k++)
+      {
+        unsigned int y_idx, y_freq_given_x;
+        y_idx = set->get_set_cardinality () + k;
+        y_freq_given_x =
+         set->get_element (y_idx)->get_element_value (j);
+        if (y_freq_given_x > 0)
+        {
+          row->insert (make_pair (k, y_freq_given_x));
+          *m += y_freq_given_x;
+        }
+      }
       samples->insert (pair<string, SampleLabels *> (observation, row));
     }
 
@@ -185,18 +192,13 @@ void MeanConditionalEntropy::calculate_distributions_from_the_samples
     //
     else
     {
-      pair<unsigned int, SampleLabels *> sample_entry;
-      sample_entry = set->get_sample_labels_map (j);
-      *m += sample_entry.first;
-      row = sample_entry.second;
-      for (l_it = row->begin (); l_it != row->end (); l_it++)
+      for (k = 0; k < set->get_number_of_labels (); k++)
       {
-        unsigned int y, y_freq;
-        y = l_it->first;
-        y_freq = l_it->second;
-        (*it->second)[y] += y_freq;
-      }      
-      delete row;
+        unsigned int y_freq_given_x = set->get_element
+             (set->get_set_cardinality () + k)->get_element_value (j);
+        (*it->second)[k] += y_freq_given_x;
+        *m               += y_freq_given_x;
+      }
     }
     observation.clear ();
   }

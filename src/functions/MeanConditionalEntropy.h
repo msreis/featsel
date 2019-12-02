@@ -31,7 +31,6 @@
 
 #include "../global.h"
 #include "../ElementSubset.h"
-#include "../ElementSet.h"
 #include "../CostFunction.h"
 
 

@@ -46,10 +46,6 @@ namespace ElementSetTest
 
   bool values_from_a_random_set_should_be_within_the_given_range ();
 
-  bool it_should_return_sample_row_as_map ();
-
-  bool it_should_return_sample_row_as_array ();
-
 }
 
 #endif /* ELEMENTSETTEST_H_ */

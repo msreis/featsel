@@ -49,8 +49,7 @@ ElementSet::ElementSet (ElementSet * elm_set)
   if (elm_set->has_extra_element)
   {
     unsigned int real_nof_elements;
-    real_nof_elements = elm_set->number_of_elements 
-      + 2 * this->number_of_labels + 1;
+    real_nof_elements = elm_set->number_of_elements + this->number_of_labels;
     this->list_of_elements = new Element*[real_nof_elements];
     for (unsigned int i = 0; i < real_nof_elements; i++)
       this->list_of_elements[i] =
@@ -114,37 +113,35 @@ ElementSet::ElementSet (string a_set_name, string file_name)
 
 void ElementSet::load_dat_file (string file_name, unsigned int n)
 {
-  unsigned int i, k, max, tot_elements;
   DatParserDriver * driver = new DatParserDriver ();
   has_extra_element = true;
   name = "Classifier design";
   number_of_elements = n;
   value = 0;
-  tot_elements = number_of_elements + 2 * number_of_labels + 1;
 
   if (driver->parse (n, number_of_labels, file_name))
   {
-    std::cout << "Error in ElementSet, processing the DAT file!" << 
-      std::endl;
+    std::cout << "Error in ElementSet, processing the DAT file!" << std::endl;
   }
   else
   {
-    list_of_elements = new Element * [tot_elements];
+    list_of_elements = new Element * [number_of_elements + number_of_labels];
 
-    for (i = 0; i < tot_elements; i++)
-      list_of_elements[i] = 
-        new Element (driver->max_number_of_values, "");
+    for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
+      list_of_elements[i] = new Element (driver->max_number_of_values, "");
 
-    max = driver->list_of_elements[0]->get_number_of_values ();
-    for (k = 0; k < max; k++)
+    unsigned int max = driver->list_of_elements[0]->get_number_of_values ();
+
+    for (unsigned int k = 0; k < max; k++)
     {
-      for (i = 0; i < tot_elements; i++)
+      for (unsigned int i = 0; i < (number_of_elements + number_of_labels); i++)
       {
-        list_of_elements[i]->add_element_value 
-          (driver->list_of_elements[i]->get_element_value (k));
+        list_of_elements[i]->add_element_value
+        (driver->list_of_elements[i]->get_element_value (k));
       }
     }
   }
+
   delete driver;
 }
 
@@ -246,7 +243,7 @@ ElementSet::~ElementSet ()
   }
   if (has_extra_element)
   {
-    for (i = 0; i < 2 * number_of_labels + 1; i++)
+    for (i = 0; i < number_of_labels; i++)
     {
       delete list_of_elements [number_of_elements + i];
     }
@@ -276,10 +273,15 @@ unsigned int ElementSet::get_set_cardinality ()
 
 Element * ElementSet::get_element (unsigned int index)
 {
-  if (index < number_of_elements)
+  if ((has_extra_element
+        &&
+      (index < (number_of_elements + number_of_labels)) )
+      ||
+      (index < number_of_elements))
     return list_of_elements[index];
-  else 
-    return NULL; // ElementSet error: index out of range!
+  else
+    // ElementSet error: index out of range!
+    return NULL;
 }
 
 
@@ -338,7 +340,6 @@ unsigned int ElementSet::get_number_of_labels ()
   return number_of_labels;
 }
 
-
 pair<unsigned int, SampleLabels *> ElementSet::get_sample_labels_map
   (unsigned int k)
 {
@@ -393,3 +394,4 @@ pair<unsigned int, unsigned int *> ElementSet::get_sample_labels_row
 
   return make_pair (m, row);
 }
+

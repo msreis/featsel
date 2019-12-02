@@ -74,6 +74,10 @@ int main(int argc, char * argv[])
   bool store_visited_subsets = false;
   ofstream log_file;
 
+
+  // enables omp nested parallelization
+  omp_set_nested (true);
+
   srand ((unsigned) time (NULL));
 
   // Parse the parameters
@@ -316,10 +320,20 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
         a->append (argv[i]);
         if (strcmp (argv[i], "pucs") == 0) 
         {
-          if (argv[i + 1][0] != '-')
-            *p = atof (argv[++i]);
-          if (argv[i + 1][0] != '-')
-            *l = atoi (argv[++i]);
+          if (i + 2 < argc) {
+            if (argv[i + 1][0] != '-')
+              *p = atof (argv[++i]);
+            else 
+              *p = 0;
+            if (argv[i + 1][0] != '-')
+              *l = atoi (argv[++i]);
+            else
+              *l = 1;
+          }
+          else {
+            *l = 1;
+            *p = 0;
+          }
         }
       }
       else
@@ -410,8 +424,8 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
           getline (a_file, a_line);
           cout << a_line << endl;
         }
-      a_file.close ();
-      return EXIT_FAILURE;
+        a_file.close ();
+        return EXIT_FAILURE;
     }
 
     // Unknown option

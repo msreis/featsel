@@ -12,3 +12,5 @@
                 kruc KRandomUChain
                chcga CHCGA
                  rbm RBM
+                pucs PUCS
+                 pfs PosetForestSearch

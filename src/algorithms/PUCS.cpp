@@ -51,9 +51,8 @@ PUCS::~PUCS ()
     delete list_of_visited_subsets;
   if (cand_part != NULL)
     delete cand_part;
-  // TODO: fix this deletion
-  //if (partition != NULL)
-    //delete partition;
+  if (partition != NULL)
+    delete partition;
 }
 
 

@@ -52,8 +52,8 @@ Partition::~Partition ()
   delete original_set;
   delete[] fixed_elm_map;
   delete[] unfixed_elm_map;
-  delete fixed_set;
-  delete unfixed_set;
+  //delete fixed_set;
+  //delete unfixed_set;
 }
 
 

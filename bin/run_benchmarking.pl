@@ -57,7 +57,7 @@ use SigNetSim;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('ES', 'SFFS', 'PUCS');
+my @LIST_OF_ALGORITHMS = ('ES', 'SFS', 'SFFS');
 
 
 # Constant that works as an upper bound limit for cost function values.

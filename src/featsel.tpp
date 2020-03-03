@@ -419,6 +419,7 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
       cout << endl << disclaimer << endl << endl;
       a_file.open ("docs/featsel.txt");
       if (a_file.is_open ())
+      {
         while(a_file.good ())
         {
           getline (a_file, a_line);
@@ -426,6 +427,7 @@ DOI: 10.1016/j.softx.2017.07.005.\n\n \
         }
         a_file.close ();
         return EXIT_FAILURE;
+      }
     }
 
     // Unknown option

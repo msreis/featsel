@@ -34,7 +34,7 @@ CostFunction::CostFunction ()
 
 CostFunction::~CostFunction ()
 {
-  // Empty destructor.
+ // Empty destructor.
 }
 
 

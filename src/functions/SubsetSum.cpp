@@ -40,9 +40,8 @@ double SubsetSum::cost (ElementSubset * X)
   gettimeofday (& begin, NULL);
   double cost = 0;
   number_of_calls_of_cost_function++;
-
-  //
-
+  
+  
   unsigned int i, j;
   Element * elem;
 

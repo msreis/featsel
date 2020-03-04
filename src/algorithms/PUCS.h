@@ -33,17 +33,20 @@
 #include "../Partition.h"
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
-#include "SFS.h"
 #include "ExhaustiveSearch.h"
 #include <omp.h>
 
-#define ES_CUTOFF 5
+#define ES_CUTOFF 11
 
 class PUCS : public Solver
 {
 
 private:
-
+    
+  // Calls of cost function of baseline algorithms.
+  //
+  unsigned int baseline_calls_of_cost_function;
+    
   // The partitions of the poset which can have the minimal element
   //
   ROBDD * cand_part;
@@ -120,7 +123,8 @@ private:
   //     Q by default
   //     P if Q is restricted by the end of the function
   //     NULL if P and Q are restricted by the end of the function
-  PartitionNode * prune_and_walk (PartitionNode *, PartitionNode *);
+  PartitionNode * prune_and_walk (PartitionNode *, PartitionNode *,
+                 list<ElementSubset *> *);
 
   // Returns true if the part is restricted
   //

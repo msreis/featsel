@@ -75,6 +75,7 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
         {
           M = UCurveToolBox::create_node (X);
           M->vertex->cost = cost_function->cost (M->vertex);
+
           // X is minimal, thus there is no lower adjacent
           UCurveToolBox::update_lower_restriction (lower_restriction,
            X);
@@ -102,6 +103,7 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
         {
           M = UCurveToolBox::create_node (X);
           M->vertex->cost = cost_function->cost (M->vertex);
+          
           // X is maximal, thus there is no upper adjacent
           UCurveToolBox::update_upper_restriction (upper_restriction, 
             X);
@@ -124,11 +126,6 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
       if (store_visited_subsets)
         list_of_visited_subsets->add_subset (X);
     }
-    // Reminder: this function DOES NOT compute again the
-    // cost function, instead it uses the cost value stored
-    // into the ElementSubsets.
-    //
-    clean_list_of_minima (max_size_of_minima_list);
 
   } while ((!search_space_is_empty) &&
            (!cost_function->has_reached_threshold ()));
@@ -138,7 +135,6 @@ void UCurveSearch::get_minima_list (unsigned int max_size_of_minima_list)
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();
-  clean_list_of_minima (max_size_of_minima_list);
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);

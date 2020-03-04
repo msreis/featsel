@@ -75,14 +75,15 @@ void SFFS::get_minima_list (unsigned int max_size_of_minima_list)
     k++;
     J[k] = X.cost = cost_function->cost (&X);
 
-    if (cost_function->has_reached_threshold ())
-      break;
-
     Z = new ElementSubset ("", set);
     Z->copy (&X);
     list_of_minima.push_back (Z);
+    
     if (store_visited_subsets)
       list_of_visited_subsets->add_subset (&X);
+
+    if (cost_function->has_reached_threshold ())
+      break;
 
     // Try to remove subsets (conditional exclusion)
     // in order to restart the inclusion from a better smaller subset
@@ -95,6 +96,11 @@ void SFFS::get_minima_list (unsigned int max_size_of_minima_list)
     Y.remove_element (worst);
 
     Y.cost = cost_function->cost (&Y);
+    
+    Z = new ElementSubset ("", set);
+    Z->copy (&Y);
+    list_of_minima.push_back (Z);
+    
     if (cost_function->has_reached_threshold ())
       break;
 
@@ -118,8 +124,14 @@ void SFFS::get_minima_list (unsigned int max_size_of_minima_list)
         worst = get_worst_element (&X);
         if (cost_function->has_reached_threshold ())
           break;
+
         Y.remove_element (worst);
         Y.cost = cost_function->cost (&Y);
+        
+        Z = new ElementSubset ("", set);
+        Z->copy (&Y);
+        list_of_minima.push_back (Z);
+        
         if (cost_function->has_reached_threshold ())
           break;
         if (store_visited_subsets)
@@ -139,8 +151,6 @@ void SFFS::get_minima_list (unsigned int max_size_of_minima_list)
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();
 
-  clean_list_of_minima (max_size_of_minima_list);
-
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
 
@@ -153,9 +163,13 @@ void SFFS::get_minima_list (unsigned int max_size_of_minima_list)
 unsigned int SFFS::get_best_element (ElementSubset * X)
 {
   unsigned int i, j = set->get_set_cardinality ();
-  ElementSubset Y ("Y", set);
+  ElementSubset * Z, Y ("Y", set);
   float current_minimum = cost_function->cost (X);
   Y.copy (X);
+  
+  Z = new ElementSubset ("", set);
+  Z->copy (&Y);
+  list_of_minima.push_back (Z);
 
   for (i = 0; i < set->get_set_cardinality (); i++)
   {
@@ -169,6 +183,10 @@ unsigned int SFFS::get_best_element (ElementSubset * X)
         list_of_visited_subsets->add_subset (&Y);
       Y.cost = cost_function->cost (&Y);
 
+      Z = new ElementSubset ("", set);
+      Z->copy (&Y);
+      list_of_minima.push_back (Z);
+    
       if (current_minimum >= Y.cost)
       {
         j = i;
@@ -184,11 +202,15 @@ unsigned int SFFS::get_best_element (ElementSubset * X)
 unsigned int SFFS::get_worst_element (ElementSubset * X)
 {
   unsigned int i, j = set->get_set_cardinality ();
-  ElementSubset Y ("Y", set);
+  ElementSubset * Z, Y ("Y", set);
 
   float current_maximum = cost_function->cost (X);
   Y.copy (X);
 
+  Z = new ElementSubset ("", set);
+  Z->copy (&Y);
+  list_of_minima.push_back (Z);
+  
   for (i = 0; i < set->get_set_cardinality (); i++)
   {
     if (cost_function->has_reached_threshold ())
@@ -200,6 +222,11 @@ unsigned int SFFS::get_worst_element (ElementSubset * X)
       if (store_visited_subsets)
         list_of_visited_subsets->add_subset (&Y);
       Y.cost = cost_function->cost (&Y);
+      
+      Z = new ElementSubset ("", set);
+      Z->copy (&Y);
+      list_of_minima.push_back (Z);
+      
       if (current_maximum <= Y.cost)
       {
         j = i;

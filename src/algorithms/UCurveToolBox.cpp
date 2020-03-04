@@ -137,10 +137,10 @@ namespace UCurveToolBox
           X->vertex->cost = c->cost (X->vertex); 
 
           // If the DFS criterion is attained, then X->element is stored
-          if (X->vertex->cost <= Y->vertex->cost)
-          {
-            L->add_subset (X->vertex);
-          }
+          //if (X->vertex->cost <= Y->vertex->cost)
+          //{
+          L->add_subset (X->vertex);
+          //}
 
           // if the algorithm is working under heuristic mode 1 or 2
           // and has reached threshold, then the search is stopped.

@@ -57,8 +57,7 @@ use SigNetSim;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('UCS', 'PUCS', 'BFS', 'CHCGA', 'SFFS');
-
+my @LIST_OF_ALGORITHMS = ('PUCS', 'SFFS', 'CHCGA', 'BFS', 'UCS', 'ES');
 
 # Constant that works as an upper bound limit for cost function values.
 #
@@ -636,6 +635,8 @@ foreach my $i (1..$maximum_instance_size)
       $t0 = [gettimeofday];
       system ("$FEATSEL_BIN -n $i -a $current_algorithm " . 
               "-l $NUMBER_OF_LABELS " .
+              "-m " .  2 ** $i . " " .
+              "-t " .  2 ** $i . " " .
               "-c $cost_function -f $INPUT_DIR/" . $experiment{$i}->[$k-1]  . 
               $max_number_of_calls . " > $LOG_FILE");
       $t1 = [gettimeofday];
@@ -643,16 +644,32 @@ foreach my $i (1..$maximum_instance_size)
       $average_time_of_algorithm[$j] += tv_interval ($t0, $t1);
       push @{$time_of_algorithm[$j]}, tv_interval ($t0, $t1);
 
+      # This modification, combined with the "-m" and "-t" options included 
+      # above (both set with the search space size), guarantees that we can 
+      # retrieve latter, for each algorithm, for each instance size and also
+      # for each instance number, the sequence of visited nodes and their 
+      # respective cost. Therefore, we can verify both result convergence
+      # to optimum and also the algorithm robustness; we just need to process
+      # the several ".seq" files that will be generated.
+      #
+      $minimum_of_algorithms[$j] = $INFINITY;
+      open (COSTS, ">" . $OUTPUT_DIR . "/" . $algorithms[$j] . "_" .
+            $i . "_" . $k . ".seq");      
       open (LOG, $LOG_FILE);
       while (<LOG>)
       {
         if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
         {
-          $minimum_of_algorithms[$j] = $2;
+          print COSTS $1 . " " . $2 . "\n";
+          if ($2 < $minimum_of_algorithms[$j])
+          {
+            $minimum_of_algorithms[$j] = $2;
+          }
         }
         elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
         { 
           $average_calls_of_cost_function[$j] += $1;
+          print $algorithms[$j] . " : " . $1 . "\n";
           push @{$calls_of_cost_function[$j]}, $1;
         }
         elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
@@ -662,6 +679,7 @@ foreach my $i (1..$maximum_instance_size)
         }
       }
       close(LOG);
+      close(COSTS);
 
       if ($best_solution > $minimum_of_algorithms[$j])
       {

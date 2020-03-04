@@ -32,6 +32,7 @@ PUCS::PUCS ()
   partition = NULL;
   this->p = 0;  // set later
   this->l = 1;
+  baseline_calls_of_cost_function = 0;
 }
 
 PUCS::PUCS (float p, unsigned int l)
@@ -42,6 +43,7 @@ PUCS::PUCS (float p, unsigned int l)
   partition = NULL;
   this->p = p;
   this->l = l;
+  baseline_calls_of_cost_function = 0;
 }
 
 
@@ -83,16 +85,8 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   // t.i.
   gettimeofday (& begin_program, NULL);
 
-  if (p == 0) {
-    p = 10.0 / set->get_set_cardinality ();
-    if (set->get_set_cardinality () > 20)
-      l = 1;
-    else
-      l = 2;
-  }
-  if (p > .5)
-    p = .5;
-
+  l = 1; p = 0.5;
+  
   this->max_size_of_minima_list = max_size_of_minima_list;
   list<ElementSubset *> * min_list = &list_of_minima;
   #pragma omp parallel shared (min_list)
@@ -119,9 +113,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
     // t.f.
     gettimeofday (& end_wait, NULL);
     //time_waiting = diff_us (end_wait, end_walk);
-    
-    clean_list_of_minima (max_size_of_minima_list);
-    
+        
     gettimeofday (& end_clean, NULL);
     //time_cleaning = diff_us (end_clean, end_wait);
     //#pragma omp critical
@@ -153,7 +145,7 @@ void PUCS::random_walk (PartitionNode * P, list<ElementSubset *> *
       continue;
     }
     PartitionNode * next;
-    next = prune_and_walk (P, Q);
+    next = prune_and_walk (P, Q, min_list);
     if (next == P)
     {
       delete Q;
@@ -236,10 +228,8 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   else
   {
     Collection * visited_subsets;
-    if (p_elm_set->get_set_cardinality () <= ES_CUTOFF)
-        sub_solver = new ExhaustiveSearch ();
-    else if (l <= 1)
-      sub_solver = new SFS ();
+    if (l <= 1)
+      sub_solver = new ExhaustiveSearch ();
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);
@@ -274,10 +264,11 @@ PartitionNode * PUCS::adjacent_part (PartitionNode * P, unsigned int i)
 }
 
 
-PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q)
+PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q,
+                                      list<ElementSubset *> * min_list)
 {
   PartitionNode * P1, * P2, * next;
-  ElementSubset * e1, * e2, * p1_sub, * p2_sub;
+  ElementSubset * Z, * e1, * e2, * p1_sub, * p2_sub;
   ElementSubset * p_sub = P->get_selected_elements ();
   ElementSubset * q_sub = Q->get_selected_elements ();
   if (P->is_upper_adjacent (Q))
@@ -292,24 +283,63 @@ PartitionNode * PUCS::prune_and_walk (PartitionNode * P, PartitionNode * Q)
   }
   p1_sub = P1->get_selected_elements ();
   p2_sub = P2->get_selected_elements ();
+
   e1 = P1->get_least_subset ();
   e2 = P2->get_least_subset ();
+  
   #pragma omp critical
   {
     store_visited_subset (e1);
     store_visited_subset (e2);
   }
-  if (cost_function->cost (e1) > cost_function->cost (e2))
+  
+  e1->cost = cost_function->cost (e1);
+  e2->cost = cost_function->cost (e2);
+  
+  Z = new ElementSubset("", e1->get_set_that_contains_this_subset());
+  Z->copy(e1);  
+  #pragma omp critical
+  {
+    min_list->push_back(Z);
+  }
+  Z = new ElementSubset("", e2->get_set_that_contains_this_subset());
+  Z->copy(e2);  
+  #pragma omp critical
+  {
+    min_list->push_back(Z);
+  }
+
+  if (e1->cost > e2->cost)
     cand_part->add_interval (p1_sub, true);
+
   e1 = P1->get_greatest_subset ();
   e2 = P2->get_greatest_subset ();
+
   #pragma omp critical
   {
     store_visited_subset (e1);
     store_visited_subset (e2);
   }
-  if (cost_function->cost (e1) < cost_function->cost (e2))
+
+  e1->cost = cost_function->cost (e1);
+  e2->cost = cost_function->cost (e2);
+  
+  Z = new ElementSubset("", e1->get_set_that_contains_this_subset());
+  Z->copy(e1);  
+  #pragma omp critical
+  {
+    min_list->push_back(Z);
+  }
+  Z = new ElementSubset("", e2->get_set_that_contains_this_subset());
+  Z->copy(e2);  
+  #pragma omp critical
+  {
+    min_list->push_back(Z);
+  }
+
+  if (e1->cost < e2->cost)
     cand_part->add_interval (p2_sub, false);
+  
   next = Q;
   if (cand_part->contains (q_sub))
   {

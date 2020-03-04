@@ -38,7 +38,7 @@
 
 class CostFunction
 {
-
+    
 protected:
 
   // Return the difference (in microseconds) between t2 and t1
@@ -82,7 +82,7 @@ protected:
   double threshold;
 
 public:
-
+    
   // Default constructor.
   //
   CostFunction ();

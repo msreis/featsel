@@ -81,10 +81,14 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
   unsigned int current_number_of_expansions = 0;
 
   ElementSubset empty_set ("", set);
-  ElementSubset * BEST_SUBSET = new ElementSubset ("", set);
+  ElementSubset * Z, * BEST_SUBSET = new ElementSubset ("", set);
 
   double BEST = empty_set.cost = cost_function->cost (&empty_set);
 
+  Z = new ElementSubset ("", set);
+  Z->copy (&empty_set);
+  list_of_minima.push_back (Z);
+  
   BEST_SUBSET->copy (&empty_set);
 
   Queue OPEN;
@@ -134,6 +138,10 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
         if (CLOSED.find (v.print_subset ()) == CLOSED.end ())
         {
           v.cost = cost_function->cost (&v);
+          
+          Z = new ElementSubset ("", set);
+          Z->copy (&v);
+          list_of_minima.push_back (Z);
 
           // Equivalent to "m_cacheSize * m_numAttribs" in Weka.
           //
@@ -176,12 +184,8 @@ void BFS::get_minima_list (unsigned int max_size_of_minima_list)
     delete OPEN.queue[i];
   delete [] OPEN.queue;
 
-  list_of_minima.push_back (BEST_SUBSET);
-
   number_of_visited_subsets =
                          cost_function->get_number_of_calls_of_cost_function ();
-
-  clean_list_of_minima (max_size_of_minima_list);
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);

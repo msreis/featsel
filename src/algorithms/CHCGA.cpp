@@ -71,13 +71,11 @@ void CHCGA::get_minima_list (unsigned int max_size_of_minima_list)
         list_of_visited_subsets->add_subset (*it);
         list_of_minima.push_back (new ElementSubset (*it));
       } 
-      clean_list_of_minima (max_size_of_minima_list);
     }
   }
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();
-  clean_list_of_minima (max_size_of_minima_list);
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);

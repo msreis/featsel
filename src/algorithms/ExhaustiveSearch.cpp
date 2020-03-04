@@ -70,8 +70,6 @@ void ExhaustiveSearch::get_minima_list (unsigned int max_size_of_minima_list)
   }
   while ( (i < n) && (!cost_function->has_reached_threshold ()) );
 
-  clean_list_of_minima (max_size_of_minima_list);
-
   // Exhaustive search, if implemented keeping just an element of minimum cost,
   // needs to compute the cost function 2^|S| times.
   //

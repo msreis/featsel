@@ -34,6 +34,7 @@
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
 #include "ExhaustiveSearch.h"
+#include "UCurveSearch.h"
 #include <omp.h>
 
 #define ES_CUTOFF 11
@@ -42,10 +43,6 @@ class PUCS : public Solver
 {
 
 private:
-    
-  // Calls of cost function of baseline algorithms.
-  //
-  unsigned int baseline_calls_of_cost_function;
     
   // The partitions of the poset which can have the minimal element
   //

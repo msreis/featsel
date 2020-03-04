@@ -30,9 +30,8 @@ PUCS::PUCS ()
   cost_function = NULL;
   cand_part = NULL;
   partition = NULL;
-  this->p = 0;  // set later
-  this->l = 1;
-  baseline_calls_of_cost_function = 0;
+  this->p = 0.5; 
+  this->l = 2;
 }
 
 PUCS::PUCS (float p, unsigned int l)
@@ -43,7 +42,6 @@ PUCS::PUCS (float p, unsigned int l)
   partition = NULL;
   this->p = p;
   this->l = l;
-  baseline_calls_of_cost_function = 0;
 }
 
 
@@ -85,7 +83,7 @@ void PUCS::get_minima_list (unsigned int max_size_of_minima_list)
   // t.i.
   gettimeofday (& begin_program, NULL);
 
-  l = 1; p = 0.5;
+  p = 0.5;
   
   this->max_size_of_minima_list = max_size_of_minima_list;
   list<ElementSubset *> * min_list = &list_of_minima;
@@ -229,7 +227,7 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   {
     Collection * visited_subsets;
     if (l <= 1)
-      sub_solver = new ExhaustiveSearch ();
+      sub_solver = new UCurveSearch ();
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);

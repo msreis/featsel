@@ -57,7 +57,8 @@ use SigNetSim;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('PUCS', 'SFFS', 'CHCGA', 'BFS', 'UCS', 'ES');
+#my @LIST_OF_ALGORITHMS = ('PUCS', 'SFFS', 'CHCGA', 'BFS', 'UCS', 'ES');
+my @LIST_OF_ALGORITHMS = ('ES');
 
 # Constant that works as an upper bound limit for cost function values.
 #
@@ -71,7 +72,7 @@ my $output_file_prefix = "foo";
 
 # Flag that verifies whether the output graphs should be generated or not.
 #
-my $PRINT_OUTPUT_GRAPHS = "ON"; # "ON" to print output graphs, "OFF" otherwise
+my $PRINT_OUTPUT_GRAPHS = "OFF"; # "ON" to print output graphs, "OFF" otherwise
 
 
 # Directory where the input instances are stored.
@@ -97,7 +98,7 @@ my $FEATSEL_BIN = "./bin/featsel";
 # Number of labels (classes) for cost functions that are directed for classifier
 # design (e.g. mean conditional entropy).
 #
-my $NUMBER_OF_LABELS = 7;
+my $NUMBER_OF_LABELS = 2;
 
 
 # LaTeX font size for the .tex table.
@@ -539,7 +540,7 @@ closedir $dh;
 my %experiment;
 
 
-(scalar(@instance_file) >= $number_of_instances_per_size*$maximum_instance_size)
+(scalar(@instance_file) >= $number_of_instances_per_size * ($maximum_instance_size - 6))
   or die "Insufficient number of instance files stored in '$INPUT_DIR'!\n\n";
 
 foreach my $file (sort @instance_file)
@@ -573,7 +574,8 @@ my $MAX_TIME_VALUE = 0;
 print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
-foreach my $i (1..$maximum_instance_size)    
+      
+foreach my $i (7..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 
@@ -669,7 +671,6 @@ foreach my $i (1..$maximum_instance_size)
         elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
         { 
           $average_calls_of_cost_function[$j] += $1;
-          print $algorithms[$j] . " : " . $1 . "\n";
           push @{$calls_of_cost_function[$j]}, $1;
         }
         elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)

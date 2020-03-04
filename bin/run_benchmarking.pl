@@ -57,7 +57,7 @@ use SigNetSim;
 # benchmarking experiment. If you want to use all valid algorithm codes, leave
 # this array blank (i.e., define @LIST_OF_ALGORITHMS = () ).
 #
-my @LIST_OF_ALGORITHMS = ('PUCS', 'SFFS', 'CHCGA', 'BFS', 'UCS', 'ES');
+my @LIST_OF_ALGORITHMS = ('Oscillation');
 
 # Constant that works as an upper bound limit for cost function values.
 #
@@ -336,7 +336,7 @@ printf TEX "\\multicolumn{%d}{c}{Total time (sec)} ", $number_of_algorithms;
 printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
 print TEX "{Cost function time (sec)} ";
 printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
-print TEX "{\\\# Calls of cost function} ";
+print TEX "{\\\# Oscillations} ";
 printf TEX " & \\phantom{} & \\multicolumn{%d}{c}", $number_of_algorithms;
 print TEX "{\\\# Best solution}\\\\\n";
 
@@ -389,7 +389,7 @@ print OUT "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>Cost Function Time (sec)</CENTER>" .
   "<TD><CENTER>&nbsp;</CENTER></TD>\n" .
-  "<TD colspan=$number_of_algorithms><CENTER>\# Calls of Cost Function" . 
+  "<TD colspan=$number_of_algorithms><CENTER>\# Oscillations" . 
   "</CENTER></TD>\n<TD><CENTER>&nbsp;</CENTER></TD>\n" .
   "<TD colspan=$number_of_algorithms><CENTER>\# The best solution</CENTER>" .
   "</TD>\n</TR>\n";
@@ -539,7 +539,7 @@ closedir $dh;
 my %experiment;
 
 
-(scalar(@instance_file) >= $number_of_instances_per_size * $maximum_instance_size)
+(scalar(@instance_file) >= $number_of_instances_per_size * ($maximum_instance_size - 6))
   or die "Insufficient number of instance files stored in '$INPUT_DIR'!\n\n";
 
 foreach my $file (sort @instance_file)
@@ -574,7 +574,7 @@ print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
       
-foreach my $i (1..$maximum_instance_size)    
+foreach my $i (7..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 
@@ -635,11 +635,9 @@ foreach my $i (1..$maximum_instance_size)
 
       $t0 = [gettimeofday];
       system ("$FEATSEL_BIN -n $i -a $current_algorithm " . 
-              "-l $NUMBER_OF_LABELS " .
-              "-m " .  2 ** $i . " " .
-              "-t " .  2 ** $i . " " .
-              "-c $cost_function -f $INPUT_DIR/" . $experiment{$i}->[$k-1]  . 
-              $max_number_of_calls . " > $LOG_FILE");
+              "-l 2 " .
+              "-c mce -f $INPUT_DIR/" . $experiment{$i}->[$k-1]  . 
+              " > $LOG_FILE");
       $t1 = [gettimeofday];
 
       $average_time_of_algorithm[$j] += tv_interval ($t0, $t1);
@@ -662,6 +660,9 @@ foreach my $i (1..$maximum_instance_size)
         if ($_ =~ /(\<\d+\>)\s+\:\s+(\S+)/)
         {
           print COSTS $1 . " " . $2 . "\n";
+          $average_calls_of_cost_function[$j] += $2;
+          push @{$calls_of_cost_function[$j]}, $2;
+          
           if ($2 < $minimum_of_algorithms[$j])
           {
             $minimum_of_algorithms[$j] = $2;
@@ -669,8 +670,8 @@ foreach my $i (1..$maximum_instance_size)
         }
         elsif ($_ =~ /^Number\s+of\s+visited\s+subsets\:\s+(\S+)/)
         { 
-          $average_calls_of_cost_function[$j] += $1;
-          push @{$calls_of_cost_function[$j]}, $1;
+          #$average_calls_of_cost_function[$j] += $1;
+          #push @{$calls_of_cost_function[$j]}, $1;
         }
         elsif ($_ =~ /subsets\:\s+(\d+)\s+microseconds/)
         {

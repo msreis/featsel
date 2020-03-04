@@ -14,3 +14,4 @@
                  rbm RBM
                 pucs PUCS
                  pfs PosetForestSearch
+         oscillation Oscillation

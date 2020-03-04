@@ -227,7 +227,7 @@ Collection * PUCS::part_minimum (PartitionNode * P,
   {
     Collection * visited_subsets;
     if (l <= 1)
-      sub_solver = new UCurveSearch ();
+      sub_solver = new UcurveBranchandBound ();
     else
       sub_solver = new PUCS (p, l - 1);
     PartCost * P_cost = new PartCost (cost_function, P);

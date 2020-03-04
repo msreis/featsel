@@ -539,7 +539,7 @@ closedir $dh;
 my %experiment;
 
 
-(scalar(@instance_file) >= $number_of_instances_per_size * ($maximum_instance_size - 6))
+(scalar(@instance_file) >= $number_of_instances_per_size * $maximum_instance_size)
   or die "Insufficient number of instance files stored in '$INPUT_DIR'!\n\n";
 
 foreach my $file (sort @instance_file)
@@ -574,7 +574,7 @@ print "\nRunning benchmarking experiments with $number_of_algorithms " .
       "algorithms and instances of size up to $maximum_instance_size.\n\n";
 
       
-foreach my $i (7..$maximum_instance_size)    
+foreach my $i (1..$maximum_instance_size)    
 {
   print "Starting iteration $i... ";
 

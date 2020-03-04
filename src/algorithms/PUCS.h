@@ -34,7 +34,7 @@
 #include "../functions/PartCost.h"
 #include "../PartitionNode.h"
 #include "ExhaustiveSearch.h"
-#include "UCurveSearch.h"
+#include "UcurveBranchandBound.h"
 #include <omp.h>
 
 #define ES_CUTOFF 11

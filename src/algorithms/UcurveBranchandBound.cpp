@@ -65,18 +65,17 @@ void UcurveBranchandBound::get_minima_list
 
     current_cost = A->cost = cost_function->cost (A);
 
+    B = new ElementSubset ("", set);
+    B->copy (A);
+    list_of_minima.push_back (B);
+
     if (((A->get_subset_cardinality () == 0) || (current_cost <= last_cost)) &&
         (A->get_subset_cardinality () <= MAX_SUBSET_SIZE) )
     {
       // The bound helps to keep the list of minimum small
       //
       if (current_cost <= bound)
-      {
         bound = current_cost;
-        B = new ElementSubset ("", set);
-        B->copy (A);
-        list_of_minima.push_back (B);
-      }
 
       if (store_visited_subsets)
         list_of_visited_subsets->add_subset (A);
@@ -97,8 +96,6 @@ void UcurveBranchandBound::get_minima_list
 
   number_of_visited_subsets =
   cost_function->get_number_of_calls_of_cost_function ();
-
-  clean_list_of_minima (max_size_of_minima_list);
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm =

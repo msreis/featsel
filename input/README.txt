@@ -62,6 +62,10 @@ tailor            - Examples of the TailorConvexHull cost function.
 
 tmp               - Directory used to store temporary instances.
 
+Thoracic          - m = 470, n = 16, l = 2
+                    Converted in .DAT instances from:
+                    https://archive.ics.uci.edu/ml/datasets/Thoracic+Surgery+Data
+
 Waveform          - Converted in .DAT instances from:
                     http://archive.ics.uci.edu/ml/datasets/waveform+database+generator+%28version+1%29
 

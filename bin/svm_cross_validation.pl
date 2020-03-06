@@ -35,7 +35,7 @@ use lib './lib';
 my $OUTPUT_DIR = "output";
 my $LOG_FILE = $OUTPUT_DIR . "/svm_result.log";
 my $FEATSEL_BIN = "./bin/featsel";
-my $LIBSVM_DIR = "/home/gustavo/cs/libsvm/libsvm-3.24/";
+my $LIBSVM_DIR = "";
 
 
 # Arguments parsing

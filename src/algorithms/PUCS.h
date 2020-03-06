@@ -35,6 +35,7 @@
 #include "../PartitionNode.h"
 #include "ExhaustiveSearch.h"
 #include "UcurveBranchandBound.h"
+#include "SFS.h"
 #include <omp.h>
 
 #define ES_CUTOFF 11

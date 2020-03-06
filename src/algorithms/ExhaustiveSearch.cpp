@@ -78,6 +78,7 @@ void ExhaustiveSearch::get_minima_list (unsigned int max_size_of_minima_list)
 
   gettimeofday (& end_program, NULL);
   elapsed_time_of_the_algorithm = diff_us (end_program, begin_program);
+  clean_list_of_minima (max_size_of_minima_list);
 
 }
 

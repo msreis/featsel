@@ -36,59 +36,34 @@ my $MAX_NUMBER_OF_COST_FUNCTION_CALLS = 1000000;
 my @ALGORITHMS = (
   "pucs", 
   "sffs",
+  "chcga",
+  "bfs",
   "all"); # all stands for a trivial feature selection algorithm that
           # selects all features
-my %cost_function = ("pucs" => "mce", "sffs" => "mce");
+my %cost_function = ("pucs" => "mce", "sffs" => "mce", "chcga" => "mce", "bfs" => "mce", "ucs" => "mce", "es" => "mce");
 my @DATA_SETS = (
                  "Iris", 
                  "Breast_cancer",
                  "Wine",
                  "Zoo",
-                 "Thoracic");
-                 #"Lung_cancer",
-                 #"Promoters");
-                 # "Forests",
-                 # "Parkinsons",
-                 # "Soybean",
-                 # "Dermatology",
-                 # "Credit",
-                 # "Fertility",
-                  # "HillValley",
-                  # "Arrhythmia",
-                 # "Musk2",
-my %labels    = ("Iris" => 3, "Arrhythmia" => 16, "Musk2" => 2, 
-                 "Promoters" => 2, "Wine" => 3, "Zoo" => 7,
-                 "Lung_cancer" => 3, "Breast_cancer" => 2,
-                 "HillValley" => 2, "Soybean" => 6, "Fertility" => 2,
-                 "Credit" => 2, "Forests" => 4, "Parkinsons" => 2, "Thoracic" => 2);
-my %features = ("Iris" => 4, "Arrhythmia" => 279, "Musk2" => 166, 
-                 "Promoters" => 57, "Wine" => 13, "Zoo" => 15,
-                 "Lung_cancer" => 56, "Breast_cancer" => 10,
-                 "HillValley" => 100, "Soybean" => 35, "Fertility" => 10,
-                 "Credit" => 15, "Forests" => 27, "Parkinsons" => 22,
-                 "Thoracic" => 16);
-my %data_size = ("Iris" => 150, "Arrhythmia" => 220, "Musk2" => 6598,
-                 "Promoters" => 106, "Wine" => 178, "Zoo" => 101,
-                 "Lung_cancer" => 32, "Breast_cancer" => 700,
-                 "HillValley" => 606, "Soybean" => 47, "Fertility" => 100,
-                 "Credit" => 690, "Forests" => 198, "Parkinsons" => 195,
-                 "Thoracic" => 470);
+                 "Thoracic",
+                 "Lung_cancer",
+                 "HillValley",
+                 );
+
+my %labels    = ("Iris" => 3, "Wine" => 3, "Zoo" => 7, "Breast_cancer" => 2, "Thoracic" => 2, "Lung_cancer" => 3, "HillValley" => 2);
+
+my %features = ("Iris" => 4, "Wine" => 13, "Zoo" => 15, "Breast_cancer" => 10, "Thoracic" => 16, "Lung_cancer" => 56, "HillValley" => 100);
+
+my %data_size = ("Iris" => 150, "Wine" => 178, "Zoo" => 101, "Breast_cancer" => 699, "Thoracic" => 470, "Lung_cancer" => 32, "HillValley" => 606);
+
 my %dat_file =  ("Iris" => "input/Iris/Test_01_A.dat",
-                 "Arrhythmia" => "input/Arrhythmia/Test_01_A.dat",
-                 "Musk2" => "input/Musk2/Test_01_A.dat",
-                 "Promoters" => "input/Promoters/Test_01_A.dat",
                  "Wine" => "input/Wine/Test_01_A.dat",
                  "Zoo" => "input/Zoo/Test_15_3.dat",
-                 "Lung_cancer" => "input/Lung_cancer/Test_01_A.dat",
                  "Breast_cancer" => "input/Breast_cancer/Test_01_A.dat",
                  "HillValley" => "input/HillValley/Test_01_A.dat",
-                 "Soybean" => "input/Soybean/Test_01_A.dat",
-                 "Fertility" => "input/Fertility/Test_01_A.dat",
-                 "Credit" => "input/Credit/Test_01_A.dat",
-                 "Forests" => "input/Forests/Test_01_A.dat",
-                 "Parkinsons" => "input/Parkinsons/Test_01_A.dat",
-                 "Thoracic" => "input/Thoracic/Test_01_A.dat");
-  
+                 "Lung_cancer" => "input/Lung_cancer/Test_01_A.dat",
+                 "Thoracic" => "input/Thoracic/Test_01_A.dat");  
 
 my $DATA_FILE = "output/dat.temp";
 open (DATA, ">$DATA_FILE");

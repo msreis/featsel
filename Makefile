@@ -32,7 +32,7 @@
 
 IDIR = ../
 
-CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/python2.7
+CXXFLAGS = -fopenmp -O2 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -std=c++11
 
 OBJS =		src/Element.o src/ElementSet.o src/ElementSubset.o \
       src/ROBDD.o src/Vertex.o src/Partition.o \
